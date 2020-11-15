@@ -72,7 +72,6 @@ namespace DoppelkopfApi.Controllers
         [HttpPost("register")]
         public IActionResult Register([FromBody] RegisterModel model)
         {
-            return BadRequest("Not in use");
             // map model to entity
             var user = _mapper.Map<User>(model);
 

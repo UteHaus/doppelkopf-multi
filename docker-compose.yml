@@ -1,42 +1,38 @@
 version: "3"
 services: 
-    nginx:
-        build: 
-            context: ./Nginx
-            dockerfile: Dockerfile
-        ports: 
-            - 80:80
-        restart: always
     client:
-        build:
-            context: ./client
+        build: 
+            context: ./
             dockerfile: Dockerfile
         ports: 
-            - 5000:80
+            - 8080:80
+        restart: always
 
     postgres:
       container_name: 'postgres'
       restart: always
       image: postgres
       environment:
-        # change this for a "real" app!
         POSTGRES_USER: doppel
         POSTGRES_PASSWORD: doppel_=983737
         POSTGRES_DB: doppelkopf
-      ports: 
-        - 5432:5432
+      volumes:
+        - dk-pgdata:/var/lib/postgresql/data
+    
+      #ports: 
+        #- 5432:5432
 
     dkapi:
         build: 
             context: ./api
             dockerfile: Dockerfile
         ports: 
-            - 3000:80
+            - 5003:80
         depends_on:
             - postgres
 
 volumes:
-  pgdata:
+  dk-pgdata:
 
 networks:
   dk-db:
