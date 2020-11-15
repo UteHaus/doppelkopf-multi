@@ -1,0 +1,39 @@
+<div *ngIf="tables$ | async as tables">
+  <h1>Spieltische</h1>
+  <a routerLink="table" class="btn btn-sm btn-success mb-2" [translate]>dk.new-play-table</a>
+  <table class="table table-striped">
+    <thead>
+      <tr>
+        <th style="width: 30%">Name</th>
+        <th style="width: 30%">User</th>
+        <th style="width: 5%"></th>
+        <th style="width: 15%"></th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let playTable of tables; trackBy: trackPlayTabel">
+        <td>{{ playTable.name }}</td>
+        <td>{{ playTable.userCount }}</td>
+        <td>{{ '' }}</td>
+        <td style="white-space: nowrap">
+          <!--  <a routerLink="edit/{{playTable.id}}" class="btn btn-sm btn-primary mr-1">Edit</a>
+                <button (click)="deleteUser(playTable.id)" class="btn btn-sm btn-danger btn-delete-user" [disabled]="user.isDeleting">
+                    <span *ngIf="user.isDeleting" class="spinner-border spinner-border-sm"></span>
+                    <span *ngIf="!user.isDeleting">Delete</span>
+                </button>-->
+          <button *ngIf="userTableId$ | async as userTableId" class="btn btn-sm btn-success mb-2"
+            (click)="runWithOnTable(playTable.id, userTableId == playTable.id)"
+            [disabled]="playTable.userCount==4 && userTableId != playTable.id">
+            <span *ngIf="userTableId != playTable.id; else goIntoGame" translate>dk.play-with</span>
+            <ng-template #goIntoGame> <span translate>dk.play-on</span></ng-template>
+          </button>
+        </td>
+      </tr>
+      <tr *ngIf="!tables$">
+        <td colspan="4" class="text-center">
+          <span class="spinner-border spinner-border-lg align-center"></span>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>

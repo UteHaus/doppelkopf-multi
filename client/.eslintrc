@@ -1,0 +1,9 @@
+{
+  "plugins": [
+    "prettier",
+    "unicorn"
+  ],
+  "env": {
+    "es6": true
+  }
+}

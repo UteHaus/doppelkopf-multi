@@ -1,0 +1,37 @@
+/* You can add global styles to this file, and also import other style files */
+a {
+    cursor: pointer;
+}
+
+.btn-delete-user {
+    width: 40px;
+    text-align: center;
+    box-sizing: content-box;
+}
+
+html {
+    height: 100%;
+
+    body {
+        height: 100%;
+    }
+}
+
+div.app-container {
+    display: grid;
+    grid-template-rows: 56px auto;
+    height: 100%;
+
+    >nav.navbar.navbar-expand {
+        grid-row: 1;
+    }
+
+    >div.app-outlet {
+        grid-row: 2;
+        min-height: 320px;
+        overflow: hidden;
+        height: 100%;
+        display: block;
+    }
+
+}

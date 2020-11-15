@@ -1,0 +1,48 @@
+{
+    "app": {
+        "logout": "Abmelden",
+        "home": "Home",
+        "users": "Nutzer"
+    },
+    "user": {
+        "username": "Nutzername",
+        "user-required": "Benutzername ist erforderlich",
+        "password": "Password",
+        "password-required": "Password iet erforderlich",
+        "login": "Anmelden",
+        "register": "Regestriren",
+        "add-user": "Nutzer hinzufügen",
+        "edit-user": "Nutzer bearbeiten",
+        "edit": "Bearbeiten"
+    },
+    "error": {
+        "full-table": "Der Tisch scheint voll zu sein."
+    },
+    "dk": {
+        "play-with": "mit spielen",
+        "play-on": "weiter spielen",
+        "choose-a-game-variant": "Whäle eine Spielvariante",
+        "next": "Weiter",
+        "selected-game-variant": "gewählte SpielVariante",
+        "next-round": "weiter mit nächsten runde",
+        "game-variant": "Spielart",
+        "player-wants-assign- cards": "Will Karten neu vergeben!",
+        "assign-cards": "Karten neu vergeben",
+        "wait-for-other-players": "Wir warten noch auf die anderen Spieler",
+        "console-table": "Spieltisch",
+        "new-play-table": "Spieltisch hinzufügen",
+        "variant": {
+            "Normal": "Gesund",
+            "Wedding": "Hochzeit",
+            "Solo": "Solo",
+            "QueenSolo": "Obersolo Solo",
+            "JackSolo": "Buben Solo",
+            "AceSolo": "Asse Solo",
+            "KingSolo": "König Solor",
+            "ColoRSoloClubs": "Eichel Solo",
+            "ColoRSoloDiamonds": "Schellen Solo",
+            "ColoRSoloHearts": "Herz Solo",
+            "ColoRSoloSpades": "Blatt Solo"
+        }
+    }
+}

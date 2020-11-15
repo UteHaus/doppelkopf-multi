@@ -1,0 +1,70 @@
+<div class="table-background">
+  <div class="back-top"></div>
+  <div class="back-bottom"></div>
+</div>
+
+<div class="table-container" *ngIf="table$ | async as playTable">
+  <div class="tale-header">
+    <h2 class="header-name">
+      {{'dk.console-table' | translate}}: {{ playTable.name }} <span>{{ playTable.status }}</span>
+    </h2>
+
+    <div class="addition-buttons">
+      <button [ngClass]="{
+        disabled: playTable.userCount !== 4 || !(playTable | showCards) || playTable.thisPlayer.shuffleRound
+      }" (click)="shuffleCards()" class="btn btn-sm btn-success mb-2">
+        dk.assign-cards
+      </button>
+    </div>
+  </div>
+
+  <div class="table-body" *ngIf="(playerInOrder$ | async) as players">
+    <div class="table-section">
+      <app-players-table [players]="players" [thisPlayerId]="playTable.thisPlayer.playerId"
+        [positionOnMove]="playTable.currentPlayerPosition"
+        [currentGiverPos]="playTable.currentPlayerPosition"></app-players-table>
+    </div>
+
+    <div class="this-player-cards">
+      <div *ngIf="playTable | showCards">
+        <app-card-map [cards]="playTable.cards" [disabled]="
+            players[3].playerPosition != playTable.currentPlayerPosition
+          " (cardSelected)="cardSelected($event)">
+        </app-card-map>
+      </div>
+    </div>
+  </div>
+
+  <div class="select-items-hover table-body" *ngIf=" !(playTable | playStatusRun)">
+    <div class="select-variant">
+      <app-select-variant
+        *ngIf="!(playTable.thisPlayer.gameVariant |valideGameVariant) && (playTable | playStatusSelectVariant) ;else selectedVariant "
+        (selected)="variantSelected($event)"></app-select-variant>
+      <ng-template #selectedVariant>
+        <h3
+          *ngIf="(playTable.thisPlayer.gameVariant |valideGameVariant ) && (playTable | playStatusSelectVariant)">
+          {{ ('dk.variant.'+playTable.thisPlayer.gameVariant) | translate }}
+          <span [translate]>dk.selected-game-variant</span>
+          <h5 [translate]>dk.wait-for-other-players</h5>
+        </h3>
+      </ng-template>
+    </div>
+
+    <div class="next-step"
+      *ngIf="(playTable | playStatusWaitNextRound) || (playTable | playStatusWinnerTime)">
+      <button *ngIf="!playTable.thisPlayer.nextTurn; else waitForNextPlayer" (click)="nextTurn()"
+        class="btn" [translate]>
+        dk.next
+      </button>
+      <ng-template #waitForNextPlayer>
+        <h3 [translate]>dk.wait-for-other-players</h3>
+      </ng-template>
+
+    </div>
+
+  </div>
+
+  <ng-template #nothisplayer>
+    <p>{{this.userId}}</p>
+  </ng-template>
+</div>

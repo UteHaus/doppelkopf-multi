@@ -1,0 +1,12 @@
+version: "3"
+services: 
+    databse-test:
+      image: postgres
+      restart: always
+      environment:
+         POSTGRES_USER: doppel
+         POSTGRES_PASSWORD: doppel_=983737
+         POSTGRES_DB: doppelkopf 
+      ports: 
+        - 5433:5432
+      network_mode: host

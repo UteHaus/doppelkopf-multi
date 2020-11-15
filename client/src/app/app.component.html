@@ -1,0 +1,18 @@
+﻿<div class="app-container">
+  <nav class="navbar navbar-expand navbar-dark bg-dark" *ngIf="(user$ |async) as user">
+    <div class="navbar-nav">
+      <a class="nav-item nav-link" routerLink="/" routerLinkActive="active"
+        [routerLinkActiveOptions]="{ exact: false }" [translate]>app.home</a>
+      <a class="nav-item nav-link" (click)="editUser(user)" routerLinkActive="active"
+        [translate]>app.users</a>
+      <a class="nav-item nav-link" (click)="logout()" [translate]>app.logout</a>
+      <!--  <button (click)="useLanguage('de')">de</button> -->
+    </div>
+
+  </nav>
+
+  <div class="app-outlet">
+    <alert></alert>
+    <router-outlet></router-outlet>
+  </div>
+</div>

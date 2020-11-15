@@ -1,0 +1,30 @@
+<div class="player-list">
+    <div *ngFor="let player of players" class="player-info"
+        [ngClass]="['player-info-'+player.viewPosition, 'player-background-'+player.viewPosition]">
+        <div class="img" [ngClass]="{ 'on-move':(player.playerPosition==positionOnMove)}">
+            <img [src]="player | playerIcon" alt="">
+            <span [ngClass]="{ 'puls':(player.playerPosition==positionOnMove)}"></span>
+        </div>
+
+        <h4 *ngIf="!(player.playerId==thisPlayerId); else iPlayer">{{ player.userName }}</h4>
+        <ng-template #iPlayer>
+            <h4>Ich</h4>
+        </ng-template>
+        <!--  <p>{{ player.playerPosition }}</p> -->
+        <p class="addition-info" *ngIf="player.gameVariant |valideGameVariant ">
+            <!-- <span class="game-variant" [translate]>dk.game-variant</span> -->
+            {{ ('dk.variant.'+player.gameVariant) | translate }}
+        </p>
+        <p *ngIf="player.shuffleRound" class="shuffle-round" [translate]>dk.player-wants-assign-
+            cards
+        </p>
+    </div>
+    <div class="player-cards">
+        <app-card *ngFor="let player of players"
+            [ngStyle]="{'z-index':player.playerPosition | cardIndexPosition:currentGiverPos}"
+            [ngClass]="['player-card-'+player.viewPosition]" [card]="player.playedCard"
+            [withDefaultCard]="false">
+        </app-card>
+
+    </div>
+</div>

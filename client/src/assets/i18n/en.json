@@ -1,0 +1,48 @@
+{
+    "app": {
+        "logout": "Logout",
+        "home": "Home",
+        "users": "Users"
+    },
+    "user": {
+        "username": "Username",
+        "user-required": "Username is required",
+        "password": "Password",
+        "password-required": "Password is required",
+        "login": "Login",
+        "register": "Register",
+        "add-user": "Add User",
+        "edit-user": "Edit User",
+        "edit": "Edit"
+    },
+    "error": {
+        "full-table": "The table seems to be full."
+    },
+    "dk": {
+        "play-with": "play with",
+        "play-on": "play on",
+        "choose-a-game-variant": "Choose a game variant ",
+        "next": "next",
+        "next-round": "next round",
+        "selected-game-variant": "selected game variant",
+        "game-variant": "game variant",
+        "player-wants-assign- cards": "wants to assign new cards!",
+        "wait-for-other-players": "wait for other players",
+        "assign-cards": "Assign new cards",
+        "console-table": "consol table",
+        "new-play-table": "new play table",
+        "variant": {
+            "Normal": "Normal",
+            "Wedding": "Wedding",
+            "Solo": "Solo",
+            "QueenSolo": "Queen Solo",
+            "JackSolo": "Jack Solo",
+            "AceSolo": "Ace Solo",
+            "KingSolo": "king Solo",
+            "ColoRSoloClubs": "Clubs Solo",
+            "ColoRSoloDiamonds": "Diamonds Solo",
+            "ColoRSoloHearts": "Heart Solo",
+            "ColoRSoloSpades": "Spades Solo"
+        }
+    }
+}
