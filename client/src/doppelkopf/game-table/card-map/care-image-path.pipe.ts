@@ -44,6 +44,9 @@ export class CareImagePathPipe implements PipeTransform {
       case Ranks.jack:
         cartRank = 'unter';
         break;
+      case Ranks.nine:
+        cartRank = '9';
+        break;
       default:
         break;
     }

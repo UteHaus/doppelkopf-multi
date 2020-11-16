@@ -21,6 +21,7 @@ namespace DoppelkopfApi.Models.PlayTable
         public GamesVariants GameVariant { get; set; }
 
         public bool ShuffleRound { get; set; }
+        public bool WithNiner { get; set; }
 
         public int PlayerPosition { get; set; }
 

@@ -44,8 +44,11 @@ export class PlayTableService {
   }
 
   public createTable(playTable: PlayTable): Observable<PlayTable> {
-    console.log(playTable);
     return this.http.post<PlayTable>(this.defaultApiPath, playTable);
+  }
+
+  public deleteTable(tableId: number | string): Observable<boolean> {
+    return this.http.delete<boolean>(`${this.defaultApiPath}/${tableId}`);
   }
 
   public updateTable(playTable: PlayTable): Observable<PlayTable> {
@@ -62,6 +65,13 @@ export class PlayTableService {
         map(() => true),
         catchError(() => of(false))
       );
+  }
+
+  public logoutOfTable(userId: number | string): Observable<undefined> {
+    return this.http.put<undefined>(
+      `${this.defaultApiPath}/out-table?userId=${userId}`,
+      {}
+    );
   }
 
   public getUserPlayTable(userId: number): Observable<PlayTable> {

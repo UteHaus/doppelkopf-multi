@@ -179,16 +179,18 @@ namespace DoppelkopfApi.Services
             return table != null ? table.Status : PlayStatus.None;
         }
 
-        public bool Delete(int tableId, bool hard = false)
+        public bool Delete(int tableId, bool hard = true)
         {
             var table = _context.PlayTables.Find(tableId);
             var tablePlayersCount = TableUserCount(table.Id);
 
-            if (table != null && (hard || tablePlayersCount > 0))
+            if (table != null && (hard || tablePlayersCount <= 0))
             {
-                _context.PlayTables.Remove(table);
-                _context.SaveChanges();
                 SetUpdateTime(table);
+                _context.Entry(table).State = Microsoft.EntityFrameworkCore.EntityState.Deleted;
+                // _context.PlayTables.Remove(table);
+                _context.SaveChanges();
+
                 return true;
             }
             return false;
@@ -267,12 +269,13 @@ namespace DoppelkopfApi.Services
                 {
                     table.SetTableToNextGameTurn();
                     changeCount = _context.SaveChanges();
-                    SetUpdateTime(table);
+
                     StartGame(tableId);
                 }
                 else
                 {
                     changeCount = _context.SaveChanges();
+                    SetUpdateTime(table);
                 }
 
                 return changeCount > 0;

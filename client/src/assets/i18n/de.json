@@ -31,6 +31,13 @@
         "wait-for-other-players": "Wir warten noch auf die anderen Spieler",
         "console-table": "Spieltisch",
         "new-play-table": "Spieltisch hinzufügen",
+        "edit-play-table": "Spieltisch bearbeiten",
+        "add-play-table": "Neuer Spieltisch",
+        "diamonds-ace-as-master": "Größter Trumpf Shell Ass",
+        "play-table-configs": "Spieletisch Einstellungen",
+        "with-niner": "Mit Neuen",
+        "users": "Nutzer",
+        "delete": "Löschen",
         "variant": {
             "Normal": "Gesund",
             "Wedding": "Hochzeit",

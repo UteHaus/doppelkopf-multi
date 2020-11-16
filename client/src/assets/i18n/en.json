@@ -31,6 +31,13 @@
         "assign-cards": "Assign new cards",
         "console-table": "consol table",
         "new-play-table": "new play table",
+        "edit-play-table": "Edit play table",
+        "add-play-table": "Add play table",
+        "diamonds-ace-as-master": "Biggest Trump Diamonds Ace",
+        "play-table-configs": "Play Table configurations",
+        "with-niner": "With niner",
+        "users": "Users",
+        "delete": "Delete",
         "variant": {
             "Normal": "Normal",
             "Wedding": "Wedding",

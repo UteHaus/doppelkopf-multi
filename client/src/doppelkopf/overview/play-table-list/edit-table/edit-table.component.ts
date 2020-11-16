@@ -9,7 +9,6 @@ import {
   PlayTable,
 } from 'src/doppelkopf/models/play-table.model';
 import { PlayTableService } from 'src/doppelkopf/services/play-table.service';
-import { PlayTableListComponent } from '../play-table-list.component';
 
 @Component({
   selector: 'app-edit-table',
@@ -37,6 +36,8 @@ export class EditTableComponent implements OnInit {
 
     this.form = this.formBuilder.group({
       tableName: ['', Validators.required],
+      diamondsAceAsMaster: [''],
+      withNiner: [''],
     });
 
     if (!this.isAddMode) {
@@ -45,6 +46,8 @@ export class EditTableComponent implements OnInit {
         .pipe(first())
         .subscribe((x) => {
           this.f.tableName.setValue(x.name);
+          this.f.diamondsAceAsMaster.setValue(x.diamondsAceAsMaster);
+          this.f.withNiner.setValue(x.withNiner);
         });
     }
   }
@@ -74,12 +77,12 @@ export class EditTableComponent implements OnInit {
     const newTable: PlayTable = {
       name: this.form.value.tableName,
       status: PlayStatus.None,
-      withNiner: false,
+      withNiner: this.form.value.withNiner,
       currentPlayerPosition: 1,
       playerPosition: 1,
       roundCardsGiversPosition: 2,
-      DiamondsAceAsMaster: false,
-      WeddingWithFirstColorCast: true,
+      diamondsAceAsMaster: this.form.value.diamondsAceAsMaster,
+      weddingWithFirstColorCast: true,
       gameVariant: GamesVariants.None,
     };
     this.playTableService

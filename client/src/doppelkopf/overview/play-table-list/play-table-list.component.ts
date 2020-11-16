@@ -1,8 +1,9 @@
-import { AfterContentInit, Component, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+import { User } from '@app/models';
 import { AccountService, AlertService } from '@app/services';
 import { Observable, of } from 'rxjs';
-import { catchError, map } from 'rxjs/operators';
+import { catchError, first, map } from 'rxjs/operators';
 import { PlayTableCount } from 'src/doppelkopf/models/play-table-count.model';
 import { PlayTable } from 'src/doppelkopf/models/play-table.model';
 import { PlayTableService } from 'src/doppelkopf/services/play-table.service';
@@ -15,7 +16,10 @@ import { PlayTableService } from 'src/doppelkopf/services/play-table.service';
 export class PlayTableListComponent implements OnInit {
   tables$: Observable<PlayTableCount[]>;
   userTableId$: Observable<number>;
-
+  get user(): User {
+    return this.accountService.userValue;
+  }
+  deleteTableIds = [];
   constructor(
     private tableService: PlayTableService,
     private alertService: AlertService,
@@ -50,7 +54,14 @@ export class PlayTableListComponent implements OnInit {
     }
   }
 
-  trackPlayTabel(index: number, table: PlayTable): string {
-    return table.id.toString();
+  trackPlayTable(index: number, table: PlayTable): string {
+    return (table ? table.id : 0).toString();
+  }
+
+  deleteTable(playTable: PlayTable) {
+    if (this.user.admin) {
+      this.deleteTableIds[playTable.id] = true;
+      this.tableService.deleteTable(playTable.id).pipe(first()).toPromise();
+    }
   }
 }

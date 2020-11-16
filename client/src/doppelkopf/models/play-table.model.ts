@@ -7,10 +7,10 @@ export class PlayTable {
   roundCardsGiversPosition: number;
   playerId?: number;
   playerPosition: number;
-  DiamondsAceAsMaster: boolean;
-  WeddingWithFirstColorCast: boolean;
-  TableIcon?: string;
-  AdditionalWeddingPlayerId?: number;
+  diamondsAceAsMaster: boolean;
+  weddingWithFirstColorCast: boolean;
+  tableIcon?: string;
+  additionalWeddingPlayerId?: number;
   gameVariant: GamesVariants;
 }
 
