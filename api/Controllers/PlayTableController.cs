@@ -234,7 +234,7 @@ namespace DoppelkopfApi.Controllers
                 var table = _playTableService.GetTableById(tableId);
                 if (table != null)
                 {
-                    return Ok(table.LastUpdate);
+                    return Ok(table.LastUpdate.ToUniversalTime());
                 }
                 return BadRequest(new { message = "Table not found " + tableId });
             }

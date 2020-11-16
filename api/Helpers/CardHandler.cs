@@ -208,13 +208,13 @@ namespace DoppelkopfApi.Helpers
                     return WhoeWinCardRound(playedCards, (card) => SoloRating(card.Card, Ranks.king));
 
                 default:
-                    return WhoeWinCardRound(playedCards, (card) => NormalRating(card.Card));
+                    return WhoeWinCardRound(playedCards, (card) => NormalRating(table, card.Card));
             }
         }
 
-        public bool IsColorPlayed(Card card)
+        public bool IsColorPlayed(PlayTable table, Card card)
         {
-            return NormalRating(card) >= 50;
+            return NormalRating(table, card) >= 50;
         }
 
         public int CardPoints(PlayCard[] playCard)
@@ -278,8 +278,12 @@ namespace DoppelkopfApi.Helpers
             }
         }
 
-        private int NormalRating(Card card)
+        private int NormalRating(PlayTable table, Card card)
         {
+            if (table.DiamondsAceAsMaster && card == Ranks.ace && card == Suits.diamonds)
+            {
+                return 5;
+            }
 
             if (card == Ranks.ten && card == Suits.hearts)
             {

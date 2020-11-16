@@ -460,7 +460,7 @@ namespace DoppelkopfApi.Services
                 if (table.WeddingWithFirstColorCast && table.StitchCounter < 2)
                 {
                     var leftOfGiverPlayer = players.FirstOrDefault((player) => table.GetLeftOfGiversPosition() == player.PlayerPosition);
-                    if (leftOfGiverPlayer != null && _cardHandler.IsColorPlayed(leftOfGiverPlayer.GetPlayedCard()))
+                    if (leftOfGiverPlayer != null && _cardHandler.IsColorPlayed(table, leftOfGiverPlayer.GetPlayedCard()))
                     {
                         additionalWeddingPlayerId = stitchWinnerId;
                         return true;

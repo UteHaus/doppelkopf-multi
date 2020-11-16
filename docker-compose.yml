@@ -1,35 +1,37 @@
 version: "3"
-services: 
-    client:
-        build: 
-            context: ./
-            dockerfile: Dockerfile
-        ports: 
-            - 8080:80
-        restart: always
+services:
+  client:
+    build:
+      context: ./
+      dockerfile: Dockerfile
+    ports:
+      - 8080:80
+    restart: always
+    depends_on:
+      - dkapi
 
-    postgres:
-      container_name: 'postgres'
-      restart: always
-      image: postgres
-      environment:
-        POSTGRES_USER: doppel
-        POSTGRES_PASSWORD: doppel_=983737
-        POSTGRES_DB: doppelkopf
-      volumes:
-        - dk-pgdata:/var/lib/postgresql/data
-    
-      #ports: 
-        #- 5432:5432
+  postgres:
+    container_name: "postgres"
+    restart: always
+    image: postgres
+    environment:
+      POSTGRES_USER: doppel
+      POSTGRES_PASSWORD: doppel_=983737
+      POSTGRES_DB: doppelkopf
+    volumes:
+      - dk-pgdata:/var/lib/postgresql/data
 
-    dkapi:
-        build: 
-            context: ./api
-            dockerfile: Dockerfile
-        ports: 
-            - 5003:80
-        depends_on:
-            - postgres
+    ports:
+      - 5432:5432
+
+  dkapi:
+    build:
+      context: ./api
+      dockerfile: Dockerfile
+    ports:
+      - 5003:80
+    depends_on:
+      - postgres
 
 volumes:
   dk-pgdata:
