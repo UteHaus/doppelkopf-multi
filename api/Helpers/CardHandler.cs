@@ -383,11 +383,11 @@ namespace DoppelkopfApi.Helpers
                 case Ranks.ten:
                     return 10;
                 case Ranks.king:
-                    return 3;
+                    return 4;
                 case Ranks.queen:
-                    return 2;
+                    return 3;
                 case Ranks.jack:
-                    return 1;
+                    return 2;
 
                 default:
                     return 0;

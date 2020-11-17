@@ -66,6 +66,7 @@ namespace DoppelkopfApi.Entities
             StitchCounter = 0;
             LastCardSet = "";
             RoundCount++;
+            GameVariant = GamesVariants.None;
             AdditionalWeddingPlayerId = -1;
         }
 
