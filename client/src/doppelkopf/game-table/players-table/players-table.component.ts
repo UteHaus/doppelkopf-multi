@@ -1,5 +1,6 @@
 import { Component, Input } from '@angular/core';
 import { AdditionPlayerInfo } from 'src/doppelkopf/models/play-table-game.model copy';
+import { GamesVariants } from 'src/doppelkopf/models/play-table.model';
 
 @Component({
   selector: 'app-players-table',
@@ -18,6 +19,9 @@ export class PlayersTableComponent {
 
   @Input()
   currentGiverPos: number;
+
+  @Input()
+  tableGameVariant: GamesVariants;
 
   constructor() {}
 }

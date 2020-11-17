@@ -9,10 +9,11 @@
         <h4>{{ player.userName }} </h4>
         <!--  <p>{{ player.playerPosition }}</p> -->
         <p class="addition-info" *ngIf="player.gameVariant |valideGameVariant ">
-            <!-- <span class="game-variant" [translate]>dk.game-variant</span> -->
-            {{ ('dk.variant.'+player.gameVariant) | translate }}
+            <span *ngIf="tableGameVariant">{{('dk.variant.'+tableGameVariant) | translate}}</span>
+            ({{ ('dk.variant.'+player.gameVariant) | translate }})
         </p>
-        <p>{{'dk.points' | translate}}: {{player.roundsPoints}}</p>
+        <p *ngIf="(player.playerId==thisPlayerId)">{{'dk.points' | translate}}:
+            {{player.roundsPoints}}</p>
         <p *ngIf="player.shuffleRound" class="shuffle-round" [translate]>dk.player-wants-assign-
             cards
         </p>
