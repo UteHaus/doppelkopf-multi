@@ -42,7 +42,7 @@ namespace DoppelkopfApi.Entities
 
         public static bool operator ==(Card card1, Card card2)
         {
-            return card1.Suit == card2.Suit && card1.Rank == card2.Rank;
+            return card1?.Suit == card2?.Suit && card1?.Rank == card2?.Rank;
         }
         public static bool operator !=(Card card1, Card card2)
         {

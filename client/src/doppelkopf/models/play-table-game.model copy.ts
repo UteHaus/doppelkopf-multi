@@ -21,6 +21,6 @@ export class AdditionPlayerInfo {
   playedCard: Card;
 
   nextTurn: boolean;
-
+  roundsPoints: number;
   viewPosition: number;
 }

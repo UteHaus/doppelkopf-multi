@@ -1,7 +1,7 @@
 ﻿<h1 *ngIf="isAddMode" [translate]>user.add-user</h1>
 <h1 *ngIf="!isAddMode" [translate]>user.edit-user</h1>
 <form [formGroup]="form" (ngSubmit)="onSubmit()">
-  <div class="form-row">
+  <!--   <div class="form-row">
     <div class="form-group col">
       <label for="firstName">First Name</label>
       <input type="text" formControlName="firstName" class="form-control"
@@ -18,7 +18,7 @@
         <div *ngIf="f.lastName.errors.required">Last Name is required</div>
       </div>
     </div>
-  </div>
+  </div> -->
   <div class="form-row">
     <div class="form-group col">
       <label for="username">Username</label>

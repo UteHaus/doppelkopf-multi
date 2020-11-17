@@ -11,7 +11,7 @@
         "url": "http://localhost:4200",
         "webRoot": "${workspaceFolder}",
         "runtimeExecutable": "/snap/bin/chromium",
-        "runtimeArgs": ["--new-Window", "--remote-debugging-port=9222", "--disable-background-networking","-user-data-dir=\"/${workspaceFolder}/log"]
+        "runtimeArgs": ["--new-Window", "--remote-debugging-port=9222", "--disable-background-networking","-user-data-dir=/${workspaceFolder}/log"]
     },
     ]
 }

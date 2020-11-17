@@ -3,17 +3,17 @@
 <table class="table table-striped">
   <thead>
     <tr>
+      <th style="width: 30%">Username</th>
       <th style="width: 30%">First Name</th>
       <th style="width: 30%">Last Name</th>
-      <th style="width: 30%">Username</th>
       <th style="width: 10%"></th>
     </tr>
   </thead>
   <tbody>
     <tr *ngFor="let user of users">
+      <td>{{ user.username }}</td>
       <td>{{ user.firstName }}</td>
       <td>{{ user.lastName }}</td>
-      <td>{{ user.username }}</td>
       <td style="white-space: nowrap">
         <a routerLink="edit/{{ user.id }}"
           class="btn btn-sm btn-primary mr-1">{{'user.edit' |translate}}</a>

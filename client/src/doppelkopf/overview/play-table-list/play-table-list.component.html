@@ -19,7 +19,7 @@
           <!--  <a routerLink="edit/{{playTable.id}}" class="btn btn-sm btn-primary mr-1">Edit</a>-->
           <div class="btn-group">
             <button type="button" (click)="deleteTable(playTable)"
-              class="btn btn-sm btn-danger btn-delete-user" [disabled]="!user.admin">
+              class="btn btn-sm btn-danger mb-2" [disabled]="!user.admin">
               <span *ngIf="deleteTableIds[playTable.id]"
                 class="spinner-border spinner-border-sm"></span>
               <span *ngIf="!deleteTableIds[playTable.id]" [translate]>dk.delete</span>

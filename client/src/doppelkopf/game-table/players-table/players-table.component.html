@@ -6,18 +6,17 @@
             <span [ngClass]="{ 'puls':(player.playerPosition==positionOnMove)}"></span>
         </div>
 
-        <h4 *ngIf="!(player.playerId==thisPlayerId); else iPlayer">{{ player.userName }}</h4>
-        <ng-template #iPlayer>
-            <h4>Ich</h4>
-        </ng-template>
+        <h4>{{ player.userName }} </h4>
         <!--  <p>{{ player.playerPosition }}</p> -->
         <p class="addition-info" *ngIf="player.gameVariant |valideGameVariant ">
             <!-- <span class="game-variant" [translate]>dk.game-variant</span> -->
             {{ ('dk.variant.'+player.gameVariant) | translate }}
         </p>
+        <p>{{'dk.points' | translate}}: {{player.roundsPoints}}</p>
         <p *ngIf="player.shuffleRound" class="shuffle-round" [translate]>dk.player-wants-assign-
             cards
         </p>
+
     </div>
     <div class="player-cards">
         <app-card *ngFor="let player of players"
@@ -25,6 +24,5 @@
             [ngClass]="['player-card-'+player.viewPosition]" [card]="player.playedCard"
             [withDefaultCard]="false">
         </app-card>
-
     </div>
 </div>

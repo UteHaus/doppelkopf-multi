@@ -1,3 +1,4 @@
+using System.Threading.Tasks;
 using System.Security;
 using System;
 using System.Collections.Generic;
@@ -24,6 +25,7 @@ namespace DoppelkopfApi.Services
         IEnumerable<PlayTable> GetAllTables();
 
         PlayTable GetTableById(int id);
+        ValueTask<PlayTable> GetTableByIdAsync(int id);
 
         PlayTable GetUserTable(int userId);
         TablePlayer GettablePlayerOfId(int playerId);
@@ -71,7 +73,7 @@ namespace DoppelkopfApi.Services
 
             PlayTable table = _context.PlayTables.Find(tableId);
             if (table != null &&
-            (table.Status == PlayStatus.End || table.Status == PlayStatus.None || table.Status == PlayStatus.Stop))
+            (table.Status == PlayStatus.End || table.Status == PlayStatus.None || table.Status == PlayStatus.Stop || table.Status == PlayStatus.WinnersTime))
             {
                 var tablePlayers = GetPlayersOfTable(tableId);
                 if (tablePlayers.Length < 4)
@@ -79,8 +81,11 @@ namespace DoppelkopfApi.Services
                     throw new System.Exception("This Table hase not 4 players");
                 }
                 table.Status = PlayStatus.SelectGameVarian;
+                foreach (var player in tablePlayers)
+                {
+                    player.ClearForNextRound();
+                }
                 SetHandCards(tablePlayers, table.WithNiner);
-                table.RoundCount = 0;
                 _context.TablePlayer.UpdateRange(tablePlayers);
                 _context.PlayTables.Update(table);
                 int changeCount = _context.SaveChanges();
@@ -100,22 +105,22 @@ namespace DoppelkopfApi.Services
                 tablePlayer.GameVariant = variant;
                 _context.TablePlayer.Update(tablePlayer);
                 _context.SaveChanges();
-                SetUpdateTime(tablePlayer.TableId);
                 var playerSetVariantCount = _context.TablePlayer.Count((player) => player.GameVariant != GamesVariants.None);
 
                 if (playerSetVariantCount == 4)
                 {
                     PlayTable table = GetTableById(tablePlayer.TableId);
 
-                    table.Status = PlayStatus.Run;
+                    table.Status = PlayStatus.End;
                     table.GameVariant = _cardHandler.WhichVariantIsPlayed(tablePlayers);
                     if (table.GameVariant == GamesVariants.Normal)
                         table.SilentForPlayer = _cardHandler.SilentPlayer(tablePlayers);
 
+                    table.Status = PlayStatus.Run;
                     _context.Update(table);
                     _context.SaveChanges();
-                    StartGame(playerId);
                 }
+                SetUpdateTime(tablePlayer.TableId);
 
             }
             else
@@ -129,47 +134,62 @@ namespace DoppelkopfApi.Services
             var tablePlayer = GettablePlayerOfId(playerId);
             if (tablePlayer != null)
             {
+                bool newGame = false;
+                tablePlayer.NextTurn = true;
+                _context.TablePlayer.Update(tablePlayer);
+                _context.SaveChanges();
                 var tablePlayers = GetPlayersOfTable(tablePlayer.TableId);
                 var table = _context.PlayTables.FirstOrDefault(pt => pt.Id == tablePlayer.TableId);
                 var nextTurnCount = tablePlayers.Count(tp => tp.NextTurn);
 
-                if (nextTurnCount == 3)
+                if (nextTurnCount == 4)
                 {
-                    var playedRoundCards = tablePlayers.Select((tp) => new PlayCard(tp)).ToArray();
-                    table.SetLastCardSet(playedRoundCards.Select((prc) => prc.Card).ToArray());
-                    int stitchWinnerId = _cardHandler.WhoeWinCardRound(playedRoundCards, table);
-                    var stitchWinner = tablePlayers.FirstOrDefault((tp) => tp.PlayerId == stitchWinnerId);
-                    SetAdditionalWeddingPlayer(tablePlayers, table, stitchWinnerId);
-
-                    foreach (var player in tablePlayers)
+                    if (table.Status != PlayStatus.WinnersTime)
                     {
-                        if (player.PlayerId == stitchWinnerId)
+                        var playedRoundCards = tablePlayers.Select((tp) => new PlayCard(tp)).ToArray();
+                        table.SetLastCardSet(playedRoundCards.Select((prc) => prc.Card).ToArray());
+                        int stitchWinnerId = _cardHandler.WhoeWinCardRound(playedRoundCards, table, tablePlayers);
+                        var stitchWinner = tablePlayers.FirstOrDefault((tp) => tp.PlayerId == stitchWinnerId);
+                        SetAdditionalWeddingPlayer(tablePlayers, table, stitchWinnerId);
+
+                        foreach (var player in tablePlayers)
                         {
-                            player.RoundsPoints += _cardHandler.CardPoints(playedRoundCards);
-                            table.CurrentPlayerPosition = player.PlayerPosition;
+                            if (player.PlayerId == stitchWinnerId)
+                            {
+                                player.RoundsPoints += _cardHandler.CardPoints(playedRoundCards);
+                                table.CurrentPlayerPosition = player.PlayerPosition;
+                            }
+                            player.ClearForNextTurn();
                         }
-                        player.ClearForNextTurn();
-                    }
 
+                        table.StitchCounter++;
+                        // when the round is over
+                        if (table.StitchCounter == 12 || (!table.WithNiner && table.StitchCounter == 10))
+                        {
+                            SetWinners(tablePlayers, table);
+                            table.SetTableToNextGameTurn();
+                            table.Status = PlayStatus.WinnersTime;
+                        }
+                        else
+                            table.Status = PlayStatus.Run;
 
-                    // when the round is over
-                    if (table.StitchCounter == 12 || (!table.WithNiner && table.StitchCounter == 10))
-                    {
-                        table.Status = PlayStatus.WinnersTime;
-                        SetWinners(tablePlayers, table);
+                        _context.PlayTables.Update(table);
+                        _context.TablePlayer.UpdateRange(tablePlayers);
+                        _context.SaveChanges();
+
                     }
                     else
-                        table.Status = PlayStatus.Run;
-
-                    _context.PlayTables.Update(table);
-                    _context.TablePlayer.UpdateRange(tablePlayers);
+                    {
+                        newGame = true;
+                    }
+                }
+                if (newGame)
+                {
+                    StartGame(table.Id);
                 }
                 else
-                {
-                    tablePlayer.NextTurn = true;
-                }
-                _context.SaveChanges();
-                SetUpdateTime(table);
+                    SetUpdateTime(table);
+
             }
         }
 
@@ -188,7 +208,7 @@ namespace DoppelkopfApi.Services
             {
                 SetUpdateTime(table);
                 _context.Entry(table).State = Microsoft.EntityFrameworkCore.EntityState.Deleted;
-                // _context.PlayTables.Remove(table);
+                //  _context.PlayTables.Remove(table);
                 _context.SaveChanges();
 
                 return true;
@@ -202,36 +222,35 @@ namespace DoppelkopfApi.Services
             var player = GettablePlayerOfId(playerId);
             if (player == null)
                 throw new Exception("Cant find player on table");
-            var cards = player.GetHandCards().ToList();
-            for (var i = 0; i < cards.Count; i++)
+            if (string.IsNullOrEmpty(player.PlayedCard))
             {
-                if (cards[i] == card)
+                var cards = player.GetHandCards().ToList();
+                for (var i = 0; i < cards.Count; i++)
                 {
-                    cards.RemoveAt(i);
-                    break;
+                    if (cards[i] == card)
+                    {
+                        cards.RemoveAt(i);
+                        break;
+                    }
                 }
+                player.PlayedCard = card.ToString();
+                player.SetHandCards(cards.ToArray());
+                _context.TablePlayer.Update(player);
+
+                bool allPlayerSetCards = this.GetPlayersOfTable(player.TableId).Count((p) => !String.IsNullOrWhiteSpace(p.PlayedCard)) == 4;
+                var table = GetTableById(player.TableId);
+                if (allPlayerSetCards)
+                {
+                    table.Status = PlayStatus.WaitForNextRund;
+                    _context.PlayTables.Update(table);
+                }
+                else
+                {
+                    table.SetToNextPlayerTurn();
+                }
+                _context.SaveChanges();
+                SetUpdateTime(player.TableId);
             }
-            player.PlayedCard = card.ToString();
-            player.SetHandCards(cards.ToArray());
-
-            bool alPlayerSetCards = this.GetPlayersOfTable(player.TableId).Count((p) => !String.IsNullOrWhiteSpace(p.PlayedCard)) == 4;
-            var table = GetTableById(player.TableId);
-            if (alPlayerSetCards)
-            {
-                table.Status = PlayStatus.WaitForNextRund;
-                table.SetTableToNextGameTurn();
-                _context.PlayTables.Update(table);
-
-
-            }
-            else
-            {
-                table.SetToNextPlayerTurn();
-            }
-            _context.TablePlayer.Update(player);
-            _context.SaveChanges();
-
-            SetUpdateTime(player.TableId);
         }
 
         public bool SetOnTable(int playerId, int tableId)
@@ -268,8 +287,11 @@ namespace DoppelkopfApi.Services
                 if (tablePlayerCount == 3)
                 {
                     table.SetTableToNextGameTurn();
+                    table.RoundCount = 0;
+                    table.Status = PlayStatus.None;
                     changeCount = _context.SaveChanges();
-
+                    _context.PlayTables.Update(table);
+                    _context.SaveChanges();
                     StartGame(tableId);
                 }
                 else
@@ -350,6 +372,11 @@ namespace DoppelkopfApi.Services
         public PlayTable GetTableById(int id)
         {
             return _context.PlayTables.Find(id);
+        }
+
+        public ValueTask<PlayTable> GetTableByIdAsync(int id)
+        {
+            return _context.PlayTables.FindAsync(id);
         }
 
         public void SetUpdateTime(PlayTable table)

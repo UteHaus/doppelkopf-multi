@@ -32,8 +32,8 @@ export class AddEditComponent implements OnInit {
     }
 
     this.form = this.formBuilder.group({
-      firstName: ['', Validators.required],
-      lastName: ['', Validators.required],
+      firstName: [''],
+      lastName: [''],
       username: ['', Validators.required],
       password: ['', passwordValidators],
     });
@@ -62,9 +62,9 @@ export class AddEditComponent implements OnInit {
     this.alertService.clear();
 
     // stop here if form is invalid
-    if (this.form.invalid) {
+    /*   if (this.form.invalid) {
       return;
-    }
+    } */
 
     this.loading = true;
     if (this.isAddMode) {

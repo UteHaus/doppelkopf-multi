@@ -41,17 +41,6 @@ namespace DoppelkopfApi.Entities
 
         public int AdditionalWeddingPlayerId { get; set; }
 
-        /// <summary>
-        /// Rest  all need properties for next round.
-        /// /// </summary>
-        public void ClearForNextRound()
-        {
-            LastCardSet = "";
-            StitchCounter = 0;
-            RoundCount++;
-            AdditionalWeddingPlayerId = -1;
-            Status = PlayStatus.SelectGameVarian;
-        }
 
         public int GetLeftOfGiversPosition()
         {
@@ -74,12 +63,14 @@ namespace DoppelkopfApi.Entities
             CurrentPlayerPosition = RoundCardsGiversPosition + 1;
             if (CurrentPlayerPosition > 4)
                 CurrentPlayerPosition = 1;
-            StitchCounter++;
+            StitchCounter = 0;
+            LastCardSet = "";
+            RoundCount++;
+            AdditionalWeddingPlayerId = -1;
         }
 
         public void SetToNextPlayerTurn()
         {
-            StitchCounter = 0;
             CurrentPlayerPosition++;
             if (CurrentPlayerPosition > 4)
                 CurrentPlayerPosition = 1;
@@ -96,7 +87,8 @@ namespace DoppelkopfApi.Entities
         End = 4,
         SelectGameVarian = 5,
         WaitForNextRund = 6,
-        WinnersTime = 7
+        WinnersTime = 7,
+        RadyToStart = 8
 
 
     }

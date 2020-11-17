@@ -9,6 +9,8 @@ services:
     restart: always
     depends_on:
       - dkapi
+    networks:
+      - dk-db
 
   postgres:
     container_name: "postgres"
@@ -23,7 +25,8 @@ services:
 
     ports:
       - 5432:5432
-
+    networks:
+      - dk-db
   dkapi:
     build:
       context: ./api
@@ -32,6 +35,8 @@ services:
       - 5003:80
     depends_on:
       - postgres
+    networks:
+      - dk-db
 
 volumes:
   dk-pgdata:

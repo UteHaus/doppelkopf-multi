@@ -35,8 +35,9 @@ namespace DoppelkopfApi.Helpers
         public List<Card> ShuffleCards()
         {
             var cards = GetNewCards();
-            Random random = new Random(40);
-            return new List<Card>(ShuffelCards.Shuffle<Card>(cards.ToArray(), random));
+            Random random = new Random(4);
+            return cards.OrderBy(x => Guid.NewGuid()).ToList();
+            //return new List<Card>(ShuffelCards.Shuffle<Card>(cards.ToArray(), random));
         }
 
 
@@ -188,27 +189,52 @@ namespace DoppelkopfApi.Helpers
 
         }
 
+        public PlayCard[] OrderPlayersByPosition(PlayCard[] playedCards, int currentPlayerPosition)
+        {
+            int initialPlayerPosition = GetNextPosition(currentPlayerPosition);
+            var player1 = playedCards.First((p) => p.Position == initialPlayerPosition);
+            var player2 = playedCards.First((p) => p.Position == GetNextPosition(player1.Position));
+            var player3 = playedCards.First((p) => p.Position == GetNextPosition(player2.Position));
+            var player4 = playedCards.First((p) => p.Position == GetNextPosition(player3.Position));
+
+            return new PlayCard[] { player1, player2, player3, player4 };
+        }
+
+        private int GetNextPosition(int position)
+        {
+            return position + 1 > 4 ? 1 : position + 1;
+        }
+
         /// <summary>
         /// Return the round winners player id.
         /// </summary>
         /// <param name="playedCards"></param>
         /// <param name="table"></param>
         /// <returns></returns>
-        public int WhoeWinCardRound(PlayCard[] playedCards, PlayTable table)
+        public int WhoeWinCardRound(PlayCard[] playedCards, PlayTable table, TablePlayer[] players)
         {
+            playedCards = OrderPlayersByPosition(playedCards, table.CurrentPlayerPosition);
+            Card initialCard = playedCards[0].Card;
             switch (table.GameVariant)
             {
                 case GamesVariants.AceSolo:
-                    return WhoeWinCardRound(playedCards, (card) => SoloRating(card.Card, Ranks.ace));
+                    return WhoeWinCardRound(playedCards, (card) => RankSoloRating(card.Card, Ranks.ace, initialCard));
                 case GamesVariants.JackSolo:
-                    return WhoeWinCardRound(playedCards, (card) => SoloRating(card.Card, Ranks.jack));
+                    return WhoeWinCardRound(playedCards, (card) => RankSoloRating(card.Card, Ranks.jack, initialCard));
                 case GamesVariants.QueenSolo:
-                    return WhoeWinCardRound(playedCards, (card) => SoloRating(card.Card, Ranks.queen));
+                    return WhoeWinCardRound(playedCards, (card) => RankSoloRating(card.Card, Ranks.queen, initialCard));
                 case GamesVariants.KingSolo:
-                    return WhoeWinCardRound(playedCards, (card) => SoloRating(card.Card, Ranks.king));
-
+                    return WhoeWinCardRound(playedCards, (card) => RankSoloRating(card.Card, Ranks.king, initialCard));
+                case GamesVariants.ColoRSoloClubs:
+                    return WhoeWinCardRound(playedCards, (card) => ColorSoloRating(card.Card, Suits.clubs, initialCard));
+                case GamesVariants.ColoRSoloDiamonds:
+                    return WhoeWinCardRound(playedCards, (card) => ColorSoloRating(card.Card, Suits.diamonds, initialCard));
+                case GamesVariants.ColoRSoloHearts:
+                    return WhoeWinCardRound(playedCards, (card) => ColorSoloRating(card.Card, Suits.hearts, initialCard));
+                case GamesVariants.ColoRSoloSpades:
+                    return WhoeWinCardRound(playedCards, (card) => ColorSoloRating(card.Card, Suits.spades, initialCard));
                 default:
-                    return WhoeWinCardRound(playedCards, (card) => NormalRating(table, card.Card));
+                    return WhoeWinCardRound(playedCards, (card) => NormalRating(table, card.Card, initialCard));
             }
         }
 
@@ -228,7 +254,6 @@ namespace DoppelkopfApi.Helpers
         }
 
 
-
         private int SuitRating(Card card)
         {
             switch (card.Suit)
@@ -243,14 +268,12 @@ namespace DoppelkopfApi.Helpers
                     return 4;
 
                 default:
-                    return -1;
+                    return 5;
             }
         }
 
 
-
-
-        private int SoloRating(Card card, Ranks soloRank)
+        int RankSoloRating(Card card, Ranks soloRank, Card initialCard)
         {
             var suitRating = SuitRating(card);
 
@@ -259,45 +282,69 @@ namespace DoppelkopfApi.Helpers
                 return (10 + suitRating);
             }
 
-            switch (card.Rank)
+            return card.Suit == initialCard.Suit ? 20 + suitRating : 1000;
+
+        }
+
+        private int ColorSoloRating(Card card, Suits soloSuit, Card initialCard)
+        {
+            var suitRating = RankRating(card.Rank);
+
+            if (card.Suit == soloSuit)
+            {
+                return (10 + suitRating);
+            }
+
+            return initialCard.Suit == card.Suit ? 20 + RankRating(card.Rank) : 1000;
+        }
+
+        private int RankRating(Ranks rank)
+        {
+            switch (rank)
             {
                 case Ranks.ace:
-                    return 20 + suitRating;
+                    return 1;
                 case Ranks.ten:
-                    return 30 + suitRating;
+                    return 2;
                 case Ranks.king:
-                    return 40 + suitRating;
+                    return 3;
                 case Ranks.queen:
-                    return 50 + suitRating;
+                    return 4;
                 case Ranks.jack:
-                    return 60 + suitRating;
+                    return 5;
                 case Ranks.nine:
-                    return 70 + suitRating;
+                    return 6;
                 default:
-                    return -1;
+                    return 7;
             }
         }
 
+        private int NormalRating(PlayTable table, Card card, Card initialCard)
+        {
+            int cardRating = NormalRating(table, card);
+            return cardRating < 50 ? cardRating : (initialCard.Suit == card.Suit ? cardRating : 1000);
+        }
         private int NormalRating(PlayTable table, Card card)
         {
+
             if (table.DiamondsAceAsMaster && card == Ranks.ace && card == Suits.diamonds)
             {
                 return 5;
             }
 
-            if (card == Ranks.ten && card == Suits.hearts)
+            else if (card == Ranks.ten && card == Suits.hearts)
             {
                 return 10;
             }
-            if (card == Ranks.queen)
+            else if (card == Ranks.queen)
             {
                 return 20 + SuitRating(card);
             }
-            if (card == Ranks.jack)
+            else if (card == Ranks.jack)
             {
                 return 30 + SuitRating(card);
             }
-            if (card == Suits.diamonds)
+            else if (card == Suits.diamonds)
             {
                 switch (card.Rank)
                 {

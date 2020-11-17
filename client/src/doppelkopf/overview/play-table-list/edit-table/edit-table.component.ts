@@ -36,8 +36,8 @@ export class EditTableComponent implements OnInit {
 
     this.form = this.formBuilder.group({
       tableName: ['', Validators.required],
-      diamondsAceAsMaster: [''],
-      withNiner: [''],
+      diamondsAceAsMaster: [false],
+      withNiner: [false],
     });
 
     if (!this.isAddMode) {
@@ -80,7 +80,7 @@ export class EditTableComponent implements OnInit {
       withNiner: this.form.value.withNiner,
       currentPlayerPosition: 1,
       playerPosition: 1,
-      roundCardsGiversPosition: 2,
+      roundCardsGiversPosition: 0,
       diamondsAceAsMaster: this.form.value.diamondsAceAsMaster,
       weddingWithFirstColorCast: true,
       gameVariant: GamesVariants.None,

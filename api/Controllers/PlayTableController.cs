@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 using AutoMapper;
 using DoppelkopfApi.Helpers;
 using DoppelkopfApi.Services;
+using System.Threading.Tasks;
 
 namespace DoppelkopfApi.Controllers
 {
@@ -227,11 +228,11 @@ namespace DoppelkopfApi.Controllers
         }
 
         [HttpGet("{tableId}/last-update")]
-        public IActionResult GetLastTableUpdate(int tableId)
+        public async Task<IActionResult> GetLastTableUpdate(int tableId)
         {
             try
             {
-                var table = _playTableService.GetTableById(tableId);
+                var table = await _playTableService.GetTableByIdAsync(tableId);
                 if (table != null)
                 {
                     return Ok(table.LastUpdate.ToUniversalTime());

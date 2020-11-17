@@ -122,7 +122,7 @@ export class GameTableComponent implements OnInit, OnDestroy {
   private getAutoRefreshTable(
     userId: number,
     tableId: number,
-    intervalMilSeconds: number = 1500
+    intervalMilSeconds: number = 1100
   ): Observable<PlayTableGame> {
     return timer(0, intervalMilSeconds).pipe(
       flatMap(() =>

@@ -18,10 +18,12 @@ namespace DoppelkopfApi.Entities
         {
             Card = tablePlayer.GetPlayedCard();
             PlayerId = tablePlayer.PlayerId;
+            Position = tablePlayer.PlayerPosition;
         }
 
-        public Card Card { get; set; }
-        public int PlayerId { get; set; }
+        public Card Card { get; }
+        public int PlayerId { get; }
+        public int Position { get; }
 
     }
 

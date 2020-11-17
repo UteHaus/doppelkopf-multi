@@ -23,6 +23,7 @@ export enum PlayStatus {
   SelectGameVarian = 'SelectGameVarian',
   WaitForNextRund = 'WaitForNextRund',
   WinnersTime = 'WinnersTime',
+  RadyToStart = 'RadyToStart',
 }
 
 export enum GamesVariants {
