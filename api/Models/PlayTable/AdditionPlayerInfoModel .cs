@@ -18,6 +18,7 @@ namespace DoppelkopfApi.Models.PlayTable
             GameVariant = player.GameVariant;
             RoundWinner = player.RoundWinner;
             RoundsPoints = player.RoundsPoints;
+            PlayedRoundCards = player.GetPlayedRoundCards();
         }
 
         public int PlayerId { get; set; }
@@ -28,6 +29,7 @@ namespace DoppelkopfApi.Models.PlayTable
         public bool ShuffleRound { get; set; }
 
         public Card PlayedCard { get; set; }
+        public Card[] PlayedRoundCards { get; set; }
 
         public bool NextTurn { get; set; }
 

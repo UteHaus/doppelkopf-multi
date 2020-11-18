@@ -251,7 +251,7 @@ namespace DoppelkopfApi.Controllers
         {
             try
             {
-                bool canRun = _playTableService.StartGame(id);
+                bool canRun = _playTableService.StartNewRound(id);
                 if (canRun)
                 {
                     return Ok();

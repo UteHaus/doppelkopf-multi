@@ -31,7 +31,7 @@ namespace DoppelkopfApi.Services
         TablePlayer GettablePlayerOfId(int playerId);
 
         void NextTurn(int playerId);
-        bool StartGame(int tableId);
+        bool StartNewRound(int tableId);
         void SetUpdateTime(PlayTable table);
 
         void SetUpdateTime(int tableId);
@@ -68,13 +68,14 @@ namespace DoppelkopfApi.Services
             return table;
         }
 
-        public bool StartGame(int tableId)
+        public bool StartNewRound(int tableId)
         {
 
             PlayTable table = _context.PlayTables.Find(tableId);
             if (table != null &&
             (table.Status == PlayStatus.End || table.Status == PlayStatus.None || table.Status == PlayStatus.Stop || table.Status == PlayStatus.WinnersTime))
             {
+                table.SetTableToNextGameTurn();
                 var tablePlayers = GetPlayersOfTable(tableId);
                 if (tablePlayers.Length < 4)
                 {
@@ -167,7 +168,6 @@ namespace DoppelkopfApi.Services
                         if (table.StitchCounter == 12 || (!table.WithNiner && table.StitchCounter == 10))
                         {
                             SetWinners(tablePlayers, table);
-                            table.SetTableToNextGameTurn();
                             table.Status = PlayStatus.WinnersTime;
                         }
                         else
@@ -185,7 +185,7 @@ namespace DoppelkopfApi.Services
                 }
                 if (newGame)
                 {
-                    StartGame(table.Id);
+                    StartNewRound(table.Id);
                 }
                 else
                     SetUpdateTime(table);
@@ -224,17 +224,7 @@ namespace DoppelkopfApi.Services
                 throw new Exception("Cant find player on table");
             if (string.IsNullOrEmpty(player.PlayedCard))
             {
-                var cards = player.GetHandCards().ToList();
-                for (var i = 0; i < cards.Count; i++)
-                {
-                    if (cards[i] == card)
-                    {
-                        cards.RemoveAt(i);
-                        break;
-                    }
-                }
-                player.PlayedCard = card.ToString();
-                player.SetHandCards(cards.ToArray());
+                player.SetPlayedCard(card);
                 _context.TablePlayer.Update(player);
 
                 bool allPlayerSetCards = this.GetPlayersOfTable(player.TableId).Count((p) => !String.IsNullOrWhiteSpace(p.PlayedCard)) == 4;
@@ -286,13 +276,12 @@ namespace DoppelkopfApi.Services
                 // 4 player on table (3 and the current) 
                 if (tablePlayerCount == 3)
                 {
-                    table.SetTableToNextGameTurn();
                     table.RoundCount = 0;
                     table.Status = PlayStatus.None;
                     changeCount = _context.SaveChanges();
                     _context.PlayTables.Update(table);
                     _context.SaveChanges();
-                    StartGame(tableId);
+                    StartNewRound(tableId);
                 }
                 else
                 {
@@ -338,23 +327,17 @@ namespace DoppelkopfApi.Services
             _context.TablePlayer.Update(player);
             _context.SaveChanges();
             int shuffelCount = _context.TablePlayer.Count(p => p.TableId == player.TableId && p.ShuffleRound);
-            if (shuffelCount == 3)
+            if (shuffelCount == 4)
             {
-                var tablePlayers = GetPlayersOfTable(player.TableId);
-
-                foreach (var tablePlayer in tablePlayers)
-                {
-                    tablePlayer.ClearForNextRound();
-                }
 
                 var table = _context.PlayTables.Find(player.TableId);
                 table.Status = PlayStatus.Stop;
-                _context.TablePlayer.UpdateRange(tablePlayers);
                 _context.PlayTables.Update(table);
                 _context.SaveChanges();
-                StartGame(table.Id);
+                StartNewRound(table.Id);
             }
-            SetUpdateTime(player.TableId);
+            else
+            { SetUpdateTime(player.TableId); }
 
         }
 

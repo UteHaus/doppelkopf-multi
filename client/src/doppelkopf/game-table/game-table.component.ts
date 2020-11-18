@@ -33,6 +33,7 @@ export class GameTableComponent implements OnInit, OnDestroy {
   variantSelected$: Subject<GamesVariants> = new Subject<GamesVariants>();
   thisPlayer$: Observable<AdditionPlayerInfo>;
   playerInOrder$: Observable<AdditionPlayerInfo[]>;
+  updateCounter: number = 0;
   get userId(): number {
     return Number(this.userService.userValue.id);
   }
@@ -129,8 +130,10 @@ export class GameTableComponent implements OnInit, OnDestroy {
         this.tableService.isTableUpdated(tableId, this.lastTableUpdate)
       ),
       map((runUpdate) => {
-        if (runUpdate) {
+        this.updateCounter++;
+        if (runUpdate || this.updateCounter > 3) {
           this.lastTableUpdate = Date.now();
+          this.updateCounter = 0;
         }
         return runUpdate;
       }),

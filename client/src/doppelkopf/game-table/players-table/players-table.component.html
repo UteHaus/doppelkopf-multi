@@ -9,7 +9,7 @@
         <h4>{{ player.userName }} </h4>
         <!--  <p>{{ player.playerPosition }}</p> -->
         <p class="addition-info" *ngIf="player.gameVariant |valideGameVariant ">
-            <span *ngIf="tableGameVariant">{{('dk.variant.'+tableGameVariant) | translate}}</span>
+            <span *ngIf="tableGameVariant ">{{('dk.variant.'+tableGameVariant) | translate}}</span>
             ({{ ('dk.variant.'+player.gameVariant) | translate }})
         </p>
         <p *ngIf="(player.playerId==thisPlayerId)">{{'dk.points' | translate}}:

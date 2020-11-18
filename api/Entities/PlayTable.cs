@@ -42,6 +42,7 @@ namespace DoppelkopfApi.Entities
         public int AdditionalWeddingPlayerId { get; set; }
 
 
+
         public int GetLeftOfGiversPosition()
         {
             return RoundCardsGiversPosition + 1 > 4 ? 1 : RoundCardsGiversPosition + 1;

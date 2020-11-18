@@ -40,6 +40,7 @@
         "points": "Punkte",
         "delete": "Delete",
         "variant": {
+            "None": "None",
             "Normal": "Normal",
             "Wedding": "Wedding",
             "Solo": "Solo",

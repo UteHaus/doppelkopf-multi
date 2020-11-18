@@ -1,3 +1,4 @@
+using System.Linq;
 using System;
 using System.ComponentModel.DataAnnotations;
 using System.Text.Json;
@@ -25,6 +26,8 @@ namespace DoppelkopfApi.Entities
 
         public string PlayedCard { get; set; }
 
+        public string PlayedRoundCards { get; set; }
+
         public bool ShuffleRound { get; set; }
 
         public bool NextTurn { get; set; }
@@ -36,6 +39,13 @@ namespace DoppelkopfApi.Entities
         public bool AnnouncementVersusParty { get; set; }
         public bool AnnouncementReParty { get; set; }
         public int CancellationOfparty { get; set; }
+
+        public string Massage { get; set; }
+        public bool BidRe { get; set; }
+
+        public bool BidKontra { get; set; }
+
+        public bool SecondDullStitches { get; set; }
         public Card[] GetHandCards() => String.IsNullOrWhiteSpace(HandCards) ? new Card[0] : JsonSerializer.Deserialize<Card[]>(HandCards);
 
         public void SetHandCards(Card[] cards)
@@ -77,9 +87,30 @@ namespace DoppelkopfApi.Entities
 
         public Card GetPlayedCard() => Card.CardOfJson(PlayedCard);
 
+        public Card[] GetPlayedRoundCards() => string.IsNullOrEmpty(PlayedRoundCards) ? new Card[0] : JsonSerializer.Deserialize<Card[]>(PlayedRoundCards);
+
+        /// <summary>
+        /// Remove this card from the HandCards and set it as PlayedCard. 
+        /// In addition set this Card to the played Cards.
+        /// </summary>
+        /// <param name="card"></param>
         public void SetPlayedCard(Card card)
         {
             PlayedCard = card.ToString();
+            var cards = GetHandCards().ToList();
+            for (var i = 0; i < cards.Count; i++)
+            {
+                if (cards[i] == card)
+                {
+                    cards.RemoveAt(i);
+                    break;
+                }
+            }
+            PlayedCard = card.ToString();
+            SetHandCards(cards.ToArray());
+            var playedRoundCards = (String.IsNullOrWhiteSpace(PlayedRoundCards) ? new Card[0] : JsonSerializer.Deserialize<Card[]>(PlayedRoundCards)).ToList();
+            playedRoundCards.Add(card);
+            PlayedRoundCards = JsonSerializer.Serialize(playedRoundCards);
         }
     }
 }
