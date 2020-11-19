@@ -3,7 +3,7 @@ using Xunit;
 
 namespace DoppelkopfApi.Test
 {
-    public class UnitTest1
+    public class CardhelperTest
     {
         [Fact]
         public void Test1()
