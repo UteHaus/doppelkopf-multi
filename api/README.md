@@ -10,9 +10,9 @@ For documentation and instructions check out https://jasonwatmore.com/post/2019/
 ### Databse Entity Framework
 
 - SQLite EF Core Migrations:
-`dotnet ef migrations add InitialCreate --context SqliteDataContext --output-dir Migrations/SqliteMigrations`
+`dotnet ef migrations add InitialCreate --context DataContext --output-dir Migrations/NpsqlMigrations`
 
-- Create Databse with Context: `dotnet ef migrations add InitialCreate --context SqliteDataContext `
+- Create Databse with Context: `dotnet ef migrations add InitialCreate --context DataContext`
 
-- update Databes with context:  `dotnet ef database update --context SqliteDataContext `
-- remove last megration with context:  `dotnet ef migrations remove --context SqliteDataContext `
+- update Databes with context:  `dotnet ef database update --context DataContext`
+- remove last megration with context:  `dotnet ef migrations remove --context DataContext`

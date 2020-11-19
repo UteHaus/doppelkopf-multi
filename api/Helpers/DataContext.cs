@@ -15,5 +15,7 @@ namespace DoppelkopfApi.Helpers
         public DbSet<PlayTable> PlayTables { get; set; }
 
         public DbSet<TablePlayer> TablePlayer { get; set; }
+
+        public DbSet<TableViewer> TableViewers { get; set; }
     }
 }
