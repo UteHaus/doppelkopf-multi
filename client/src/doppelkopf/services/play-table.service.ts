@@ -1,5 +1,5 @@
 import { HttpClient } from '@angular/common/http';
-import { Injectable, NgZone } from '@angular/core';
+import { Injectable } from '@angular/core';
 import { Observable, of, timer } from 'rxjs';
 import { GamesVariants, PlayTable } from '../models/play-table.model';
 import { environment } from '@environments/environment';
