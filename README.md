@@ -1,6 +1,6 @@
 # doppelkopf-multi
-Doppelkopf, sometimes abbreviated to Doko, is a trick-taking card game for four players
-
+Doppelkopf --> mit nuget repo, sometimes abbreviated to Doko, is a trick-taking card game for four players
+ 
 ## ToDoś:
 - Update des Tisch states 
 - König solo, Spieler 1 spiel unter herz und kein weiterer einen König und der letzte einen Herz Ass. Dabei gewinnt der 1 Spieler, es müsste aber der letzte Spieler den stich erhalten 
@@ -23,3 +23,7 @@ Doppelkopf, sometimes abbreviated to Doko, is a trick-taking card game for four 
 ### behoben
 - Spielstand wird bei neuen Karten nicht richtig zurück gesetzt
 - 
+
+## Update State
+- https://www.tpeczek.com/2017/02/server-sent-events-sse-support-for.html --> mit nuget repo
+- https://dev.to/praneetnadkar/understanding-server-sent-events-17n8 
