@@ -1,11 +1,11 @@
 using System;
-using Xunit;
+//  using Xunit;
 
 namespace DoppelkopfApi.Test
 {
     public class CardhelperTest
     {
-        [Fact]
+        // [Fact]
         public void Test1()
         {
 
