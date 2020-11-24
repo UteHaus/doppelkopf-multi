@@ -1,8 +1,8 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { PlayTableListComponent } from './overview/play-table-list/play-table-list.component';
+import { PlayTableListComponent } from './play-table-list/play-table-list.component';
 import { RouterModule, Routes } from '@angular/router';
-import { EditTableComponent } from './overview/play-table-list/edit-table/edit-table.component';
+import { EditTableComponent } from './play-table-list/edit-table/edit-table.component';
 import { ReactiveFormsModule } from '@angular/forms';
 import { GameTableComponent } from './game-table/game-table.component';
 import { CardMapComponent } from './game-table/card-map/card-map.component';
