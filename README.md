@@ -10,7 +10,6 @@ Doppelkopf --> mit nuget repo, sometimes abbreviated to Doko, is a trick-taking 
 - Auflisten der Stiche am Ende
 - info an wen man wartet
 - Chate eine Zeile --> DB vorhanden 
-- Geber und Anspieler mit angeben
 - beim Client die Karten nach gesund sortieren
 - Ton beim spielen eier Karte
 - Übersetzungen beim Tisch überprüfen
@@ -23,6 +22,7 @@ Doppelkopf --> mit nuget repo, sometimes abbreviated to Doko, is a trick-taking 
 ### behoben
 - Spielstand wird bei neuen Karten nicht richtig zurück gesetzt
 - Karten werden Sortiert
+- Geber und Anspieler mit angeben
 
 ## Update State
 - https://www.tpeczek.com/2017/02/server-sent-events-sse-support-for.html --> mit nuget repo
