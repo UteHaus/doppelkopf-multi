@@ -22,7 +22,7 @@ Doppelkopf --> mit nuget repo, sometimes abbreviated to Doko, is a trick-taking 
 
 ### behoben
 - Spielstand wird bei neuen Karten nicht richtig zurück gesetzt
-- 
+- Karten werden Sortiert
 
 ## Update State
 - https://www.tpeczek.com/2017/02/server-sent-events-sse-support-for.html --> mit nuget repo

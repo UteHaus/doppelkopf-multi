@@ -1,6 +1,7 @@
 import { Component, Input, OnDestroy, OnInit, Output } from '@angular/core';
-import { BehaviorSubject, Subject } from 'rxjs';
+import { Subject } from 'rxjs';
 import { Card } from 'src/doppelkopf/models/card.model';
+import { CardUtil } from 'src/doppelkopf/utils/card.util';
 
 @Component({
   selector: 'app-card-map',
@@ -8,11 +9,24 @@ import { Card } from 'src/doppelkopf/models/card.model';
   styleUrls: ['./card-map.component.less'],
 })
 export class CardMapComponent implements OnInit, OnDestroy {
+  private _cards: Card[];
+  private _diamondsAceAsMaster: boolean;
+  orderedCards: Card[] = [];
+
   @Input()
   disabled: boolean;
 
   @Input()
-  cards: Card[];
+  set cards(value: Card[]) {
+    this._cards = value;
+    this.orderCards();
+  }
+
+  @Input()
+  set diamondsAceAsMaster(value: boolean) {
+    this._diamondsAceAsMaster = value;
+    this.orderCards();
+  }
 
   @Output()
   cardSelected: Subject<Card> = new Subject<Card>();
@@ -25,13 +39,22 @@ export class CardMapComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {}
 
-  trackCard(index: number, card: Card): string {
+  trackCard(card: Card): string {
     return `${card.rank}-${card.suit}`;
   }
 
   selectCard(card: Card) {
     if (!this.disabled) {
       this.cardSelected.next(card);
+    }
+  }
+
+  private orderCards() {
+    if (this._diamondsAceAsMaster && this._cards && this._cards.length > 0) {
+      this.orderedCards = CardUtil.orderCards(
+        this._cards,
+        this._diamondsAceAsMaster
+      );
     }
   }
 }

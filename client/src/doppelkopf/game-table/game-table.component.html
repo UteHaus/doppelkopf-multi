@@ -28,7 +28,8 @@
 
     <div class="this-player-cards">
       <div *ngIf="playTable | showCards">
-        <app-card-map [cards]="playTable.cards" [disabled]="
+        <app-card-map [cards]="playTable.cards"
+          [diamondsAceAsMaster]="playTable.diamondsAceAsMaster" [disabled]="
             players[3].playerPosition != playTable.currentPlayerPosition
           " (cardSelected)="cardSelected($event)">
         </app-card-map>
