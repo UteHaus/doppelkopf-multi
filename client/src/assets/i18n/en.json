@@ -39,6 +39,7 @@
         "users": "Users",
         "points": "Punkte",
         "delete": "Delete",
+        "giver": "Giver",
         "variant": {
             "None": "None",
             "Normal": "Normal",
