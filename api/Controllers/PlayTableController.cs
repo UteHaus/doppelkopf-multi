@@ -9,7 +9,8 @@ using AutoMapper;
 using DoppelkopfApi.Helpers;
 using DoppelkopfApi.Services;
 using System.Threading.Tasks;
-
+using Microsoft.AspNetCore.SignalR;
+using DoppelkopfApi.Hubs;
 namespace DoppelkopfApi.Controllers
 {
     [Authorize]
@@ -20,11 +21,13 @@ namespace DoppelkopfApi.Controllers
 
         private IPlayTableService _playTableService;
         private IMapper _mapper;
+        private IHubContext<TableHub> _hub;
 
-        public PlayTableController(IPlayTableService playTableService, IMapper mapper)
+        public PlayTableController(IPlayTableService playTableService, IMapper mapper, IHubContext<TableHub> hub)
         {
             _playTableService = playTableService;
             _mapper = mapper;
+            _hub = hub;
         }
 
         [HttpPost()]
@@ -32,7 +35,7 @@ namespace DoppelkopfApi.Controllers
         {
             try
             {
-                var newTable = _playTableService.CreatTable(_mapper.Map<PlayTable>(table));
+                var newTable = _playTableService.CreateTable(_mapper.Map<PlayTable>(table));
                 var model = _mapper.Map<PlayTableModel>(newTable);
                 return Ok(model);
             }
@@ -145,6 +148,7 @@ namespace DoppelkopfApi.Controllers
                 return BadRequest(new { message = ex.Message });
             }
         }
+
 
         [HttpGet("{id}")]
         public IActionResult getById(int id)

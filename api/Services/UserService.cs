@@ -20,6 +20,7 @@ namespace DoppelkopfApi.Services
     {
         private DataContext _context;
 
+
         public UserService(DataContext context)
         {
             _context = context;

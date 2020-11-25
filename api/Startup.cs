@@ -4,15 +4,17 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
+using Microsoft.AspNetCore.HttpsPolicy;
+using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Hosting;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using DoppelkopfApi.Helpers;
 using DoppelkopfApi.Services;
 using AutoMapper;
 using System.Text;
+using DoppelkopfApi.Hubs;
 
 namespace DoppelkopfApi
 {
@@ -30,15 +32,32 @@ namespace DoppelkopfApi
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            // use sql server db in production and sqlite db in development
-
             var connectionString = _configuration.GetConnectionString("NpsqlDatabase");
             services.AddDbContext<DataContext>(options => options.UseNpgsql(connectionString));
             services.AddDbContext<DataContext>();
 
+            services
+                .AddCors(options =>
+                {
+                    options.AddPolicy("CorsPolicy",
+                        builder => builder
+                        .AllowAnyOrigin()
+                        .AllowAnyMethod()
+                        .AllowAnyHeader()
+                        );
 
-            services.AddCors();
+                    options.AddPolicy("signalr",
+                        builder => builder
+                        .AllowAnyMethod()
+                        .AllowAnyHeader()
+
+                        .AllowCredentials()
+                        .SetIsOriginAllowed(hostName => true));
+                });
+
+            services.AddSignalR();
             services.AddControllers();
+
             services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
             services.AddControllers().AddJsonOptions(o =>
          {
@@ -48,6 +67,8 @@ namespace DoppelkopfApi
              //o.JsonSerializerOptions.Converters.Add(new Newtonsoft.Json.Converters.StringEnumConverter());
 
          });
+
+
             // configure strongly typed settings objects
             var appSettingsSection = _configuration.GetSection("AppSettings");
             services.Configure<AppSettings>(appSettingsSection);
@@ -59,6 +80,7 @@ namespace DoppelkopfApi
             {
                 x.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
                 x.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+                // x.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
             })
             .AddJwtBearer(x =>
             {
@@ -98,20 +120,19 @@ namespace DoppelkopfApi
         {
             // migrate any database changes on startup (includes initial db creation)
             dataContext.Database.Migrate();
-
-
             app.UseRouting();
 
             // global cors policy
-            app.UseCors(x => x
-                .AllowAnyOrigin()
-                .AllowAnyMethod()
-                .AllowAnyHeader());
+            app.UseCors("signalr");
 
             app.UseAuthentication();
             app.UseAuthorization();
+            app.UseEndpoints(endpoints =>
+            {
 
-            app.UseEndpoints(endpoints => endpoints.MapControllers());
+                endpoints.MapControllers();
+                endpoints.MapHub<TableHub>("/api/hub/playtable");
+            });
         }
     }
 }
