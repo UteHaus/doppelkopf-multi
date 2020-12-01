@@ -16,3 +16,7 @@ For documentation and instructions check out https://jasonwatmore.com/post/2019/
 
 - update Databes with context:  `dotnet ef database update --context DataContext`
 - remove last megration with context:  `dotnet ef migrations remove --context DataContext`
+
+
+### Authen singalr 
+https://docs.microsoft.com/de-de/aspnet/core/signalr/authn-and-authz?view=aspnetcore-5.0#use-claims-to-customize-identity-handling

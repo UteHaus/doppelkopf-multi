@@ -9,8 +9,7 @@ using AutoMapper;
 using DoppelkopfApi.Helpers;
 using DoppelkopfApi.Services;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.SignalR;
-using DoppelkopfApi.Hubs;
+
 namespace DoppelkopfApi.Controllers
 {
     [Authorize]
@@ -21,13 +20,11 @@ namespace DoppelkopfApi.Controllers
 
         private IPlayTableService _playTableService;
         private IMapper _mapper;
-        private IHubContext<TableHub> _hub;
 
-        public PlayTableController(IPlayTableService playTableService, IMapper mapper, IHubContext<TableHub> hub)
+        public PlayTableController(IPlayTableService playTableService, IMapper mapper)
         {
             _playTableService = playTableService;
             _mapper = mapper;
-            _hub = hub;
         }
 
         [HttpPost()]

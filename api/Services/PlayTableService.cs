@@ -2,6 +2,7 @@ using System.Threading.Tasks;
 using System;
 using System.Collections.Generic;
 using DoppelkopfApi.Entities;
+using DoppelkopfApi.Hubs;
 using DoppelkopfApi.Helpers;
 using System.Linq;
 using System.Text.Json;
@@ -14,14 +15,19 @@ namespace DoppelkopfApi.Services
         private IUserService _userService;
         private CardHandler _cardHandler;
 
-        public event TableEventHandler TableListChanged;
+        public event TableListEventHandler TableListChanged;
+        public event TableEventHandler TableChanged;
+
+        //private TableHub _tableHub;
 
         public PlayTableService(DataContext context, IUserService userService)
         {
             _context = context;
             _userService = userService;
+            //_tableHub = tableHub; , TableHub tableHub
             _cardHandler = new CardHandler();
         }
+
 
         public PlayTable CreateTable(PlayTable table)
         {
@@ -29,7 +35,6 @@ namespace DoppelkopfApi.Services
             table.Status = PlayStatus.None;
             _context.PlayTables.Add(table);
             _context.SaveChanges();
-            SetUpdateTime(table);
             OnTableListChanged();
             return table;
         }
@@ -56,7 +61,7 @@ namespace DoppelkopfApi.Services
                 _context.TablePlayer.UpdateRange(tablePlayers);
                 _context.PlayTables.Update(table);
                 int changeCount = _context.SaveChanges();
-                SetUpdateTime(table);
+                OnTableChanged(table.Id);
                 return changeCount > 0;
 
             }
@@ -87,7 +92,7 @@ namespace DoppelkopfApi.Services
                     _context.Update(table);
                     _context.SaveChanges();
                 }
-                SetUpdateTime(tablePlayer.TableId);
+                OnTableChanged(tablePlayer.TableId);
 
             }
             else
@@ -154,7 +159,7 @@ namespace DoppelkopfApi.Services
                     StartNewRound(table.Id);
                 }
                 else
-                    SetUpdateTime(table);
+                    OnTableChanged(table.Id);
 
             }
         }
@@ -172,7 +177,7 @@ namespace DoppelkopfApi.Services
 
             if (table != null && (hard || tablePlayersCount <= 0))
             {
-                SetUpdateTime(table);
+                OnTableChanged(table.Id);
                 _context.Entry(table).State = Microsoft.EntityFrameworkCore.EntityState.Deleted;
                 //  _context.PlayTables.Remove(table);
                 _context.SaveChanges();
@@ -205,7 +210,7 @@ namespace DoppelkopfApi.Services
                     table.SetToNextPlayerTurn();
                 }
                 _context.SaveChanges();
-                SetUpdateTime(player.TableId);
+                OnTableChanged(player.TableId);
             }
         }
 
@@ -252,7 +257,7 @@ namespace DoppelkopfApi.Services
                 else
                 {
                     changeCount = _context.SaveChanges();
-                    SetUpdateTime(table);
+                    OnTableChanged(table.Id);
                 }
                 OnTableListChanged();
                 return changeCount > 0;
@@ -280,7 +285,7 @@ namespace DoppelkopfApi.Services
                 _context.Update(table);
                 _context.TablePlayer.UpdateRange(tablePlayers);
                 int changeCount = _context.SaveChanges();
-                SetUpdateTime(tablePlayer.TableId);
+                OnTableChanged(tablePlayer.TableId);
                 OnTableListChanged();
                 return changeCount > 0;
             }
@@ -304,7 +309,7 @@ namespace DoppelkopfApi.Services
                 StartNewRound(table.Id);
             }
             else
-            { SetUpdateTime(player.TableId); }
+            { OnTableChanged(player.TableId); }
 
         }
 
@@ -329,20 +334,7 @@ namespace DoppelkopfApi.Services
             return _context.PlayTables.FindAsync(id);
         }
 
-        public void SetUpdateTime(PlayTable table)
-        {
-            if (table != null)
-            {
-                table.LastUpdate = DateTime.Now;
-                _context.PlayTables.Update(table);
-                _context.SaveChanges();
-            }
-        }
 
-        public void SetUpdateTime(int tableId)
-        {
-            SetUpdateTime(_context.PlayTables.Find(tableId));
-        }
         public DateTime GetLastTableUpdate(int tableId)
         {
             var table = _context.PlayTables.FirstOrDefault((table) => table.Id == tableId);
@@ -460,6 +452,12 @@ namespace DoppelkopfApi.Services
         protected virtual void OnTableListChanged()
         {
             TableListChanged?.Invoke();
+            //  _tableHub.Tables();
+        }
+
+        protected virtual void OnTableChanged(int tableId)
+        {
+            TableChanged?.Invoke(tableId);
         }
 
     }

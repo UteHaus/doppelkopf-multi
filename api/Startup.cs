@@ -4,12 +4,11 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
-using Microsoft.AspNetCore.HttpsPolicy;
-using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
+using Microsoft.AspNetCore.SignalR;
 using DoppelkopfApi.Helpers;
 using DoppelkopfApi.Services;
 using AutoMapper;
@@ -55,7 +54,12 @@ namespace DoppelkopfApi
                         .SetIsOriginAllowed(hostName => true));
                 });
 
-            services.AddSignalR();
+            services.AddSignalR().AddJsonProtocol(options =>
+                  {
+                      options.PayloadSerializerOptions.Converters
+                         .Add(new System.Text.Json.Serialization.JsonStringEnumConverter());
+                  });
+            services.AddSingleton<IUserIdProvider, NameUserIdProvider>();
             services.AddControllers();
 
             services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
@@ -82,26 +86,16 @@ namespace DoppelkopfApi
                 x.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
                 // x.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
             })
-            .AddJwtBearer(x =>
+            .AddJwtBearer(option =>
             {
-                x.Events = new JwtBearerEvents
+                option.Events = new JwtBearerEvents
                 {
-                    OnTokenValidated = context =>
-                    {
-                        var userService = context.HttpContext.RequestServices.GetRequiredService<IUserService>();
-                        var userId = int.Parse(context.Principal.Identity.Name);
-                        var user = userService.GetById(userId);
-                        if (user == null)
-                        {
-                            // return unauthorized if user no longer exists
-                            context.Fail("Unauthorized");
-                        }
-                        return Task.CompletedTask;
-                    }
+                    OnTokenValidated = OnTokenValidated,
+                    //OnMessageReceived = OnMessageReceived
                 };
-                x.RequireHttpsMetadata = false;
-                x.SaveToken = true;
-                x.TokenValidationParameters = new TokenValidationParameters
+                option.RequireHttpsMetadata = false;
+                option.SaveToken = true;
+                option.TokenValidationParameters = new TokenValidationParameters
                 {
                     ValidateIssuerSigningKey = true,
                     IssuerSigningKey = new SymmetricSecurityKey(key),
@@ -109,6 +103,7 @@ namespace DoppelkopfApi
                     ValidateAudience = false
                 };
             });
+
 
             // configure DI for application services
             services.AddScoped<IUserService, UserService>();
@@ -134,5 +129,34 @@ namespace DoppelkopfApi
                 endpoints.MapHub<TableHub>("/api/hub/playtable");
             });
         }
+
+        private Task OnTokenValidated(TokenValidatedContext context)
+        {
+            var userService = context.HttpContext.RequestServices.GetRequiredService<IUserService>();
+            var userId = int.Parse(context.Principal.Identity.Name);
+            var user = userService.GetById(userId);
+            if (user == null)
+            {
+                // return unauthorized if user no longer exists
+                context.Fail("Unauthorized");
+            }
+            return Task.CompletedTask;
+        }
+
+        private Task OnMessageReceived(MessageReceivedContext context)
+        {
+            var accessToken = context.Request.Query["access_token"];
+
+            // If the request is for our hub...
+            var path = context.HttpContext.Request.Path;
+            if (!string.IsNullOrEmpty(accessToken) &&
+                (path.StartsWithSegments("/api/hub/playtable")))
+            {
+                // Read the token out of the query string
+                context.Token = accessToken;
+            }
+            return Task.CompletedTask;
+        }
     }
+
 }

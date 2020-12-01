@@ -1,3 +1,4 @@
+<!-- <div *ngIf="connectionOn | async; else loading"> -->
 <div *ngIf="tables$ | async as tables">
   <h1>Spieltische</h1>
   <a routerLink="table" class="btn btn-sm btn-success mb-2" [translate]>dk.new-play-table</a>
@@ -43,3 +44,9 @@
     </tbody>
   </table>
 </div>
+<!--</div>
+ <ng-template #loading>
+  <div class="spinner-border text-success" role="status">
+    <span class="sr-only">Loading...</span>
+  </div>
+</ng-template> -->

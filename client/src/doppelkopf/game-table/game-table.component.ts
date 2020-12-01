@@ -1,14 +1,8 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { AccountService } from '@app/services';
-import { iif, Observable, Subject, Subscription, timer } from 'rxjs';
-import {
-  flatMap,
-  map,
-  shareReplay as share,
-  switchMap,
-  take,
-} from 'rxjs/operators';
+import { Observable, Subject, Subscription } from 'rxjs';
+import { map, shareReplay, switchMap } from 'rxjs/operators';
 import { Card, Ranks, Suits } from '../models/card.model';
 import {
   AdditionPlayerInfo,
@@ -16,6 +10,8 @@ import {
 } from '../models/play-table-game.model copy';
 import { GamesVariants } from '../models/play-table.model';
 import { PlayTableService } from '../services/play-table.service';
+import { SignalRService } from '../services/signal-r.service';
+import { TableHubService } from '../services/table-hub.service';
 
 @Component({
   selector: 'app-game-table',
@@ -24,14 +20,14 @@ import { PlayTableService } from '../services/play-table.service';
 })
 export class GameTableComponent implements OnInit, OnDestroy {
   private subscription: Subscription = new Subscription();
-  private lastTableUpdate: number;
+  private hubMethode = 'playertablestate';
   table$: Observable<PlayTableGame>;
+
   tableId$: Observable<number>;
   testCard: Card = new Card(Suits.clubs, Ranks.queen);
   nextTurnClicked$: Subject<undefined>;
   shuffleCardsClick$: Subject<undefined>;
   variantSelected$: Subject<GamesVariants> = new Subject<GamesVariants>();
-  thisPlayer$: Observable<AdditionPlayerInfo>;
   playerInOrder$: Observable<AdditionPlayerInfo[]>;
   updateCounter: number = 0;
   get userId(): number {
@@ -41,10 +37,9 @@ export class GameTableComponent implements OnInit, OnDestroy {
   constructor(
     private route: ActivatedRoute,
     private tableService: PlayTableService,
-    private userService: AccountService
-  ) {
-    this.lastTableUpdate = new Date(0).getTime();
-  }
+    private userService: AccountService,
+    private tableHubService: TableHubService
+  ) {}
 
   ngOnDestroy(): void {
     this.nextTurnClicked$.complete();
@@ -58,6 +53,43 @@ export class GameTableComponent implements OnInit, OnDestroy {
       map((params) => Number(params.get('id')))
     );
     this.nextTurnClicked$ = new Subject<undefined>();
+
+    this.table$ = this.tableHubService.tableGame$.pipe(
+      shareReplay(),
+      map((playTable) => {
+        playTable.thisPlayer = playTable.players.find(
+          (p) => p.playerId == this.userId
+        );
+        playTable.players.forEach((player) => {
+          const player1Pos =
+            player.playerPosition + 4 - playTable.playerPosition;
+          player.viewPosition = player1Pos > 4 ? player1Pos - 4 : player1Pos;
+        });
+        console.log('oder players');
+        playTable.players = playTable.players.sort(
+          (playerA, playerB) => playerA.viewPosition - playerB.viewPosition
+        );
+
+        return playTable;
+      })
+    );
+
+    this.tableHubService.InvokeForTableGame();
+
+    this.playerInOrder$ = this.table$.pipe(
+      map((playTable) => {
+        playTable.players.forEach((player) => {
+          const player1Pos =
+            player.playerPosition + 4 - playTable.playerPosition;
+          player.viewPosition = player1Pos > 4 ? player1Pos - 4 : player1Pos;
+        });
+        console.log('oder players');
+        return playTable.players.sort(
+          (playerA, playerB) => playerA.viewPosition - playerB.viewPosition
+        );
+      })
+    );
+
     this.addSubscription(
       this.nextTurnClicked$.pipe(
         switchMap(() => this.tableService.nextTurn(this.userId))
@@ -67,7 +99,7 @@ export class GameTableComponent implements OnInit, OnDestroy {
     this.addSubscription(
       this.shuffleCardsClick$.pipe(
         switchMap(() => tableId$),
-        switchMap((tableId) => this.tableService.shuffleCards(this.userId))
+        switchMap(() => this.tableService.shuffleCards(this.userId))
       )
     );
 
@@ -79,29 +111,12 @@ export class GameTableComponent implements OnInit, OnDestroy {
       )
     );
 
-    this.table$ = tableId$.pipe(
+    /*   this.table$ = tableId$.pipe(
       switchMap((tableId) => this.getAutoRefreshTable(this.userId, tableId)),
       share(1)
-    );
+    ); */
 
-    this.thisPlayer$ = this.table$.pipe(
-      map((table) => {
-        const p = table.players.find((p) => p.playerId == this.userId);
-        return p;
-      })
-    );
     // Arrange player position and this player has position 4 each time.
-    this.playerInOrder$ = this.table$.pipe(
-      map((table) => {
-        table.players.forEach((player) => {
-          const player1Pos = player.playerPosition + 4 - table.playerPosition;
-          player.viewPosition = player1Pos > 4 ? player1Pos - 4 : player1Pos;
-        });
-        return table.players.sort(
-          (playerA, playerB) => playerA.viewPosition - playerB.viewPosition
-        );
-      })
-    );
   }
 
   shuffleCards(): void {
@@ -120,31 +135,7 @@ export class GameTableComponent implements OnInit, OnDestroy {
     return variant == GamesVariants.None;
   }
 
-  private getAutoRefreshTable(
-    userId: number,
-    tableId: number,
-    intervalMilSeconds: number = 1100
-  ): Observable<PlayTableGame> {
-    return timer(0, intervalMilSeconds).pipe(
-      flatMap(() =>
-        this.tableService.isTableUpdated(tableId, this.lastTableUpdate)
-      ),
-      map((runUpdate) => {
-        this.updateCounter++;
-        if (runUpdate || this.updateCounter > 3) {
-          this.lastTableUpdate = Date.now();
-          this.updateCounter = 0;
-        }
-        return runUpdate;
-      }),
-      share(1),
-      flatMap((tableUpdated) =>
-        iif(() => tableUpdated, this.tableService.getTableGameState(userId))
-      )
-    );
-  }
-
-  trackPlayer(index: number, player: AdditionPlayerInfo): string {
+  trackPlayer(player: AdditionPlayerInfo): string {
     return `${player.playerPosition}`;
   }
 

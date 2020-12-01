@@ -18,6 +18,7 @@ import { AlertComponent } from './components';
 import { HomeComponent } from './home';
 import { DoppelkopfModule } from 'src/doppelkopf/doppelkopf.module';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
+import { TableHubService } from 'src/doppelkopf/services/table-hub.service';
 
 @NgModule({
   imports: [
@@ -38,7 +39,7 @@ import { TranslateHttpLoader } from '@ngx-translate/http-loader';
   providers: [
     { provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true },
     { provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptor, multi: true },
-
+    TableHubService,
     // provider used to create fake backend
     // fakeBackendProvider
   ],

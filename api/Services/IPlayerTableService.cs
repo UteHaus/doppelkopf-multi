@@ -6,11 +6,13 @@ using System.Threading.Tasks;
 namespace DoppelkopfApi.Services
 {
 
-    public delegate void TableEventHandler();
+    public delegate void TableListEventHandler();
+    public delegate void TableEventHandler(int tableId);
 
     public interface IPlayTableService
     {
-        event TableEventHandler TableListChanged;
+        event TableListEventHandler TableListChanged;
+        event TableEventHandler TableChanged;
 
         PlayTable CreateTable(PlayTable table);
         bool Delete(int id, bool hard = false);
@@ -32,9 +34,6 @@ namespace DoppelkopfApi.Services
 
         void NextTurn(int playerId);
         bool StartNewRound(int tableId);
-        void SetUpdateTime(PlayTable table);
-
-        void SetUpdateTime(int tableId);
         DateTime GetLastTableUpdate(int tableId);
 
         void SetPlayedCard(int playerId, Card card);

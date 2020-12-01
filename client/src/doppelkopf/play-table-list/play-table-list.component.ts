@@ -7,13 +7,9 @@ import { catchError, first, map } from 'rxjs/operators';
 import { PlayTableCount } from 'src/doppelkopf/models/play-table-count.model';
 import { PlayTable } from 'src/doppelkopf/models/play-table.model';
 import { PlayTableService } from 'src/doppelkopf/services/play-table.service';
-import {
-  HttpTransportType,
-  HubConnection,
-  HubConnectionBuilder,
-} from '@aspnet/signalr';
+import { HubConnection, HubConnectionBuilder } from '@aspnet/signalr';
 import { environment } from '@environments/environment';
-import { HttpClient } from '@angular/common/http';
+import { SignalRService } from '../services/signal-r.service';
 
 @Component({
   selector: 'app-play-table-list',
@@ -21,6 +17,7 @@ import { HttpClient } from '@angular/common/http';
   styleUrls: ['./play-table-list.component.less'],
 })
 export class PlayTableListComponent implements OnInit, OnDestroy {
+  private methodeTableList = 'tables';
   tables$: Subject<PlayTableCount[]> = new Subject();
   testValue: any;
   userTableId$: Observable<number>;
@@ -28,35 +25,32 @@ export class PlayTableListComponent implements OnInit, OnDestroy {
     return this.accountService.userValue;
   }
   deleteTableIds = [];
-  private connection: HubConnection;
 
   constructor(
     private tableService: PlayTableService,
     private alertService: AlertService,
     private router: Router,
-    private accountService: AccountService
+    private accountService: AccountService,
+    private signalService: SignalRService
   ) {}
-
   ngOnDestroy(): void {
-    this.connection.stop();
+    this.signalService.off(this.methodeTableList, (value) =>
+      this.tables$.next(value)
+    );
   }
 
   ngOnInit(): void {
-    /* this.tables$ = this.tableService.getTablesWithAutoReload(); */
     this.userTableId$ = this.tableService
       .getUserPlayTable(Number(this.accountService.userValue.id))
       .pipe(
         map((tp) => (tp != undefined ? tp.id : -1)),
         catchError(() => of(-1))
       );
-    this.connection = new HubConnectionBuilder()
-      .withUrl(`${environment.apiUrl}/hub/playtable`, {
-        /* skipNegotiation: true,
-        transport: HttpTransportType.WebSockets, */
-        accessTokenFactory: () => this.accountService.userValue.token,
-      })
-      .build();
-    this.connect();
+
+    this.signalService.on(this.methodeTableList, (value) =>
+      this.tables$.next(value)
+    );
+    this.signalService.invoke(this.methodeTableList);
   }
 
   runWithOnTable(tableId: number, playOn: boolean): void {
@@ -74,19 +68,6 @@ export class PlayTableListComponent implements OnInit, OnDestroy {
           }
         });
     }
-  }
-
-  private connect() {
-    this.connection
-      .start()
-      .then(() => {
-        console.log('Connection started');
-        this.connection.on('tables', (value) => {
-          this.tables$.next(value);
-        });
-        this.connection.invoke('tables');
-      })
-      .catch((err) => console.error('Error while starting connection: ' + err));
   }
 
   trackPlayTable(index: number, table: PlayTable): string {

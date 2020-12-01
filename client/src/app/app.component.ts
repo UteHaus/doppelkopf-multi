@@ -6,6 +6,7 @@ import { TranslateService } from '@ngx-translate/core';
 import { Observable } from 'rxjs';
 import { Router } from '@angular/router';
 import { PlayTableService } from 'src/doppelkopf/services/play-table.service';
+import { TableHubService } from 'src/doppelkopf/services/table-hub.service';
 
 @Component({ selector: 'app', templateUrl: 'app.component.html' })
 export class AppComponent {
@@ -15,7 +16,8 @@ export class AppComponent {
     private accountService: AccountService,
     translate: TranslateService,
     private route: Router,
-    private playeService: PlayTableService
+    private playeService: PlayTableService,
+    public tableHub: TableHubService
   ) {
     this.user$ = this.accountService.user;
     translate.setDefaultLang('de');
