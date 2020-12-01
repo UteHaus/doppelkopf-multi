@@ -104,6 +104,10 @@ export class GameTableComponent implements OnInit, OnDestroy {
     );
   }
 
+  reloadTable() {
+    this.lastTableUpdate = new Date(0).getTime();
+  }
+
   shuffleCards(): void {
     this.shuffleCardsClick$.next();
   }
