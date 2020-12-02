@@ -14,17 +14,13 @@ namespace DoppelkopfApi.Services
         private DataContext _context;
         private IUserService _userService;
         private CardHandler _cardHandler;
+        ITableEventService _tableEventService;
 
-        public event TableListEventHandler TableListChanged;
-        public event TableEventHandler TableChanged;
-
-        //private TableHub _tableHub;
-
-        public PlayTableService(DataContext context, IUserService userService)
+        public PlayTableService(DataContext context, IUserService userService, ITableEventService tableEventService)
         {
             _context = context;
+            _tableEventService = tableEventService;
             _userService = userService;
-            //_tableHub = tableHub; , TableHub tableHub
             _cardHandler = new CardHandler();
         }
 
@@ -449,15 +445,14 @@ namespace DoppelkopfApi.Services
             return false;
         }
 
-        protected virtual void OnTableListChanged()
+        protected void OnTableListChanged()
         {
-            TableListChanged?.Invoke();
-            //  _tableHub.Tables();
+            _tableEventService.TableListChanged(this);
         }
 
         protected virtual void OnTableChanged(int tableId)
         {
-            TableChanged?.Invoke(tableId);
+            _tableEventService.TableChanged(tableId, this);
         }
 
     }

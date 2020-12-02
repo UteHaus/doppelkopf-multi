@@ -7,9 +7,8 @@ import { catchError, first, map } from 'rxjs/operators';
 import { PlayTableCount } from 'src/doppelkopf/models/play-table-count.model';
 import { PlayTable } from 'src/doppelkopf/models/play-table.model';
 import { PlayTableService } from 'src/doppelkopf/services/play-table.service';
-import { HubConnection, HubConnectionBuilder } from '@aspnet/signalr';
-import { environment } from '@environments/environment';
 import { SignalRService } from '../services/signal-r.service';
+import { TableHubService } from '../services/table-hub.service';
 
 @Component({
   selector: 'app-play-table-list',
@@ -17,8 +16,8 @@ import { SignalRService } from '../services/signal-r.service';
   styleUrls: ['./play-table-list.component.less'],
 })
 export class PlayTableListComponent implements OnInit, OnDestroy {
-  private methodeTableList = 'tables';
-  tables$: Subject<PlayTableCount[]> = new Subject();
+  tables$: Observable<PlayTableCount[]>;
+  onHubConnect$: Observable<boolean>;
   testValue: any;
   userTableId$: Observable<number>;
   get user(): User {
@@ -31,13 +30,9 @@ export class PlayTableListComponent implements OnInit, OnDestroy {
     private alertService: AlertService,
     private router: Router,
     private accountService: AccountService,
-    private signalService: SignalRService
+    private tableHub: TableHubService
   ) {}
-  ngOnDestroy(): void {
-    this.signalService.off(this.methodeTableList, (value) =>
-      this.tables$.next(value)
-    );
-  }
+  ngOnDestroy(): void {}
 
   ngOnInit(): void {
     this.userTableId$ = this.tableService
@@ -46,11 +41,9 @@ export class PlayTableListComponent implements OnInit, OnDestroy {
         map((tp) => (tp != undefined ? tp.id : -1)),
         catchError(() => of(-1))
       );
-
-    this.signalService.on(this.methodeTableList, (value) =>
-      this.tables$.next(value)
-    );
-    this.signalService.invoke(this.methodeTableList);
+    this.tables$ = this.tableHub.tables$;
+    this.onHubConnect$ = this.tableHub.connectionEstablished$;
+    this.tableHub.InvokeForTables();
   }
 
   runWithOnTable(tableId: number, playOn: boolean): void {

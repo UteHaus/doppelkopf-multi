@@ -9,33 +9,26 @@ namespace DoppelkopfApi.Hubs
     public class TableHubUtils
     {
 
-        private IMapper _mapper;
-        private IPlayTableService _playTableService;
-        public TableHubUtils(IPlayTableService playTableService, IMapper mapper)
-        {
-            _playTableService = playTableService;
-            _mapper = mapper;
-        }
 
-        public IList<PlayTableCountModel> GetTablesWithUserCount()
+        public static IList<PlayTableCountModel> GetTablesWithUserCount(IPlayTableService playTableService, IMapper mapper)
         {
-            var tables = _playTableService.GetAllTables();
-            var model = _mapper.Map<IList<PlayTableCountModel>>(tables);
+            var tables = playTableService.GetAllTables();
+            var model = mapper.Map<IList<PlayTableCountModel>>(tables);
             foreach (var table in model)
             {
-                table.UserCount = _playTableService.TableUserCount(table.Id);
+                table.UserCount = playTableService.TableUserCount(table.Id);
             }
             return model;
         }
 
-        public PlayTableGameModel GetTablePLayerState(int playerId)
+        public static PlayTableGameModel GetTablePLayerState(int playerId, IPlayTableService playTableService, IMapper mapper)
         {
-            var tablePlayer = _playTableService.GettablePlayerOfId(playerId);
+            var tablePlayer = playTableService.GettablePlayerOfId(playerId);
             if (tablePlayer != null)
             {
-                var table = _playTableService.GetTableById(tablePlayer.TableId);
-                var tablePlayers = _playTableService.GetPlayersOfTable(tablePlayer.TableId);
-                var model = _mapper.Map<PlayTableGameModel>(table);
+                var table = playTableService.GetTableById(tablePlayer.TableId);
+                var tablePlayers = playTableService.GetPlayersOfTable(tablePlayer.TableId);
+                var model = mapper.Map<PlayTableGameModel>(table);
                 model.UserCount = tablePlayers.Length;
                 model.Cards = tablePlayer.GetHandCards();
                 model.Players = tablePlayers.Select((p) => new AdditionPlayerInfoModel(p)).ToArray();

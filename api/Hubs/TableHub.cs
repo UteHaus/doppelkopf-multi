@@ -4,8 +4,6 @@ using System.Linq;
 using Microsoft.AspNetCore.SignalR;
 using System.Threading.Tasks;
 using DoppelkopfApi.Services;
-using DoppelkopfApi.Entities;
-using System.Text.Json;
 using Microsoft.AspNetCore.Authorization;
 using AutoMapper;
 using DoppelkopfApi.Models.PlayTable;
@@ -24,35 +22,39 @@ namespace DoppelkopfApi.Hubs
     public class TableHub : Hub<ITableClient>
     {
         private IPlayTableService _tablesService;
-        private TableHubUtils _hubUtil;
         private IMapper _mapper;
 
+        private HubConnections _hubConnections;
 
-
-        public TableHub(IPlayTableService tableService, IMapper mapper)
+        public TableHub(IPlayTableService tableService, IMapper mapper, HubConnections hubConnections)
         {
-
             _tablesService = tableService;
+            _hubConnections = hubConnections;
             _mapper = mapper;
-            _tablesService.TableListChanged += OnTableListChanged;
-            _tablesService.TableChanged += OnTableChanged;
-            _hubUtil = new TableHubUtils(tableService, mapper);
         }
 
-
-
-        protected override void Dispose(bool disposing)
+        public override Task OnConnectedAsync()
         {
-            _tablesService.TableListChanged -= OnTableListChanged;
-            _tablesService.TableChanged -= OnTableChanged;
-            base.Dispose(disposing);
+            _hubConnections.SetConnection(Context.UserIdentifier, Context.ConnectionId);
+            return base.OnConnectedAsync();
         }
 
-        public Task PlayerTableState()
+
+        public async Task PlayerTableState()
         {
-            return UpdatePlayerTableState(-1);
+            await UpdatePlayerTableState(-1);
         }
-        public Task UpdatePlayerTableState(int playerId = -1)
+
+
+        public async Task Tables()
+        {
+            Console.WriteLine(Context.UserIdentifier);
+            await Clients.All.Tables(TableHubUtils.GetTablesWithUserCount(_tablesService, _mapper));
+        }
+
+
+
+        public async Task UpdatePlayerTableState(int playerId = -1)
         {
             if (playerId < 0)
             {
@@ -61,35 +63,14 @@ namespace DoppelkopfApi.Hubs
             PlayTableGameModel modelValue = null;
             if (int.TryParse(Context.UserIdentifier, out playerId))
             {
-                modelValue = _hubUtil.GetTablePLayerState(playerId);
+                if (playerId > 0)
+                {
+                    modelValue = TableHubUtils.GetTablePLayerState(playerId, _tablesService, _mapper);
+                    await Clients.User(playerId.ToString()).PlayerTableState(modelValue);
+                }
 
             }
-            if (playerId > 0)
-            {
 
-                return Clients.User(playerId.ToString()).PlayerTableState(modelValue);
-            }
-            return null;
-        }
-
-
-        public Task Tables()
-        {
-            Console.WriteLine(Context.UserIdentifier);
-            return Clients.All.Tables(_hubUtil.GetTablesWithUserCount());
-        }
-
-        public void OnTableListChanged()
-        {
-            Tables();
-        }
-
-        public void OnTableChanged(int tableId)
-        {
-            foreach (var player in _tablesService.GetPlayersOfTable(tableId))
-            {
-                UpdatePlayerTableState(player.Id);
-            }
         }
     }
 }

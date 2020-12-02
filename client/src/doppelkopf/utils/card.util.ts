@@ -37,17 +37,17 @@ export class CardUtil {
           return 44;
       }
     }
-    const suitRating = this.suitRating(card);
-    switch (card.rank) {
-      case Ranks.ace:
-        return 50 + suitRating;
-      case Ranks.ten:
-        return 60 + suitRating;
-      case Ranks.king:
-        return 70 + suitRating;
+    const rankRating = this.rankRating(card.rank);
+    switch (card.suit) {
+      case Suits.clubs:
+        return 50 + rankRating;
+      case Suits.spades:
+        return 60 + rankRating;
+      case Suits.hearts:
+        return 70 + rankRating;
 
       default:
-        return 80 + suitRating;
+        return 80 + rankRating;
     }
   }
 
@@ -64,6 +64,25 @@ export class CardUtil {
 
       default:
         return 5;
+    }
+  }
+
+  private static rankRating(rank: Ranks): number {
+    switch (rank) {
+      case Ranks.ace:
+        return 1;
+      case Ranks.ten:
+        return 2;
+      case Ranks.king:
+        return 3;
+      case Ranks.queen:
+        return 4;
+      case Ranks.jack:
+        return 5;
+      case Ranks.nine:
+        return 6;
+      default:
+        return 7;
     }
   }
 }

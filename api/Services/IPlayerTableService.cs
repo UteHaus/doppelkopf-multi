@@ -5,14 +5,8 @@ using System.Threading.Tasks;
 
 namespace DoppelkopfApi.Services
 {
-
-    public delegate void TableListEventHandler();
-    public delegate void TableEventHandler(int tableId);
-
     public interface IPlayTableService
     {
-        event TableListEventHandler TableListChanged;
-        event TableEventHandler TableChanged;
 
         PlayTable CreateTable(PlayTable table);
         bool Delete(int id, bool hard = false);

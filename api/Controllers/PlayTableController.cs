@@ -8,7 +8,9 @@ using Microsoft.AspNetCore.Mvc;
 using AutoMapper;
 using DoppelkopfApi.Helpers;
 using DoppelkopfApi.Services;
+using DoppelkopfApi.Hubs;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.SignalR;
 
 namespace DoppelkopfApi.Controllers
 {
@@ -20,12 +22,16 @@ namespace DoppelkopfApi.Controllers
 
         private IPlayTableService _playTableService;
         private IMapper _mapper;
+        private IHubContext<TableHub, ITableClient> _hub;
 
-        public PlayTableController(IPlayTableService playTableService, IMapper mapper)
+
+        public PlayTableController(IPlayTableService playTableService, IMapper mapper, IHubContext<TableHub, ITableClient> hub)
         {
             _playTableService = playTableService;
             _mapper = mapper;
+            _hub = hub;
         }
+
 
         [HttpPost()]
         public IActionResult CreatePlayTable([FromBody] PlayTableModel table)
@@ -132,13 +138,7 @@ namespace DoppelkopfApi.Controllers
         {
             try
             {
-                var tables = _playTableService.GetAllTables();
-                var model = _mapper.Map<IList<PlayTableCountModel>>(tables);
-                foreach (var table in model)
-                {
-                    table.UserCount = _playTableService.TableUserCount(table.Id);
-                }
-                return Ok(model);
+                return Ok(GetTablesWithUserCount());
             }
             catch (AppException ex)
             {
@@ -175,22 +175,7 @@ namespace DoppelkopfApi.Controllers
         {
             try
             {
-                var tablePlayer = _playTableService.GettablePlayerOfId(playerId);
-
-                if (tablePlayer == null)
-                {
-                    return NotFound();
-                }
-                var table = _playTableService.GetTableById(tablePlayer.TableId);
-                var tablePlayers = _playTableService.GetPlayersOfTable(tablePlayer.TableId);
-                var model = _mapper.Map<PlayTableGameModel>(table);
-                model.UserCount = tablePlayers.Length;
-                model.Cards = tablePlayer.GetHandCards();
-                model.Players = tablePlayers.Select((p) => new AdditionPlayerInfoModel(p)).ToArray();
-                model.ShuffleCount = tablePlayers.Count(p => p.ShuffleRound);
-                model.NextTurnCount = tablePlayers.Count(p => p.NextTurn);
-                model.PlayerPosition = tablePlayer.PlayerPosition;
-                return Ok(model);
+                return Ok(GetTableState(playerId));
             }
             catch (AppException ex)
             {
@@ -300,6 +285,38 @@ namespace DoppelkopfApi.Controllers
 
 
 
+
+
+        private IList<PlayTableCountModel> GetTablesWithUserCount()
+        {
+            var tables = _playTableService.GetAllTables();
+            var model = _mapper.Map<IList<PlayTableCountModel>>(tables);
+            foreach (var table in model)
+            {
+                table.UserCount = _playTableService.TableUserCount(table.Id);
+            }
+            return model;
+        }
+
+        private PlayTableGameModel GetTableState(int playerId)
+        {
+            var tablePlayer = _playTableService.GettablePlayerOfId(playerId);
+
+            if (tablePlayer == null)
+            {
+                return null;
+            }
+            var table = _playTableService.GetTableById(tablePlayer.TableId);
+            var tablePlayers = _playTableService.GetPlayersOfTable(tablePlayer.TableId);
+            var model = _mapper.Map<PlayTableGameModel>(table);
+            model.UserCount = tablePlayers.Length;
+            model.Cards = tablePlayer.GetHandCards();
+            model.Players = tablePlayers.Select((p) => new AdditionPlayerInfoModel(p)).ToArray();
+            model.ShuffleCount = tablePlayers.Count(p => p.ShuffleRound);
+            model.NextTurnCount = tablePlayers.Count(p => p.NextTurn);
+            model.PlayerPosition = tablePlayer.PlayerPosition;
+            return model;
+        }
 
     }
 

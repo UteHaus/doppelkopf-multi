@@ -1,5 +1,4 @@
-﻿using System.IO;
-using System;
+﻿using System;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -15,6 +14,7 @@ using AutoMapper;
 using System.Text;
 using DoppelkopfApi.Hubs;
 
+
 namespace DoppelkopfApi
 {
     public class Startup
@@ -22,10 +22,11 @@ namespace DoppelkopfApi
         private readonly IWebHostEnvironment _env;
         private readonly IConfiguration _configuration;
 
+
         public Startup(IWebHostEnvironment env, IConfiguration configuration)
         {
-            _env = env;
             _configuration = configuration;
+            _env = env;
         }
 
         // This method gets called by the runtime. Use this method to add services to the container.
@@ -49,7 +50,6 @@ namespace DoppelkopfApi
                         builder => builder
                         .AllowAnyMethod()
                         .AllowAnyHeader()
-
                         .AllowCredentials()
                         .SetIsOriginAllowed(hostName => true));
                 });
@@ -59,6 +59,7 @@ namespace DoppelkopfApi
                       options.PayloadSerializerOptions.Converters
                          .Add(new System.Text.Json.Serialization.JsonStringEnumConverter());
                   });
+
             services.AddSingleton<IUserIdProvider, NameUserIdProvider>();
             services.AddControllers();
 
@@ -84,14 +85,14 @@ namespace DoppelkopfApi
             {
                 x.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
                 x.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-                // x.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
+                x.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
             })
             .AddJwtBearer(option =>
             {
                 option.Events = new JwtBearerEvents
                 {
                     OnTokenValidated = OnTokenValidated,
-                    //OnMessageReceived = OnMessageReceived
+                    OnMessageReceived = OnMessageReceived
                 };
                 option.RequireHttpsMetadata = false;
                 option.SaveToken = true;
@@ -105,7 +106,8 @@ namespace DoppelkopfApi
             });
 
 
-            // configure DI for application services
+            services.AddSingleton<HubConnections>();
+            services.AddScoped<ITableEventService, TableEventService>();
             services.AddScoped<IUserService, UserService>();
             services.AddScoped<IPlayTableService, PlayTableService>();
         }
@@ -115,6 +117,12 @@ namespace DoppelkopfApi
         {
             // migrate any database changes on startup (includes initial db creation)
             dataContext.Database.Migrate();
+
+            // if (env.IsDevelopment())
+            // {
+            // app.UseDeveloperExceptionPage();
+            // }
+
             app.UseRouting();
 
             // global cors policy

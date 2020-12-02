@@ -8,8 +8,7 @@ import {
   LogLevel,
 } from '@aspnet/signalr';
 import { environment } from '@environments/environment';
-import { BehaviorSubject, Observable, Subject } from 'rxjs';
-import { Timestamp } from 'rxjs/internal/operators/timestamp';
+import { BehaviorSubject, Subject } from 'rxjs';
 import { PlayTableCount } from '../models/play-table-count.model';
 import { PlayTableGame } from '../models/play-table-game.model copy';
 
@@ -27,7 +26,6 @@ export class TableHubService {
     this.createConnection();
     this.registerOnServerEvents();
     this.startConnection();
-    console.warn('Initial Table Hub');
   }
 
   public InvokeForTables() {
@@ -55,8 +53,8 @@ export class TableHubService {
       .withUrl(`${environment.apiUrl}/hub/playtable`, {
         accessTokenFactory: () => this.accountService.userValue.token,
       })
-      .withAutomaticReconnect()
-      .configureLogging(LogLevel.Information)
+      .withAutomaticReconnect([0, 2000, 10000, 30000, null])
+      .configureLogging(LogLevel.Trace)
       .build();
     this.hubConnection.keepAliveIntervalInMilliseconds = 1000 * 30;
     this.hubConnection.serverTimeoutInMilliseconds = 1000 * 60;

@@ -3,6 +3,7 @@ import { AccountService } from '@app/services';
 import {
   HubConnection,
   HubConnectionBuilder,
+  HubConnectionState,
   IStreamResult,
 } from '@aspnet/signalr';
 import { environment } from '@environments/environment';
@@ -21,7 +22,7 @@ export class SignalRService {
   private onWaitList: OnWaitType[] = [];
   private onInvokeList: string[] = [];
   public get connectionRun(): boolean {
-    return this.connection.state == 1;
+    return this.connection.state == HubConnectionState.Connected;
   }
   constructor(accountService: AccountService) {
     this.connection = new HubConnectionBuilder()

@@ -1,52 +1,52 @@
-<!-- <div *ngIf="connectionOn | async; else loading"> -->
-<div *ngIf="tables$ | async as tables">
-  <h1>Spieltische</h1>
-  <a routerLink="table" class="btn btn-sm btn-success mb-2" [translate]>dk.new-play-table</a>
-  <table class="table table-striped">
-    <thead>
-      <tr>
-        <th style="width: 30%">Name</th>
-        <th style="width: 10%" [translate]>dk.users</th>
-        <th style="width: 5%"></th>
-        <th style="width: 35%"></th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr *ngFor="let playTable of tables; trackBy: trackPlayTable">
-        <td>{{ playTable.name }}</td>
-        <td>{{ playTable.userCount }}</td>
-        <td>{{ '' }}</td>
-        <td style="white-space: nowrap">
-          <!--  <a routerLink="edit/{{playTable.id}}" class="btn btn-sm btn-primary mr-1">Edit</a>-->
-          <div class="btn-group">
-            <button type="button" (click)="deleteTable(playTable)"
-              class="btn btn-sm btn-danger mb-2" [disabled]="!user.admin">
-              <span *ngIf="deleteTableIds[playTable.id]"
-                class="spinner-border spinner-border-sm"></span>
-              <span *ngIf="!deleteTableIds[playTable.id]" [translate]>dk.delete</span>
-            </button>
-            <button type="button" *ngIf="userTableId$ | async as userTableId"
-              class="btn btn-sm btn-success mb-2"
-              (click)="runWithOnTable(playTable.id, userTableId == playTable.id)"
-              [disabled]="playTable.userCount == 4 && userTableId != playTable.id">
-              <span *ngIf="userTableId != playTable.id; else goIntoGame"
-                [translate]>dk.play-with</span>
-              <ng-template #goIntoGame> <span [translate]>dk.play-on</span></ng-template>
-            </button>
-          </div>
-        </td>
-      </tr>
-      <tr *ngIf="!tables$">
-        <td colspan="4" class="text-center">
-          <span class="spinner-border spinner-border-lg align-center"></span>
-        </td>
-      </tr>
-    </tbody>
-  </table>
+<div *ngIf="onHubConnect$ | async; else loading">
+  <div *ngIf="tables$ | async as tables">
+    <h1>Spieltische</h1>
+    <a routerLink="table" class="btn btn-sm btn-success mb-2" [translate]>dk.new-play-table</a>
+    <table class="table table-striped">
+      <thead>
+        <tr>
+          <th style="width: 30%">Name</th>
+          <th style="width: 10%" [translate]>dk.users</th>
+          <th style="width: 5%"></th>
+          <th style="width: 35%"></th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let playTable of tables; trackBy: trackPlayTable">
+          <td>{{ playTable.name }}</td>
+          <td>{{ playTable.userCount }}</td>
+          <td>{{ '' }}</td>
+          <td style="white-space: nowrap">
+            <!--  <a routerLink="edit/{{playTable.id}}" class="btn btn-sm btn-primary mr-1">Edit</a>-->
+            <div class="btn-group">
+              <button type="button" (click)="deleteTable(playTable)"
+                class="btn btn-sm btn-danger mb-2" [disabled]="!user.admin">
+                <span *ngIf="deleteTableIds[playTable.id]"
+                  class="spinner-border spinner-border-sm"></span>
+                <span *ngIf="!deleteTableIds[playTable.id]" [translate]>dk.delete</span>
+              </button>
+              <button type="button" *ngIf="userTableId$ | async as userTableId"
+                class="btn btn-sm btn-success mb-2"
+                (click)="runWithOnTable(playTable.id, userTableId == playTable.id)"
+                [disabled]="playTable.userCount == 4 && userTableId != playTable.id">
+                <span *ngIf="userTableId != playTable.id; else goIntoGame"
+                  [translate]>dk.play-with</span>
+                <ng-template #goIntoGame> <span [translate]>dk.play-on</span></ng-template>
+              </button>
+            </div>
+          </td>
+        </tr>
+        <tr *ngIf="!tables$">
+          <td colspan="4" class="text-center">
+            <span class="spinner-border spinner-border-lg align-center"></span>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
 </div>
-<!--</div>
- <ng-template #loading>
+<ng-template #loading>
   <div class="spinner-border text-success" role="status">
     <span class="sr-only">Loading...</span>
   </div>
-</ng-template> -->
+</ng-template>
