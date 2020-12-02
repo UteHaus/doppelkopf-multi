@@ -23,9 +23,7 @@ export class TableHubService {
   private hubConnection: HubConnection;
 
   constructor(private accountService: AccountService) {
-    this.createConnection();
-    this.registerOnServerEvents();
-    this.startConnection();
+    this.start();
   }
 
   public InvokeForTables() {
@@ -41,10 +39,20 @@ export class TableHubService {
   }
 
   private invokeMethode(methodeName: string) {
-    if (this.hubConnection.state === HubConnectionState.Connected) {
+    if (
+      this.hubConnection &&
+      this.hubConnection.state === HubConnectionState.Connected
+    ) {
       this.hubConnection.invoke(methodeName);
     } else {
       this.onInvokeList.push(methodeName);
+    }
+  }
+  private start(): void {
+    if (this.accountService.userValue.token && !this.hubConnection) {
+      this.createConnection();
+      this.registerOnServerEvents();
+      this.startConnection();
     }
   }
 
@@ -54,7 +62,7 @@ export class TableHubService {
         accessTokenFactory: () => this.accountService.userValue.token,
       })
       .withAutomaticReconnect([0, 2000, 10000, 30000, null])
-      .configureLogging(LogLevel.Trace)
+      .configureLogging(LogLevel.Critical)
       .build();
     this.hubConnection.keepAliveIntervalInMilliseconds = 1000 * 30;
     this.hubConnection.serverTimeoutInMilliseconds = 1000 * 60;

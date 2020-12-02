@@ -16,8 +16,7 @@ export class AppComponent {
     private accountService: AccountService,
     translate: TranslateService,
     private route: Router,
-    private playeService: PlayTableService,
-    public tableHub: TableHubService
+    private playeService: PlayTableService
   ) {
     this.user$ = this.accountService.user;
     translate.setDefaultLang('de');
