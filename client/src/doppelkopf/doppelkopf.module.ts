@@ -23,6 +23,7 @@ import { ValideGameVariantPipe } from './game-table/valide-game-variant.pipe';
 import { PlayersTableComponent } from './game-table/players-table/players-table.component';
 import { CardIndexPositionPipe } from './game-table/players-table/card-index-position.pipe';
 import { AuthGuard } from '@app/helpers';
+import { SpectatorViewComponent } from './game-table/spectator-view/spectator-view.component';
 const routes: Routes = [
   {
     path: 'table',
@@ -61,6 +62,7 @@ const routes: Routes = [
     ValideGameVariantPipe,
     PlayersTableComponent,
     CardIndexPositionPipe,
+    SpectatorViewComponent,
   ],
   imports: [
     ReactiveFormsModule,
