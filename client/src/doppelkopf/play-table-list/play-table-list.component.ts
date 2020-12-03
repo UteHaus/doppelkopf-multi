@@ -7,6 +7,7 @@ import { catchError, first, map } from 'rxjs/operators';
 import { PlayTableCount } from 'src/doppelkopf/models/play-table-count.model';
 import { PlayTable } from 'src/doppelkopf/models/play-table.model';
 import { PlayTableService } from 'src/doppelkopf/services/play-table.service';
+import { TableMethods } from '../services/table-hub-method.enum';
 import { TableHubService } from '../services/table-hub.service';
 
 @Component({
@@ -42,7 +43,7 @@ export class PlayTableListComponent implements OnInit, OnDestroy {
       );
     this.tables$ = this.tableHub.tables$;
     this.onHubConnect$ = this.tableHub.connectionEstablished$;
-    this.tableHub.InvokeForTables();
+    this.tableHub.InvokeMethode(TableMethods.Tables);
   }
 
   runWithOnTable(tableId: number, playOn: boolean): void {

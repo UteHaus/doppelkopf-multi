@@ -20,26 +20,18 @@ export class TableHubService {
   tables$ = new Subject<PlayTableCount[]>();
   tableGame$ = new Subject<TablePlayerState>();
   connectionEstablished$ = new BehaviorSubject<boolean>(false);
-  private onInvokeList: string[] = [];
+  private onInvokeList: TableHubMethods[] = [];
   private hubConnection: HubConnection;
 
   constructor(private accountService: AccountService) {
     this.start();
   }
 
-  public InvokeForTables() {
-    this.invokeMethode(TableHubMethods.tables);
+  public InvokeMethode(methode: TableHubMethods) {
+    this.invokeMethode(methode);
   }
 
-  public streamForTables(): IStreamResult<any> {
-    return this.hubConnection.stream('tables');
-  }
-
-  public InvokeForTableGame() {
-    this.invokeMethode('playertablestate');
-  }
-
-  private invokeMethode(methodeName: string) {
+  private invokeMethode(methodeName: TableHubMethods) {
     if (
       this.hubConnection &&
       this.hubConnection.state === HubConnectionState.Connected
@@ -88,14 +80,15 @@ export class TableHubService {
   }
 
   private registerOnServerEvents(): void {
-    this.hubConnection.on('tables', (data: any) => {
+    this.hubConnection.on(TableHubMethods.Tables, (data: any) => {
       this.tables$.next(data);
-      console.log(data);
     });
-    //this.hubConnection.invoke('tables');
 
-    this.hubConnection.on('playertablestate', (data: any) => {
-      console.log('data', data);
+    this.hubConnection.on(TableHubMethods.PlayerTableState, (data: any) => {
+      this.tableGame$.next(data);
+    });
+
+    this.hubConnection.on(TableHubMethods.SpectatorTable, (data: any) => {
       this.tableGame$.next(data);
     });
   }

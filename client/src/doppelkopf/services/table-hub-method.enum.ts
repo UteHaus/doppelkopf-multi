@@ -1,3 +1,5 @@
 export enum TableMethods {
-  'tables' = 'tables',
+  'Tables' = 'Tables',
+  'PlayerTableState' = 'PlayerTableState',
+  'SpectatorTable' = 'SpectatorTable',
 }

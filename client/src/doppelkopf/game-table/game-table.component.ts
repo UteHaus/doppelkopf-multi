@@ -9,6 +9,7 @@ import { GamesVariants } from '../models/play-table.model';
 import { PlayTableService } from '../services/play-table.service';
 import { TableHubService } from '../services/table-hub.service';
 import { AdditionPlayerInfo } from '../models/additional-player-info.model';
+import { TableMethods } from '../services/table-hub-method.enum';
 
 @Component({
   selector: 'app-game-table',
@@ -68,7 +69,7 @@ export class GameTableComponent implements OnInit, OnDestroy {
       })
     );
 
-    this.tableHubService.InvokeForTableGame();
+    this.tableHubService.InvokeMethode(TableMethods.PlayerTableState);
 
     this.playerInOrder$ = this.table$.pipe(
       map((playTable) => {
@@ -107,7 +108,7 @@ export class GameTableComponent implements OnInit, OnDestroy {
   }
 
   reloadTable() {
-    this.tableHubService.InvokeForTableGame();
+    this.tableHubService.InvokeMethode(TableMethods.PlayerTableState);
   }
 
   shuffleCards(): void {
