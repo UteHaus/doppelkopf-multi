@@ -277,25 +277,25 @@ namespace DoppelkopfApi.Helpers
         {
             var suitRating = SuitRating(card);
 
-            if (card == soloRank)
-            {
-                return (10 + suitRating);
-            }
-
-            return card.Suit == initialCard.Suit ? 20 + suitRating : 1000;
-
-        }
-
-        private int ColorSoloRating(Card card, Suits soloSuit, Card initialCard)
-        {
-            var suitRating = RankRating(card.Rank);
-
-            if (card.Suit == soloSuit)
+            if (card.Rank == soloRank)
             {
                 return (10 + suitRating);
             }
 
             return initialCard.Suit == card.Suit ? 20 + RankRating(card.Rank) : 1000;
+
+        }
+
+        private int ColorSoloRating(Card card, Suits soloSuit, Card initialCard)
+        {
+            var rankRating = RankRating(card.Rank);
+
+            if (card.Suit == soloSuit)
+            {
+                return (10 + rankRating);
+            }
+
+            return initialCard.Suit == card.Suit ? 20 + rankRating : 1000;
         }
 
         private int RankRating(Ranks rank)
