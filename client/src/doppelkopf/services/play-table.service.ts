@@ -56,7 +56,6 @@ export class PlayTableService {
   }
 
   public runWithOnTable(tableId: number, userId: number): Observable<boolean> {
-    console.error(`on table user ${userId}  and table ${tableId.toString()}`);
     return this.http
       .put(`${this.defaultApiPath}/${tableId}/on-table?userId=${userId}`, {
         userId: userId,

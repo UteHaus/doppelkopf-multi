@@ -19,13 +19,13 @@ export class CardMapComponent implements OnInit, OnDestroy {
   @Input()
   set cards(value: Card[]) {
     this._cards = value;
-    this.orderCards();
+    this.updateOrderCards();
   }
 
   @Input()
   set diamondsAceAsMaster(value: boolean) {
     this._diamondsAceAsMaster = value;
-    this.orderCards();
+    this.updateOrderCards();
   }
 
   @Output()
@@ -49,8 +49,12 @@ export class CardMapComponent implements OnInit, OnDestroy {
     }
   }
 
-  private orderCards() {
-    if (this._diamondsAceAsMaster && this._cards && this._cards.length > 0) {
+  private updateOrderCards(): void {
+    if (
+      this._diamondsAceAsMaster != undefined &&
+      this._cards &&
+      this._cards.length > 0
+    ) {
       this.orderedCards = CardUtil.orderCards(
         this._cards,
         this._diamondsAceAsMaster

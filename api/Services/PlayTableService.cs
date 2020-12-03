@@ -1,70 +1,37 @@
 using System.Threading.Tasks;
-using System.Security;
 using System;
 using System.Collections.Generic;
 using DoppelkopfApi.Entities;
+using DoppelkopfApi.Hubs;
 using DoppelkopfApi.Helpers;
 using System.Linq;
 using System.Text.Json;
 
 namespace DoppelkopfApi.Services
 {
-
-    public interface IPlayTableService
-    {
-        PlayTable CreatTable(PlayTable table);
-        bool Delete(int id, bool hard = false);
-
-        bool SetOnTable(int userId, int tableId);
-        bool SetOutTable(int userId);
-
-        PlayStatus GetStatus(int tableId);
-
-        int TableUserCount(int tableId);
-
-        IEnumerable<PlayTable> GetAllTables();
-
-        PlayTable GetTableById(int id);
-        ValueTask<PlayTable> GetTableByIdAsync(int id);
-
-        PlayTable GetUserTable(int userId);
-        TablePlayer GettablePlayerOfId(int playerId);
-
-        void NextTurn(int playerId);
-        bool StartNewRound(int tableId);
-        void SetUpdateTime(PlayTable table);
-
-        void SetUpdateTime(int tableId);
-        DateTime GetLastTableUpdate(int tableId);
-
-        void SetPlayedCard(int playerId, Card card);
-
-        TablePlayer[] GetPlayersOfTable(int tableId);
-        void ShuffleCards(int playerId);
-        void SetGameVariant(int playerId, GamesVariants variant);
-
-    }
-
-
     public class PlayTableService : IPlayTableService
     {
         private DataContext _context;
         private IUserService _userService;
         private CardHandler _cardHandler;
-        public PlayTableService(DataContext context, IUserService userService)
+        ITableEventService _tableEventService;
+
+        public PlayTableService(DataContext context, IUserService userService, ITableEventService tableEventService)
         {
             _context = context;
+            _tableEventService = tableEventService;
             _userService = userService;
             _cardHandler = new CardHandler();
         }
 
-        public PlayTable CreatTable(PlayTable table)
+
+        public PlayTable CreateTable(PlayTable table)
         {
             table.GameVariant = GamesVariants.None;
             table.Status = PlayStatus.None;
             _context.PlayTables.Add(table);
             _context.SaveChanges();
-            SetUpdateTime(table);
+            OnTableListChanged();
             return table;
         }
 
@@ -90,7 +57,7 @@ namespace DoppelkopfApi.Services
                 _context.TablePlayer.UpdateRange(tablePlayers);
                 _context.PlayTables.Update(table);
                 int changeCount = _context.SaveChanges();
-                SetUpdateTime(table);
+                OnTableChanged(table.Id);
                 return changeCount > 0;
 
             }
@@ -121,7 +88,7 @@ namespace DoppelkopfApi.Services
                     _context.Update(table);
                     _context.SaveChanges();
                 }
-                SetUpdateTime(tablePlayer.TableId);
+                OnTableChanged(tablePlayer.TableId);
 
             }
             else
@@ -188,7 +155,7 @@ namespace DoppelkopfApi.Services
                     StartNewRound(table.Id);
                 }
                 else
-                    SetUpdateTime(table);
+                    OnTableChanged(table.Id);
 
             }
         }
@@ -206,7 +173,7 @@ namespace DoppelkopfApi.Services
 
             if (table != null && (hard || tablePlayersCount <= 0))
             {
-                SetUpdateTime(table);
+                OnTableChanged(table.Id);
                 _context.Entry(table).State = Microsoft.EntityFrameworkCore.EntityState.Deleted;
                 //  _context.PlayTables.Remove(table);
                 _context.SaveChanges();
@@ -239,7 +206,7 @@ namespace DoppelkopfApi.Services
                     table.SetToNextPlayerTurn();
                 }
                 _context.SaveChanges();
-                SetUpdateTime(player.TableId);
+                OnTableChanged(player.TableId);
             }
         }
 
@@ -286,9 +253,9 @@ namespace DoppelkopfApi.Services
                 else
                 {
                     changeCount = _context.SaveChanges();
-                    SetUpdateTime(table);
+                    OnTableChanged(table.Id);
                 }
-
+                OnTableListChanged();
                 return changeCount > 0;
             }
             else
@@ -314,7 +281,8 @@ namespace DoppelkopfApi.Services
                 _context.Update(table);
                 _context.TablePlayer.UpdateRange(tablePlayers);
                 int changeCount = _context.SaveChanges();
-                SetUpdateTime(tablePlayer.TableId);
+                OnTableChanged(tablePlayer.TableId);
+                OnTableListChanged();
                 return changeCount > 0;
             }
             return false;
@@ -337,7 +305,7 @@ namespace DoppelkopfApi.Services
                 StartNewRound(table.Id);
             }
             else
-            { SetUpdateTime(player.TableId); }
+            { OnTableChanged(player.TableId); }
 
         }
 
@@ -362,20 +330,7 @@ namespace DoppelkopfApi.Services
             return _context.PlayTables.FindAsync(id);
         }
 
-        public void SetUpdateTime(PlayTable table)
-        {
-            if (table != null)
-            {
-                table.LastUpdate = DateTime.Now;
-                _context.PlayTables.Update(table);
-                _context.SaveChanges();
-            }
-        }
 
-        public void SetUpdateTime(int tableId)
-        {
-            SetUpdateTime(_context.PlayTables.Find(tableId));
-        }
         public DateTime GetLastTableUpdate(int tableId)
         {
             var table = _context.PlayTables.FirstOrDefault((table) => table.Id == tableId);
@@ -488,6 +443,16 @@ namespace DoppelkopfApi.Services
 
             }
             return false;
+        }
+
+        protected void OnTableListChanged()
+        {
+            _tableEventService.TableListChanged(this);
+        }
+
+        protected virtual void OnTableChanged(int tableId)
+        {
+            _tableEventService.TableChanged(tableId, this);
         }
 
     }

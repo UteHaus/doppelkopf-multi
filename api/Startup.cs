@@ -1,18 +1,19 @@
-﻿using System.IO;
-using System;
+﻿using System;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Hosting;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
+using Microsoft.AspNetCore.SignalR;
 using DoppelkopfApi.Helpers;
 using DoppelkopfApi.Services;
 using AutoMapper;
 using System.Text;
+using DoppelkopfApi.Hubs;
+
 
 namespace DoppelkopfApi
 {
@@ -21,24 +22,47 @@ namespace DoppelkopfApi
         private readonly IWebHostEnvironment _env;
         private readonly IConfiguration _configuration;
 
+
         public Startup(IWebHostEnvironment env, IConfiguration configuration)
         {
-            _env = env;
             _configuration = configuration;
+            _env = env;
         }
 
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            // use sql server db in production and sqlite db in development
-
             var connectionString = _configuration.GetConnectionString("NpsqlDatabase");
             services.AddDbContext<DataContext>(options => options.UseNpgsql(connectionString));
             services.AddDbContext<DataContext>();
 
+            services
+                .AddCors(options =>
+                {
+                    options.AddPolicy("CorsPolicy",
+                        builder => builder
+                        .AllowAnyOrigin()
+                        .AllowAnyMethod()
+                        .AllowAnyHeader()
+                        );
 
-            services.AddCors();
+                    options.AddPolicy("signalr",
+                        builder => builder
+                        .AllowAnyMethod()
+                        .AllowAnyHeader()
+                        .AllowCredentials()
+                        .SetIsOriginAllowed(hostName => true));
+                });
+
+            services.AddSignalR().AddJsonProtocol(options =>
+                  {
+                      options.PayloadSerializerOptions.Converters
+                         .Add(new System.Text.Json.Serialization.JsonStringEnumConverter());
+                  });
+
+            services.AddSingleton<IUserIdProvider, NameUserIdProvider>();
             services.AddControllers();
+
             services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
             services.AddControllers().AddJsonOptions(o =>
          {
@@ -48,6 +72,8 @@ namespace DoppelkopfApi
              //o.JsonSerializerOptions.Converters.Add(new Newtonsoft.Json.Converters.StringEnumConverter());
 
          });
+
+
             // configure strongly typed settings objects
             var appSettingsSection = _configuration.GetSection("AppSettings");
             services.Configure<AppSettings>(appSettingsSection);
@@ -59,27 +85,18 @@ namespace DoppelkopfApi
             {
                 x.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
                 x.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+                x.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
             })
-            .AddJwtBearer(x =>
+            .AddJwtBearer(option =>
             {
-                x.Events = new JwtBearerEvents
+                option.Events = new JwtBearerEvents
                 {
-                    OnTokenValidated = context =>
-                    {
-                        var userService = context.HttpContext.RequestServices.GetRequiredService<IUserService>();
-                        var userId = int.Parse(context.Principal.Identity.Name);
-                        var user = userService.GetById(userId);
-                        if (user == null)
-                        {
-                            // return unauthorized if user no longer exists
-                            context.Fail("Unauthorized");
-                        }
-                        return Task.CompletedTask;
-                    }
+                    OnTokenValidated = OnTokenValidated,
+                    OnMessageReceived = OnMessageReceived
                 };
-                x.RequireHttpsMetadata = false;
-                x.SaveToken = true;
-                x.TokenValidationParameters = new TokenValidationParameters
+                option.RequireHttpsMetadata = false;
+                option.SaveToken = true;
+                option.TokenValidationParameters = new TokenValidationParameters
                 {
                     ValidateIssuerSigningKey = true,
                     IssuerSigningKey = new SymmetricSecurityKey(key),
@@ -88,7 +105,9 @@ namespace DoppelkopfApi
                 };
             });
 
-            // configure DI for application services
+
+            services.AddSingleton<HubConnections>();
+            services.AddScoped<ITableEventService, TableEventService>();
             services.AddScoped<IUserService, UserService>();
             services.AddScoped<IPlayTableService, PlayTableService>();
         }
@@ -99,19 +118,53 @@ namespace DoppelkopfApi
             // migrate any database changes on startup (includes initial db creation)
             dataContext.Database.Migrate();
 
+            // if (env.IsDevelopment())
+            // {
+            // app.UseDeveloperExceptionPage();
+            // }
 
             app.UseRouting();
 
             // global cors policy
-            app.UseCors(x => x
-                .AllowAnyOrigin()
-                .AllowAnyMethod()
-                .AllowAnyHeader());
+            app.UseCors("signalr");
 
             app.UseAuthentication();
             app.UseAuthorization();
+            app.UseEndpoints(endpoints =>
+            {
 
-            app.UseEndpoints(endpoints => endpoints.MapControllers());
+                endpoints.MapControllers();
+                endpoints.MapHub<TableHub>("/api/hub/playtable");
+            });
+        }
+
+        private Task OnTokenValidated(TokenValidatedContext context)
+        {
+            var userService = context.HttpContext.RequestServices.GetRequiredService<IUserService>();
+            var userId = int.Parse(context.Principal.Identity.Name);
+            var user = userService.GetById(userId);
+            if (user == null)
+            {
+                // return unauthorized if user no longer exists
+                context.Fail("Unauthorized");
+            }
+            return Task.CompletedTask;
+        }
+
+        private Task OnMessageReceived(MessageReceivedContext context)
+        {
+            var accessToken = context.Request.Query["access_token"];
+
+            // If the request is for our hub...
+            var path = context.HttpContext.Request.Path;
+            if (!string.IsNullOrEmpty(accessToken) &&
+                (path.StartsWithSegments("/api/hub/playtable")))
+            {
+                // Read the token out of the query string
+                context.Token = accessToken;
+            }
+            return Task.CompletedTask;
         }
     }
+
 }
