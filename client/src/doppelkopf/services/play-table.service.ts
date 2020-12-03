@@ -5,7 +5,7 @@ import { GamesVariants, PlayTable } from '../models/play-table.model';
 import { environment } from '@environments/environment';
 import { catchError, map, switchMap } from 'rxjs/operators';
 import { PlayTableCount } from '../models/play-table-count.model';
-import { PlayTableGame } from '../models/play-table-game.model copy';
+import { TablePlayerState } from '../models/table-player-state.model';
 import { Card } from '../models/card.model';
 
 @Injectable({
@@ -30,9 +30,9 @@ export class PlayTableService {
     return this.http.get<PlayTable>(`${this.defaultApiPath}/${id}`);
   }
 
-  public getTableGameState(userId: number): Observable<PlayTableGame> {
+  public getTableGameState(userId: number): Observable<TablePlayerState> {
     return this.http
-      .get<PlayTableGame>(`${this.defaultApiPath}/player/${userId}/state`)
+      .get<TablePlayerState>(`${this.defaultApiPath}/player/${userId}/state`)
       .pipe(
         map((playTable) => {
           playTable.thisPlayer = playTable.players.find(

@@ -1,12 +1,12 @@
 import { Pipe, PipeTransform } from '@angular/core';
-import { PlayTableGame } from '../models/play-table-game.model copy';
+import { TablePlayerState } from '../models/table-player-state.model';
 import { PlayStatus } from '../models/play-table.model';
 
 @Pipe({
   name: 'playStatusSelectVariant',
 })
 export class PlayStatusSelectVariantPipe implements PipeTransform {
-  transform(value: PlayTableGame, ...args: unknown[]): unknown {
+  transform(value: TablePlayerState, ...args: unknown[]): unknown {
     return value.status == PlayStatus.SelectGameVarian;
   }
 }

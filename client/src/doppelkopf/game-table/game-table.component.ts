@@ -4,14 +4,11 @@ import { AccountService } from '@app/services';
 import { Observable, Subject, Subscription } from 'rxjs';
 import { map, shareReplay, switchMap } from 'rxjs/operators';
 import { Card, Ranks, Suits } from '../models/card.model';
-import {
-  AdditionPlayerInfo,
-  PlayTableGame,
-} from '../models/play-table-game.model copy';
+import { TablePlayerState } from '../models/table-player-state.model';
 import { GamesVariants } from '../models/play-table.model';
 import { PlayTableService } from '../services/play-table.service';
-import { SignalRService } from '../services/signal-r.service';
 import { TableHubService } from '../services/table-hub.service';
+import { AdditionPlayerInfo } from '../models/additional-player-info.model';
 
 @Component({
   selector: 'app-game-table',
@@ -20,16 +17,13 @@ import { TableHubService } from '../services/table-hub.service';
 })
 export class GameTableComponent implements OnInit, OnDestroy {
   private subscription: Subscription = new Subscription();
-  private hubMethode = 'playertablestate';
-  table$: Observable<PlayTableGame>;
-
+  table$: Observable<TablePlayerState>;
   tableId$: Observable<number>;
   testCard: Card = new Card(Suits.clubs, Ranks.queen);
   nextTurnClicked$: Subject<undefined>;
   shuffleCardsClick$: Subject<undefined>;
   variantSelected$: Subject<GamesVariants> = new Subject<GamesVariants>();
   playerInOrder$: Observable<AdditionPlayerInfo[]>;
-  updateCounter: number = 0;
   get userId(): number {
     return Number(this.userService.userValue.id);
   }
@@ -110,17 +104,10 @@ export class GameTableComponent implements OnInit, OnDestroy {
         )
       )
     );
-
-    /*   this.table$ = tableId$.pipe(
-      switchMap((tableId) => this.getAutoRefreshTable(this.userId, tableId)),
-      share(1)
-    ); */
-
-    // Arrange player position and this player has position 4 each time.
   }
 
   reloadTable() {
-    this.lastTableUpdate = new Date(0).getTime();
+    this.tableHubService.InvokeForTableGame();
   }
 
   shuffleCards(): void {

@@ -2,12 +2,11 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { User } from '@app/models';
 import { AccountService, AlertService } from '@app/services';
-import { Observable, of, Subject } from 'rxjs';
+import { Observable, of } from 'rxjs';
 import { catchError, first, map } from 'rxjs/operators';
 import { PlayTableCount } from 'src/doppelkopf/models/play-table-count.model';
 import { PlayTable } from 'src/doppelkopf/models/play-table.model';
 import { PlayTableService } from 'src/doppelkopf/services/play-table.service';
-import { SignalRService } from '../services/signal-r.service';
 import { TableHubService } from '../services/table-hub.service';
 
 @Component({

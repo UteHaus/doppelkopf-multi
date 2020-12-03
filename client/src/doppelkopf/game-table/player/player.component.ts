@@ -1,5 +1,5 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { AdditionPlayerInfo } from 'src/doppelkopf/models/play-table-game.model copy';
+import { AdditionPlayerInfo } from 'src/doppelkopf/models/additional-player-info.model';
 
 @Component({
   selector: 'app-player',

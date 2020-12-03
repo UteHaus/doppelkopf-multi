@@ -10,14 +10,15 @@ import {
 import { environment } from '@environments/environment';
 import { BehaviorSubject, Subject } from 'rxjs';
 import { PlayTableCount } from '../models/play-table-count.model';
-import { PlayTableGame } from '../models/play-table-game.model copy';
+import { TablePlayerState } from '../models/table-player-state.model';
+import { TableMethods as TableHubMethods } from './table-hub-method.enum';
 
 @Injectable({
   providedIn: 'root',
 })
 export class TableHubService {
   tables$ = new Subject<PlayTableCount[]>();
-  tableGame$ = new Subject<PlayTableGame>();
+  tableGame$ = new Subject<TablePlayerState>();
   connectionEstablished$ = new BehaviorSubject<boolean>(false);
   private onInvokeList: string[] = [];
   private hubConnection: HubConnection;
@@ -27,7 +28,7 @@ export class TableHubService {
   }
 
   public InvokeForTables() {
-    this.invokeMethode('tables');
+    this.invokeMethode(TableHubMethods.tables);
   }
 
   public streamForTables(): IStreamResult<any> {
