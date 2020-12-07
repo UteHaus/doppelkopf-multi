@@ -1,8 +1,17 @@
 # doppelkopf-multi
-Doppelkopf --> mit nuget repo, sometimes abbreviated to Doko, is a trick-taking card game for four players
+Doppelkopf -->  sometimes abbreviated to Doko, is a trick-taking card game for four players
  
+ It is a multiplayer Doppelkopf game. You can add tables and user. Users can play a game or view a game.
+
+
+ ## Configurations
+ ### Default
+ - default user: admin and password: admin.
+ - port: 8080
+
+
 ## build and run
-`git clone repo`
+`git clone doppelkopf-multi`
 
 ### Docker
 
@@ -26,8 +35,6 @@ To change the port of the client, at docker compose file change the client ports
 
 
 ## ToDoś:
--  
-- König solo, Spieler 1 spiel unter herz und kein weiterer einen König und der letzte einen Herz Ass. Dabei gewinnt der 1 Spieler, es müsste aber der letzte Spieler den stich erhalten 
 - spielverlauf anzeigen
 - aktellen Stich nur für 3 sekunden Anzeigen 
 - Re Kontra --> DB vorhanden 
@@ -37,12 +44,14 @@ To change the port of the client, at docker compose file change the client ports
 - Ton beim spielen eier Karte
 - Übersetzungen beim Tisch überprüfen
 - Bilder auf ihrer Größe Komprimieren bzw optimieren
-- Zuschauer --> DB vorhanden 
 - eventuell Tisch Bild
 - einige müssen sich nach einem refresh neu Anmelden, es könnte am cocky
 - Option Rod nicht abschmeißen 
+- [Jitsi](https://github.com/jitsi/lib-jitsi-meet/blob/master/doc/API.md#installation)
 
 ### behoben
+- König solo, Spieler 1 spiel unter herz und kein weiterer einen König und der letzte einen Herz Ass. Dabei gewinnt der 1 Spieler, es müsste aber der letzte Spieler den stich erhalten 
+- Zuschauer --> DB vorhanden 
 - Spielstand wird bei neuen Karten nicht richtig zurück gesetzt
 - Karten werden Sortiert
 - Geber und Anspieler mit angeben
