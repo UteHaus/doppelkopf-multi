@@ -6,4 +6,7 @@
   lastName: string;
   token: string;
   admin: boolean;
+  editUser: boolean;
+  editTables: boolean;
+  icon: string;
 }

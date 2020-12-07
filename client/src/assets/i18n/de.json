@@ -13,7 +13,14 @@
         "register": "Regestriren",
         "add-user": "Nutzer hinzufügen",
         "edit-user": "Nutzer bearbeiten",
-        "edit": "Bearbeiten"
+        "edit": "Bearbeiten",
+        "save": "Speichern",
+        "cancel": "Abbrechen",
+        "could-edit-users": "Kann Nutzer bearbeiten",
+        "could-edit-tables": "Kann Tabellen bearbeiten",
+        "leave-blank-for-same-password": "(Leer lassen, um das gleiche Passwort zu behalten).",
+        "password-6-characters": "Das Passwort muss mindestens 6 Zeichen lang sein.",
+        "password-is-required": "Passwort ist erforderlich!"
     },
     "error": {
         "full-table": "Der Tisch scheint voll zu sein."
@@ -41,6 +48,7 @@
         "points": "Punkte",
         "delete": "Löschen",
         "giver": "Geber",
+        "name": "Name",
         "variant": {
             "None": "Keine Auswahl",
             "Normal": "Gesund",

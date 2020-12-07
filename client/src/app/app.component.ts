@@ -32,6 +32,8 @@ export class AppComponent {
   }
 
   editUser(user: User) {
-    this.route.navigate(user.admin ? ['/users'] : ['/users', 'edit', user.id]);
+    this.route.navigate(
+      user.admin || user.editUser ? ['/users'] : ['/users', 'edit', user.id]
+    );
   }
 }

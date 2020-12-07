@@ -12,7 +12,7 @@ using DoppelkopfApi.Services;
 using DoppelkopfApi.Entities;
 using DoppelkopfApi.Models.Users;
 using AutoMapper;
-
+using System.Reflection;
 namespace DoppelkopfApi.Controllers
 {
     [Authorize]
@@ -20,6 +20,7 @@ namespace DoppelkopfApi.Controllers
     [Route("api/[controller]")]
     public class UsersController : ControllerBase
     {
+
         private IUserService _userService;
         private IMapper _mapper;
         private readonly AppSettings _appSettings;
@@ -58,15 +59,10 @@ namespace DoppelkopfApi.Controllers
             var tokenString = tokenHandler.WriteToken(token);
 
             // return basic user info and authentication token
-            return Ok(new
-            {
-                Id = user.Id,
-                Username = user.Username,
-                FirstName = user.FirstName,
-                LastName = user.LastName,
-                Token = tokenString,
-                Admin = user.Admin
-            });
+            UserTokenModel userModel = _mapper.Map<UserTokenModel>(user);
+
+            userModel.Token = tokenString;
+            return Ok(userModel);
         }
 
         [HttpPost("register")]

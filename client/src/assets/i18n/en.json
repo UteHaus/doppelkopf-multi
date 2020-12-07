@@ -13,7 +13,14 @@
         "register": "Register",
         "add-user": "Add User",
         "edit-user": "Edit User",
-        "edit": "Edit"
+        "edit": "Edit",
+        "save": "Save",
+        "cancel": "Cancel",
+        "could-edit-users": "Could edit users",
+        "could-edit-tables": "Could edit tables",
+        "leave-blank-for-same-password": "(Leave blank to keep the same password)",
+        "password-6-characters": "Password must be at least 6 characters",
+        "password-is-required": "Password is required"
     },
     "error": {
         "full-table": "The table seems to be full."
@@ -41,6 +48,7 @@
         "delete": "Delete",
         "watch": "watch",
         "giver": "Giver",
+        "name": "Name",
         "variant": {
             "None": "None",
             "Normal": "Normal",

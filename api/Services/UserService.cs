@@ -121,6 +121,8 @@ namespace DoppelkopfApi.Services
                 user.PasswordHash = passwordHash;
                 user.PasswordSalt = passwordSalt;
             }
+            user.EditTables = userParam.EditTables;
+            user.EditUser = userParam.EditUser;
 
             _context.Users.Update(user);
             _context.SaveChanges();

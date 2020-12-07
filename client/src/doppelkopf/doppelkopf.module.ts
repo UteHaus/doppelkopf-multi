@@ -24,11 +24,13 @@ import { CardIndexPositionPipe } from './game-table/players-table/card-index-pos
 import { AuthGuard } from '@app/helpers';
 import { SpectatorViewComponent } from './game-table/spectator-view/spectator-view.component';
 import { PlayerViewComponent } from './game-table/player-view/player-view.component';
+import { AuthGuardEditTables } from '@app/helpers/auth-edit-tables.guard';
+import { AuthAdminGuard } from '@app/helpers/auth-admin.guard';
 const routes: Routes = [
   {
     path: 'table',
     component: EditTableComponent,
-    canActivate: [AuthGuard],
+    canActivate: [AuthGuard, AuthGuardEditTables, AuthAdminGuard],
   },
 
   {
@@ -80,7 +82,6 @@ const routes: Routes = [
     ReactiveFormsModule,
     CommonModule,
     RouterModule.forChild(routes),
-    CommonModule,
     TranslateModule.forChild(),
   ],
   exports: [RouterModule],

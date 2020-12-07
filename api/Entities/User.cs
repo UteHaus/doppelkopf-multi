@@ -15,5 +15,9 @@ namespace DoppelkopfApi.Entities
 
         public string Icon { get; set; }
         public bool Admin { get; set; }
+
+        public bool EditUser { get; set; }
+
+        public bool EditTables { get; set; }
     }
 }
