@@ -42,7 +42,7 @@ export class EditTableComponent implements OnInit {
 
     if (!this.isAddMode) {
       this.playTableService
-        .getById(this.id)
+        .getTable(Number(this.id))
         .pipe(first())
         .subscribe((x) => {
           this.f.tableName.setValue(x.name);
@@ -79,7 +79,6 @@ export class EditTableComponent implements OnInit {
       status: PlayStatus.None,
       withNiner: this.form.value.withNiner,
       currentPlayerPosition: 1,
-      playerPosition: 1,
       roundCardsGiversPosition: 0,
       diamondsAceAsMaster: this.form.value.diamondsAceAsMaster,
       weddingWithFirstColorCast: true,

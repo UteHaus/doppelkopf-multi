@@ -23,8 +23,6 @@ namespace DoppelkopfApi.Models.PlayTable
         public bool ShuffleRound { get; set; }
         public bool WithNiner { get; set; }
 
-        public int PlayerPosition { get; set; }
-
         public int PlayerId { get; set; }
 
         public bool DiamondsAceAsMaster { get; set; }

@@ -1,9 +1,10 @@
 import { AdditionPlayerInfo } from './additional-player-info.model';
 import { Card } from './card.model';
-import { TablePlayers } from './table-players.model';
+import { TableState } from './table-players.model';
 
-export class TablePlayerState extends TablePlayers {
+export class TablePlayerState extends TableState {
   cards: Card[];
+  playerPosition: number;
 
   thisPlayer?: AdditionPlayerInfo;
 }

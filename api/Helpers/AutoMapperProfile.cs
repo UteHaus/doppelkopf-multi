@@ -15,8 +15,11 @@ namespace DoppelkopfApi.Helpers
             CreateMap<PlayTableModel, PlayTable>();
             CreateMap<PlayTable, PlayTableModel>();
             CreateMap<PlayTable, PlayTableCountModel>();
-            CreateMap<PlayTable, PlayTableGameModel>();
-            CreateMap<TablePlayer, PlayerTableGameStateModel>();
+            CreateMap<PlayTable, PlayerStateModel>();
+            CreateMap<TablePlayer, PlayerStateModel>();
+            CreateMap<TablePlayer, PlayTableStaeModel>();
+            CreateMap<PlayTableStaeModel, PlayerStateModel>();
+            CreateMap<PlayTable, PlayTableStaeModel>();
         }
     }
 }

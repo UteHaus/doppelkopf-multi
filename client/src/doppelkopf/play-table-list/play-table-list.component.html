@@ -33,6 +33,12 @@
                   [translate]>dk.play-with</span>
                 <ng-template #goIntoGame> <span [translate]>dk.play-on</span></ng-template>
               </button>
+              <button type="button" (click)="watchTable(playTable)"
+                class="btn btn-sm btn-success mb-2">
+                <span *ngIf="deleteTableIds[playTable.id]"
+                  class="spinner-border spinner-border-sm"></span>
+                <span [translate]>dk.watch</span>
+              </button>
             </div>
           </td>
         </tr>

@@ -212,7 +212,7 @@ namespace DoppelkopfApi.Services
 
         public bool SetOnTable(int playerId, int tableId)
         {
-
+            CancelWatchTable(playerId);
             var tablePlayer = GettablePlayerOfId(playerId);
             if (tablePlayer != null)
             {
@@ -320,9 +320,9 @@ namespace DoppelkopfApi.Services
             return _context.PlayTables;
         }
 
-        public PlayTable GetTableById(int id)
+        public PlayTable GetTableById(int tableId)
         {
-            return _context.PlayTables.Find(id);
+            return _context.PlayTables.Find(tableId);
         }
 
         public ValueTask<PlayTable> GetTableByIdAsync(int id)
@@ -356,6 +356,43 @@ namespace DoppelkopfApi.Services
         public TablePlayer[] GetPlayersOfTable(int tableId)
         {
             return _context.TablePlayer.Where(tp => tp.TableId == tableId).ToArray();
+        }
+
+
+        public bool CancelWatchTable(int userId, bool saveContext = true)
+        {
+            var users = _context.TableViewers.Where((user) => user.userId == userId);
+            if (users.Count() > 0)
+            {
+                _context.TableViewers.RemoveRange(users);
+            }
+            return saveContext ? _context.SaveChanges() > 0 : true;
+
+        }
+        public bool WatchTable(int userId, int tableId)
+        {
+            CancelWatchTable(userId, false);
+            SetOutTable(userId);
+            TableViewer newTableViewer = new TableViewer(userId, tableId);
+            _context.TableViewers.Add(newTableViewer);
+            return _context.SaveChanges() > 0;
+        }
+
+        public void CloseAllSessions(int userId)
+        {
+            CancelWatchTable(userId);
+            //SetOutTable(userId);
+
+        }
+
+        public TableViewer GetTableViewerByUserId(int userId)
+        {
+            return _context.TableViewers.FirstOrDefault((viewer) => viewer.userId == userId);
+        }
+
+        public TableViewer[] GetTableViewer(int tableId)
+        {
+            return _context.TableViewers.Where((viewer) => viewer.tableId == tableId).ToArray();
         }
 
         private void SetHandCards(TablePlayer[] tablePlayers, bool withNiner)
@@ -411,6 +448,8 @@ namespace DoppelkopfApi.Services
 
         }
 
+
+
         private TablePlayer GetWeddingPlayer(TablePlayer[] players)
         {
             return players.FirstOrDefault((player) => player.GameVariant == GamesVariants.Wedding);
@@ -454,6 +493,7 @@ namespace DoppelkopfApi.Services
         {
             _tableEventService.TableChanged(tableId, this);
         }
+
 
     }
 }

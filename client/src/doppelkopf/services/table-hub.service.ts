@@ -17,30 +17,50 @@ import { TableMethods as TableHubMethods } from './table-hub-method.enum';
   providedIn: 'root',
 })
 export class TableHubService {
-  tables$ = new Subject<PlayTableCount[]>();
-  tableGame$ = new Subject<TablePlayerState>();
   connectionEstablished$ = new BehaviorSubject<boolean>(false);
-  private onInvokeList: TableHubMethods[] = [];
+  private invokeList: TableHubMethods[] = [];
+  private onList: Array<{
+    methodeName: TableHubMethods;
+    method: (...args: any[]) => void;
+  }> = [];
   private hubConnection: HubConnection;
 
   constructor(private accountService: AccountService) {
     this.start();
   }
 
-  public InvokeMethode(methode: TableHubMethods) {
-    this.invokeMethode(methode);
-  }
-
-  private invokeMethode(methodeName: TableHubMethods) {
-    if (
-      this.hubConnection &&
-      this.hubConnection.state === HubConnectionState.Connected
-    ) {
+  public invokeMethode(methodeName: TableHubMethods) {
+    if (this.isHubConnected()) {
       this.hubConnection.invoke(methodeName);
     } else {
-      this.onInvokeList.push(methodeName);
+      this.invokeList.push(methodeName);
     }
   }
+
+  public offMethode(methodeName: TableHubMethods) {
+    if (this.isHubConnected()) {
+      this.hubConnection.off(methodeName);
+    }
+  }
+
+  public onMethode(
+    methodeName: TableHubMethods,
+    method: (...args: any[]) => void
+  ) {
+    if (this.isHubConnected()) {
+      this.hubConnection.on(methodeName, method);
+    } else {
+      this.onList.push({ methodeName: methodeName, method: method });
+    }
+  }
+
+  private isHubConnected(): boolean {
+    return (
+      this.hubConnection &&
+      this.hubConnection.state === HubConnectionState.Connected
+    );
+  }
+
   private start(): void {
     if (this.accountService.userValue.token && !this.hubConnection) {
       this.createConnection();
@@ -55,7 +75,7 @@ export class TableHubService {
         accessTokenFactory: () => this.accountService.userValue.token,
       })
       .withAutomaticReconnect([0, 2000, 10000, 30000, null])
-      .configureLogging(LogLevel.Critical)
+      .configureLogging(LogLevel.Information)
       .build();
     this.hubConnection.keepAliveIntervalInMilliseconds = 1000 * 30;
     this.hubConnection.serverTimeoutInMilliseconds = 1000 * 60;
@@ -69,27 +89,36 @@ export class TableHubService {
     await this.hubConnection.start().then(
       () => {
         console.log('Hub connection started!');
+        this.onList.forEach((item) => {
+          this.hubConnection.on(item.methodeName, item.method);
+        });
+        this.onList = [];
+
         this.connectionEstablished$.next(true);
-        this.onInvokeList.forEach((item) => {
+        this.invokeList.forEach((item) => {
           this.hubConnection.invoke(item);
         });
-        this.onInvokeList = [];
+        this.invokeList = [];
       },
       (error) => console.error(error)
     );
   }
 
   private registerOnServerEvents(): void {
-    this.hubConnection.on(TableHubMethods.Tables, (data: any) => {
+    /*      this.hubConnection.on(TableHubMethods.Tables, (data: any) => {
+      console.log('Update table list');
+
       this.tables$.next(data);
-    });
+    }); 
 
     this.hubConnection.on(TableHubMethods.PlayerTableState, (data: any) => {
+      console.log('Update table state');
+
       this.tableGame$.next(data);
     });
 
     this.hubConnection.on(TableHubMethods.SpectatorTable, (data: any) => {
       this.tableGame$.next(data);
-    });
+    }); */
   }
 }

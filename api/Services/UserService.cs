@@ -24,6 +24,10 @@ namespace DoppelkopfApi.Services
         public UserService(DataContext context)
         {
             _context = context;
+        }
+
+        public void CreateDefaultUser()
+        {
             if (_context.Users.FirstOrDefault((user) => user.Username == "admin") == null)
             {
                 var admin = new User();
@@ -31,6 +35,7 @@ namespace DoppelkopfApi.Services
                 admin.Admin = true;
                 Create(admin, "admin");
             }
+
         }
 
         public User Authenticate(string username, string password)

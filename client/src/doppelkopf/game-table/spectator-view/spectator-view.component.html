@@ -1,1 +1,7 @@
-<p>spectator-view works!</p>
+<ng-container *ngIf="(tableState$ | async) as tableState">
+    <app-players-table [players]="tableState.players" [thisPlayerId]="-1"
+        [positionOnMove]="tableState.currentPlayerPosition"
+        [currentGiverPos]="tableState.roundCardsGiversPosition"
+        [tableGameVariant]="tableState.gameVariant">
+    </app-players-table>
+</ng-container>

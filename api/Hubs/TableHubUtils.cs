@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using DoppelkopfApi.Models.PlayTable;
 using DoppelkopfApi.Services;
+using DoppelkopfApi.Entities;
 using AutoMapper;
 using System.Linq;
 
@@ -21,24 +22,44 @@ namespace DoppelkopfApi.Hubs
             return model;
         }
 
-        public static PlayTableGameModel GetTablePLayerState(int playerId, IPlayTableService playTableService, IMapper mapper)
+        public static PlayerStateModel GetTablePLayerState(int playerId, IPlayTableService playTableService, IMapper mapper)
         {
             var tablePlayer = playTableService.GettablePlayerOfId(playerId);
             if (tablePlayer != null)
             {
-                var table = playTableService.GetTableById(tablePlayer.TableId);
-                var tablePlayers = playTableService.GetPlayersOfTable(tablePlayer.TableId);
-                var model = mapper.Map<PlayTableGameModel>(table);
-                model.UserCount = tablePlayers.Length;
-                model.Cards = tablePlayer.GetHandCards();
-                model.Players = tablePlayers.Select((p) => new AdditionPlayerInfoModel(p)).ToArray();
-                model.ShuffleCount = tablePlayers.Count(p => p.ShuffleRound);
-                model.NextTurnCount = tablePlayers.Count(p => p.NextTurn);
-                model.PlayerPosition = tablePlayer.PlayerPosition;
-                return model;
+                var tableState = GetTableState(tablePlayer.TableId, playTableService, mapper);
+                return AddPlayerInfosToTableState(tablePlayer, tableState, mapper);
             }
             return null;
         }
 
+        public static PlayTableStaeModel GetTableState(int tableId, IPlayTableService playTableService, IMapper mapper)
+        {
+            var table = playTableService.GetTableById(tableId);
+            if (table != null)
+            {
+                var tablePlayers = playTableService.GetPlayersOfTable(tableId);
+                var tableState = mapper.Map<PlayTableStaeModel>(table);
+                tableState.UserCount = tablePlayers.Length;
+                tableState.Players = tablePlayers.Select((p) => new AdditionPlayerInfoModel(p)).ToArray();
+                tableState.ShuffleCount = tablePlayers.Count(p => p.ShuffleRound);
+                tableState.NextTurnCount = tablePlayers.Count(p => p.NextTurn);
+                return tableState;
+            }
+            return null;
+        }
+
+        public static PlayerStateModel AddPlayerInfosToTableState(TablePlayer player, PlayTableStaeModel tableState, IMapper mapper)
+        {
+            var playerState = mapper.Map<PlayerStateModel>(tableState);
+
+            if (player != null)
+            {
+                playerState.PlayerPosition = player.PlayerPosition;
+                playerState.Cards = player.GetHandCards();
+            }
+
+            return playerState;
+        }
     }
 }

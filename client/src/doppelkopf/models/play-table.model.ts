@@ -6,7 +6,6 @@ export class PlayTable {
   currentPlayerPosition: number;
   roundCardsGiversPosition: number;
   playerId?: number;
-  playerPosition: number;
   diamondsAceAsMaster: boolean;
   weddingWithFirstColorCast: boolean;
   tableIcon?: string;
