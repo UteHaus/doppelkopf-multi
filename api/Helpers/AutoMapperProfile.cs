@@ -10,6 +10,7 @@ namespace DoppelkopfApi.Helpers
         public AutoMapperProfile()
         {
             CreateMap<User, UserModel>();
+            CreateMap<User, UserTokenModel>();
             CreateMap<RegisterModel, User>();
             CreateMap<UpdateModel, User>();
             CreateMap<PlayTableModel, PlayTable>();

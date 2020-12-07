@@ -3,24 +3,25 @@ import { Routes, RouterModule } from '@angular/router';
 import { LayoutComponent } from './layout.component';
 import { ListComponent } from './list.component';
 import { AddEditComponent } from './add-edit.component';
-import { AuthAdminGuard } from '@app/helpers/auth-admin.guard';
-import { AuthForUserGuard } from '@app/helpers/auth-for-user.guard';
+import { AuthGuardEditUser } from '@app/helpers/auth-edit-user.guard';
+import { AuthGuardAddUser } from '@app/helpers/auth-add-user.guard';
+import { AuthGuardListUser } from '@app/helpers/auth-list-user.guard';
 
 const routes: Routes = [
   {
     path: '',
     component: LayoutComponent,
     children: [
-      { path: '', component: ListComponent, canActivate: [AuthAdminGuard] },
+      { path: '', component: ListComponent, canActivate: [AuthGuardListUser] },
       {
         path: 'add',
         component: AddEditComponent,
-        canActivate: [AuthAdminGuard],
+        canActivate: [AuthGuardAddUser],
       },
       {
         path: 'edit/:id',
         component: AddEditComponent,
-        canActivate: [AuthForUserGuard],
+        canActivate: [AuthGuardEditUser],
       },
     ],
   },

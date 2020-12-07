@@ -1,11 +1,12 @@
 <div *ngIf="onHubConnect$ | async; else loading">
   <div *ngIf="tables$ | async as tables">
-    <h1>Spieltische</h1>
-    <a routerLink="table" class="btn btn-sm btn-success mb-2" [translate]>dk.new-play-table</a>
+    <h1 [translate]>dk.console-table</h1>
+    <a *ngIf="(user.editTables || user.admin)" routerLink="table"
+      class="btn btn-sm btn-success mb-2" [translate]>dk.new-play-table</a>
     <table class="table table-striped">
       <thead>
         <tr>
-          <th style="width: 30%">Name</th>
+          <th style="width: 30%" [translate]>dk.name</th>
           <th style="width: 10%" [translate]>dk.users</th>
           <th style="width: 5%"></th>
           <th style="width: 35%"></th>
@@ -19,8 +20,9 @@
           <td style="white-space: nowrap">
             <!--  <a routerLink="edit/{{playTable.id}}" class="btn btn-sm btn-primary mr-1">Edit</a>-->
             <div class="btn-group">
-              <button type="button" (click)="deleteTable(playTable)"
-                class="btn btn-sm btn-danger mb-2" [disabled]="!user.admin">
+              <button type="button" *ngIf="user.editTables || user.admin"
+                (click)="deleteTable(playTable)" class="btn btn-sm btn-danger mb-2"
+                [disabled]="!user.admin">
                 <span *ngIf="deleteTableIds[playTable.id]"
                   class="spinner-border spinner-border-sm"></span>
                 <span *ngIf="!deleteTableIds[playTable.id]" [translate]>dk.delete</span>

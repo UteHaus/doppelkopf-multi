@@ -22,7 +22,7 @@ export class AlertComponent implements OnInit, OnDestroy {
       .onAlert(this.id)
       .subscribe((alert) => {
         // clear alerts when an empty alert is received
-        if (!alert.message) {
+        if (!(alert && alert.message)) {
           // filter out alerts without 'keepAfterRouteChange' flag
           this.alerts = this.alerts.filter((x) => x.keepAfterRouteChange);
 

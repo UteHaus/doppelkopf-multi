@@ -4,14 +4,22 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { first } from 'rxjs/operators';
 
 import { AccountService, AlertService } from '@app/services';
+import { User } from '@app/models';
 
-@Component({ templateUrl: 'add-edit.component.html' })
+@Component({
+  templateUrl: 'add-edit.component.html',
+  styleUrls: ['add-edit.component.less'],
+})
 export class AddEditComponent implements OnInit {
   form: FormGroup;
   id: string;
   isAddMode: boolean;
   loading = false;
   submitted = false;
+
+  get user(): User {
+    return this.accountService.userValue;
+  }
 
   constructor(
     private formBuilder: FormBuilder,
@@ -36,6 +44,8 @@ export class AddEditComponent implements OnInit {
       lastName: [''],
       username: ['', Validators.required],
       password: ['', passwordValidators],
+      editUser: [false],
+      editTables: [false],
     });
 
     if (!this.isAddMode) {
@@ -43,15 +53,17 @@ export class AddEditComponent implements OnInit {
         .getById(this.id)
         .pipe(first())
         .subscribe((x) => {
-          this.f.firstName.setValue(x.firstName);
-          this.f.lastName.setValue(x.lastName);
-          this.f.username.setValue(x.username);
+          this.formControls.firstName.setValue(x.firstName);
+          this.formControls.lastName.setValue(x.lastName);
+          this.formControls.username.setValue(x.username);
+          this.formControls.editUser.setValue(x.editUser);
+          this.formControls.editTables.setValue(x.editTables);
         });
     }
   }
 
   // convenience getter for easy access to form fields
-  get f() {
+  get formControls() {
     return this.form.controls;
   }
 
