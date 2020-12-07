@@ -23,5 +23,8 @@ export class PlayersTableComponent {
   @Input()
   tableGameVariant: GamesVariants;
 
+  @Input()
+  showPointsForAllPlayers: boolean = false;
+
   constructor() {}
 }
