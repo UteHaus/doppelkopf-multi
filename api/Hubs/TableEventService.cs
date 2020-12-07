@@ -11,6 +11,7 @@ using DoppelkopfApi.Services;
 using DoppelkopfApi.Hubs;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.SignalR;
+using System.Threading;
 
 namespace DoppelkopfApi.Hubs
 {
@@ -23,12 +24,10 @@ namespace DoppelkopfApi.Hubs
 
     public class TableEventService : ITableEventService
     {
-        private HubConnections _hubConnections;
         private IMapper _mapper;
         private IHubContext<TableHub, ITableClient> _hub;
-        public TableEventService(IMapper mapper, IHubContext<TableHub, ITableClient> hub, HubConnections hubConnections)
+        public TableEventService(IMapper mapper, IHubContext<TableHub, ITableClient> hub)
         {
-            _hubConnections = hubConnections;
             _mapper = mapper;
             _hub = hub;
         }
@@ -43,11 +42,20 @@ namespace DoppelkopfApi.Hubs
         public async void TableChanged(int tableId, IPlayTableService playTableService)
         {
             var tablePlayers = playTableService.GetPlayersOfTable(tableId);
-            foreach (var tablePlayer in tablePlayers)
+            var tableViewers = playTableService.GetTableViewer(tableId);
+            var tableState = TableHubUtils.GetTableState(tableId, playTableService, _mapper);
+            Parallel.ForEach(tablePlayers, (tablePlayer) =>
             {
-                var connectionId = _hubConnections.GetConnection(tablePlayer.PlayerId.ToString());
-                await _hub.Clients.User(tablePlayer.PlayerId.ToString()).PlayerTableState(TableHubUtils.GetTablePLayerState(tablePlayer.PlayerId, playTableService, _mapper));
-            }
+                var playerState = TableHubUtils.AddPlayerInfosToTableState(tablePlayer, tableState, _mapper);
+                _hub.Clients.User(tablePlayer.PlayerId.ToString()).PlayerTableState(playerState);
+            });
+
+            // for all viewers of the table
+            Parallel.ForEach(tableViewers, (tableViewer) =>
+            {
+                _hub.Clients.User(tableViewer.userId.ToString()).SpectatorTable(tableState);
+            });
+
         }
 
     }

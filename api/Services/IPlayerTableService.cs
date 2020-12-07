@@ -20,7 +20,7 @@ namespace DoppelkopfApi.Services
 
         IEnumerable<PlayTable> GetAllTables();
 
-        PlayTable GetTableById(int id);
+        PlayTable GetTableById(int tableId);
         ValueTask<PlayTable> GetTableByIdAsync(int id);
 
         PlayTable GetUserTable(int userId);
@@ -35,6 +35,16 @@ namespace DoppelkopfApi.Services
         TablePlayer[] GetPlayersOfTable(int tableId);
         void ShuffleCards(int playerId);
         void SetGameVariant(int playerId, GamesVariants variant);
+
+        bool WatchTable(int userId, int tableId);
+
+        bool CancelWatchTable(int userId, bool saveContext = true);
+
+        void CloseAllSessions(int userId);
+
+        TableViewer[] GetTableViewer(int tableId);
+
+        TableViewer GetTableViewerByUserId(int userId);
 
     }
 

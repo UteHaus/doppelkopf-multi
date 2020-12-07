@@ -5,7 +5,7 @@ import { GamesVariants, PlayTable } from '../models/play-table.model';
 import { environment } from '@environments/environment';
 import { catchError, map, switchMap } from 'rxjs/operators';
 import { PlayTableCount } from '../models/play-table-count.model';
-import { PlayTableGame } from '../models/play-table-game.model copy';
+import { TablePlayerState } from '../models/table-player-state.model';
 import { Card } from '../models/card.model';
 
 @Injectable({
@@ -16,23 +16,13 @@ export class PlayTableService {
 
   constructor(private http: HttpClient) {}
 
-  public getTablesWithAutoReload(
-    intervalMilSeconds: number = 5000
-  ): Observable<PlayTableCount[]> {
-    return timer(0, intervalMilSeconds).pipe(switchMap(() => this.getTables()));
-  }
-
   public getTables(): Observable<PlayTableCount[]> {
     return this.http.get<PlayTableCount[]>(this.defaultApiPath);
   }
 
-  public getById(id: string): Observable<PlayTable> {
-    return this.http.get<PlayTable>(`${this.defaultApiPath}/${id}`);
-  }
-
-  public getTableGameState(userId: number): Observable<PlayTableGame> {
+  public getTableGameState(userId: number): Observable<TablePlayerState> {
     return this.http
-      .get<PlayTableGame>(`${this.defaultApiPath}/player/${userId}/state`)
+      .get<TablePlayerState>(`${this.defaultApiPath}/player/${userId}/state`)
       .pipe(
         map((playTable) => {
           playTable.thisPlayer = playTable.players.find(
@@ -64,6 +54,10 @@ export class PlayTableService {
         map(() => true),
         catchError(() => of(false))
       );
+  }
+
+  public getTable(tableId: number): Observable<PlayTable> {
+    return this.http.get<PlayTable>(`${this.defaultApiPath}/${tableId}`);
   }
 
   public logoutOfTable(userId: number | string): Observable<undefined> {
@@ -105,6 +99,21 @@ export class PlayTableService {
     );
   }
 
+  public watchTable(userId: number, tableId: number): Observable<boolean> {
+    return this.http.post<boolean>(`${this.defaultApiPath}/player/spectator`, {
+      userId: userId,
+      tableId: tableId,
+    });
+  }
+  public cancelWatchTable(
+    userId: number,
+    tableId: number
+  ): Observable<boolean> {
+    return this.http.put<boolean>(`${this.defaultApiPath}/player/spectator`, {
+      userId: userId,
+    });
+  }
+
   public isTableUpdated(
     tableId: number,
     lastUpdate: number
@@ -125,6 +134,23 @@ export class PlayTableService {
   ): Observable<undefined> {
     return this.http.put<undefined>(
       `${this.defaultApiPath}/player/${playerId}/variant?variant=${variant}`,
+      {}
+    );
+  }
+
+  public setSpectatorOnTable(
+    userId: number,
+    tableId: number
+  ): Observable<boolean> {
+    return this.http.post<boolean>(
+      `${this.defaultApiPath}/spectator?tableId=${tableId}&userId=${userId}`,
+      {}
+    );
+  }
+
+  public cancelSpectatorOnTable(userId: number): Observable<boolean> {
+    return this.http.post<boolean>(
+      `${this.defaultApiPath}/spectator?userId=${userId}`,
       {}
     );
   }

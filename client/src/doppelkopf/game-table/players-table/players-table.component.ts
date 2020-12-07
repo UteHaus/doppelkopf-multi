@@ -1,5 +1,5 @@
 import { Component, Input } from '@angular/core';
-import { AdditionPlayerInfo } from 'src/doppelkopf/models/play-table-game.model copy';
+import { AdditionPlayerInfo } from 'src/doppelkopf/models/additional-player-info.model';
 import { GamesVariants } from 'src/doppelkopf/models/play-table.model';
 
 @Component({
@@ -22,6 +22,9 @@ export class PlayersTableComponent {
 
   @Input()
   tableGameVariant: GamesVariants;
+
+  @Input()
+  showPointsForAllPlayers: boolean = false;
 
   constructor() {}
 }

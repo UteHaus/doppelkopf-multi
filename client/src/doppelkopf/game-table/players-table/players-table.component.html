@@ -12,7 +12,8 @@
             <span *ngIf="tableGameVariant ">{{('dk.variant.'+tableGameVariant) | translate}}</span>
             ({{ ('dk.variant.'+player.gameVariant) | translate }})
         </p>
-        <p *ngIf="(player.playerId==thisPlayerId)">{{'dk.points' | translate}}:
+        <p *ngIf="(player.playerId==thisPlayerId || showPointsForAllPlayers)">
+            {{'dk.points' | translate}}:
             {{player.roundsPoints}}</p>
         <p *ngIf="player.shuffleRound" class="shuffle-round" [translate]>dk.player-wants-assign-
             cards

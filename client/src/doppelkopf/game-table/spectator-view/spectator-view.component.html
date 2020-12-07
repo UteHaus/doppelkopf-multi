@@ -1,0 +1,7 @@
+<ng-container *ngIf="(tableState$ | async) as tableState">
+    <app-players-table [players]="tableState.players" [thisPlayerId]="-1"
+        [positionOnMove]="tableState.currentPlayerPosition"
+        [currentGiverPos]="tableState.roundCardsGiversPosition"
+        [tableGameVariant]="tableState.gameVariant" [showPointsForAllPlayers]="true">
+    </app-players-table>
+</ng-container>

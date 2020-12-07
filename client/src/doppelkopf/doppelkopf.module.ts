@@ -13,8 +13,7 @@ import { SelectVariantComponent } from './game-table/select-variant/select-varia
 import { TranslateModule } from '@ngx-translate/core';
 import { HttpClient } from '@angular/common/http';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
-import { PlayerComponent } from './game-table/player/player.component';
-import { PlayerIconPipe } from './game-table/player/player-icon.pipe';
+import { PlayerIconPipe } from './game-table/players-table/player-icon.pipe';
 import { ShowCardsPipe } from './game-table/show-cards.pipe';
 import { PlayStatusWaitNextRoundPipe } from './game-table/play-status-wait-next-round.pipe';
 import { PlayStatusWinnerTimePipe } from './game-table/play-status-winner-time.pipe';
@@ -23,6 +22,8 @@ import { ValideGameVariantPipe } from './game-table/valide-game-variant.pipe';
 import { PlayersTableComponent } from './game-table/players-table/players-table.component';
 import { CardIndexPositionPipe } from './game-table/players-table/card-index-position.pipe';
 import { AuthGuard } from '@app/helpers';
+import { SpectatorViewComponent } from './game-table/spectator-view/spectator-view.component';
+import { PlayerViewComponent } from './game-table/player-view/player-view.component';
 const routes: Routes = [
   {
     path: 'table',
@@ -39,6 +40,18 @@ const routes: Routes = [
     path: 'table/:id',
     component: GameTableComponent,
     canActivate: [AuthGuard],
+    children: [
+      {
+        path: 'player',
+        component: PlayerViewComponent,
+        canActivate: [AuthGuard],
+      },
+      {
+        path: 'spectator',
+        component: SpectatorViewComponent,
+        canActivate: [AuthGuard],
+      },
+    ],
   },
 ];
 
@@ -52,7 +65,6 @@ const routes: Routes = [
     CardComponent,
     CareImagePathPipe,
     SelectVariantComponent,
-    PlayerComponent,
     PlayerIconPipe,
     ShowCardsPipe,
     PlayStatusWaitNextRoundPipe,
@@ -61,6 +73,8 @@ const routes: Routes = [
     ValideGameVariantPipe,
     PlayersTableComponent,
     CardIndexPositionPipe,
+    SpectatorViewComponent,
+    PlayerViewComponent,
   ],
   imports: [
     ReactiveFormsModule,

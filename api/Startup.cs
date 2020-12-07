@@ -92,7 +92,8 @@ namespace DoppelkopfApi
                 option.Events = new JwtBearerEvents
                 {
                     OnTokenValidated = OnTokenValidated,
-                    OnMessageReceived = OnMessageReceived
+                    OnMessageReceived = OnMessageReceived,
+
                 };
                 option.RequireHttpsMetadata = false;
                 option.SaveToken = true;
@@ -106,7 +107,6 @@ namespace DoppelkopfApi
             });
 
 
-            services.AddSingleton<HubConnections>();
             services.AddScoped<ITableEventService, TableEventService>();
             services.AddScoped<IUserService, UserService>();
             services.AddScoped<IPlayTableService, PlayTableService>();
@@ -117,7 +117,7 @@ namespace DoppelkopfApi
         {
             // migrate any database changes on startup (includes initial db creation)
             dataContext.Database.Migrate();
-
+            CreateDefaultUser(dataContext);
             // if (env.IsDevelopment())
             // {
             // app.UseDeveloperExceptionPage();
@@ -164,6 +164,11 @@ namespace DoppelkopfApi
                 context.Token = accessToken;
             }
             return Task.CompletedTask;
+        }
+
+        private void CreateDefaultUser(DataContext dataContext)
+        {
+            new UserService(dataContext).CreateDefaultUser();
         }
     }
 

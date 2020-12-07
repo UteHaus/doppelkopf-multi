@@ -39,6 +39,7 @@
         "users": "Users",
         "points": "Punkte",
         "delete": "Delete",
+        "watch": "watch",
         "giver": "Giver",
         "variant": {
             "None": "None",

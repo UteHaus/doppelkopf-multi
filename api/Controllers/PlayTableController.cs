@@ -147,10 +147,10 @@ namespace DoppelkopfApi.Controllers
         }
 
 
-        [HttpGet("{id}")]
-        public IActionResult getById(int id)
+        [HttpGet("{tableId}")]
+        public IActionResult getById(int tableId)
         {
-            var table = _playTableService.GetTableById(id);
+            var table = _playTableService.GetTableById(tableId);
             var model = _mapper.Map<PlayTableModel>(table);
             return Ok(model);
         }
@@ -252,6 +252,38 @@ namespace DoppelkopfApi.Controllers
             return Forbid();
         }
 
+        [HttpPost("spectator")]
+        public IActionResult WatchTable(int tableId, int userId)
+        {
+            try
+            {
+                bool result = _playTableService.WatchTable(userId, tableId);
+
+                return Ok(result);
+            }
+
+            catch (AppException ex)
+            {
+                return BadRequest(new { message = ex.Message });
+            }
+        }
+
+        [HttpPut("spectator")]
+        public IActionResult CancelWatchTable(int userId)
+        {
+            try
+            {
+                bool result = _playTableService.CancelWatchTable(userId);
+
+                return Ok(result);
+            }
+
+            catch (AppException ex)
+            {
+                return BadRequest(new { message = ex.Message });
+            }
+        }
+
         [HttpPut("player/{playerId}/next")]
         public IActionResult NextTurn(int playerId)
         {
@@ -283,10 +315,6 @@ namespace DoppelkopfApi.Controllers
             }
         }
 
-
-
-
-
         private IList<PlayTableCountModel> GetTablesWithUserCount()
         {
             var tables = _playTableService.GetAllTables();
@@ -298,7 +326,7 @@ namespace DoppelkopfApi.Controllers
             return model;
         }
 
-        private PlayTableGameModel GetTableState(int playerId)
+        private PlayerStateModel GetTableState(int playerId)
         {
             var tablePlayer = _playTableService.GettablePlayerOfId(playerId);
 
@@ -308,7 +336,7 @@ namespace DoppelkopfApi.Controllers
             }
             var table = _playTableService.GetTableById(tablePlayer.TableId);
             var tablePlayers = _playTableService.GetPlayersOfTable(tablePlayer.TableId);
-            var model = _mapper.Map<PlayTableGameModel>(table);
+            var model = _mapper.Map<PlayerStateModel>(table);
             model.UserCount = tablePlayers.Length;
             model.Cards = tablePlayer.GetHandCards();
             model.Players = tablePlayers.Select((p) => new AdditionPlayerInfoModel(p)).ToArray();

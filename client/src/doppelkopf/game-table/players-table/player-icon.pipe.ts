@@ -1,5 +1,5 @@
 import { Pipe, PipeTransform } from '@angular/core';
-import { AdditionPlayerInfo } from 'src/doppelkopf/models/play-table-game.model copy';
+import { AdditionPlayerInfo } from 'src/doppelkopf/models/additional-player-info.model';
 
 @Pipe({
   name: 'playerIcon',

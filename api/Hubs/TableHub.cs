@@ -15,7 +15,9 @@ namespace DoppelkopfApi.Hubs
         Task Tables(IList<PlayTableCountModel> tables);
 
 
-        Task PlayerTableState(PlayTableGameModel state);
+        Task PlayerTableState(PlayerStateModel state);
+
+        Task SpectatorTable(PlayTableStaeModel state);
     }
 
     [Authorize]
@@ -24,19 +26,19 @@ namespace DoppelkopfApi.Hubs
         private IPlayTableService _tablesService;
         private IMapper _mapper;
 
-        private HubConnections _hubConnections;
-
-        public TableHub(IPlayTableService tableService, IMapper mapper, HubConnections hubConnections)
+        public TableHub(IPlayTableService tableService, IMapper mapper)
         {
             _tablesService = tableService;
-            _hubConnections = hubConnections;
             _mapper = mapper;
         }
 
-        public override Task OnConnectedAsync()
+
+        public override Task OnDisconnectedAsync(Exception exception)
         {
-            _hubConnections.SetConnection(Context.UserIdentifier, Context.ConnectionId);
-            return base.OnConnectedAsync();
+            int userId;
+            if (int.TryParse(Context.UserIdentifier, out userId))
+                _tablesService.CloseAllSessions(userId);
+            return base.OnDisconnectedAsync(exception);
         }
 
 
@@ -48,10 +50,24 @@ namespace DoppelkopfApi.Hubs
 
         public async Task Tables()
         {
-            Console.WriteLine(Context.UserIdentifier);
             await Clients.All.Tables(TableHubUtils.GetTablesWithUserCount(_tablesService, _mapper));
         }
 
+        [HubMethodName("SpectatorTable")]
+        public Task SpectatorTable()
+        {
+            int userId;
+            PlayTableStaeModel state = null;
+            if (int.TryParse(Context.UserIdentifier, out userId))
+            {
+                var viewer = _tablesService.GetTableViewerByUserId(userId);
+                if (viewer != null)
+                {
+                    state = TableHubUtils.GetTableState(viewer.tableId, _tablesService, _mapper);
+                }
+            }
+            return Clients.User(Context.UserIdentifier).SpectatorTable(state);
+        }
 
 
         public async Task UpdatePlayerTableState(int playerId = -1)
@@ -60,7 +76,7 @@ namespace DoppelkopfApi.Hubs
             {
                 string userId = Context.UserIdentifier;
             }
-            PlayTableGameModel modelValue = null;
+            PlayerStateModel modelValue = null;
             if (int.TryParse(Context.UserIdentifier, out playerId))
             {
                 if (playerId > 0)
@@ -72,5 +88,6 @@ namespace DoppelkopfApi.Hubs
             }
 
         }
+
     }
 }
