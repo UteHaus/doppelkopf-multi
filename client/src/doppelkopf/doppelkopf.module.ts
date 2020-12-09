@@ -9,7 +9,6 @@ import { CardMapComponent } from './game-table/card-map/card-map.component';
 import { PlayStatusRunPipe } from './game-table/play-status-run.pipe';
 import { CardComponent } from './game-table/card-map/card/card.component';
 import { CareImagePathPipe } from './game-table/card-map/care-image-path.pipe';
-import { SelectVariantComponent } from './game-table/select-variant/select-variant.component';
 import { TranslateModule } from '@ngx-translate/core';
 import { HttpClient } from '@angular/common/http';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
@@ -26,6 +25,7 @@ import { SpectatorViewComponent } from './game-table/spectator-view/spectator-vi
 import { PlayerViewComponent } from './game-table/player-view/player-view.component';
 import { AuthGuardEditTables } from '@app/helpers/auth-edit-tables.guard';
 import { AuthAdminGuard } from '@app/helpers/auth-admin.guard';
+import { SelectVariantComponent } from './game-table/player-view/select-variant/select-variant.component';
 const routes: Routes = [
   {
     path: 'table',
