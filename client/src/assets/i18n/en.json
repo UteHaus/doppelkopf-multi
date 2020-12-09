@@ -49,6 +49,7 @@
         "watch": "watch",
         "giver": "Giver",
         "name": "Name",
+        "go-out": "go out",
         "variant": {
             "None": "None",
             "Normal": "Normal",

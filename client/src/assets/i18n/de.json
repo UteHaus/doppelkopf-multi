@@ -36,7 +36,7 @@
         "player-wants-assign- cards": "Will Karten neu vergeben!",
         "assign-cards": "Karten neu vergeben",
         "wait-for-other-players": "Wir warten noch auf die anderen Spieler",
-        "console-table": "Spieltisch",
+        "console-table": "Spieltische",
         "new-play-table": "Spieltisch hinzufügen",
         "edit-play-table": "Spieltisch bearbeiten",
         "add-play-table": "Neuer Spieltisch",
@@ -49,6 +49,7 @@
         "delete": "Löschen",
         "giver": "Geber",
         "name": "Name",
+        "go-out": "austeigen",
         "variant": {
             "None": "Keine Auswahl",
             "Normal": "Gesund",
