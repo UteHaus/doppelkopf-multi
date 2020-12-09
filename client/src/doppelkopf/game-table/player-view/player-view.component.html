@@ -29,8 +29,10 @@
         </div>
     </div>
 
-    <app-hover-step-board [tablePlayerState]="tablePlayerState"
-        (gameVariantSelected)="variantSelected($event)" (runNextTurn)="nextTurn()">
+    <app-hover-step-board
+        *ngIf=" !(tablePlayerState | playStatusRun) && tablePlayerState.thisPlayer"
+        [tablePlayerState]="tablePlayerState" (gameVariantSelected)="variantSelected($event)"
+        (runNextTurn)="nextTurn()">
     </app-hover-step-board>
 
 </div>

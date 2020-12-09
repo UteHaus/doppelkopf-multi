@@ -8,9 +8,8 @@ describe('HoverStepBoardComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ HoverStepBoardComponent ]
-    })
-    .compileComponents();
+      declarations: [HoverStepBoardComponent],
+    }).compileComponents();
   }));
 
   beforeEach(() => {
