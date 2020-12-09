@@ -1,6 +1,6 @@
 <div *ngIf="onHubConnect$ | async; else loading">
   <div *ngIf="tables$ | async as tables">
-    <h1 [translate]>dk.console-table</h1>
+    <h1 [translate]>dk.console-tables</h1>
     <a *ngIf="(user.editTables || user.admin)" routerLink="table"
       class="btn btn-sm btn-success mb-2" [translate]>dk.new-play-table</a>
     <table class="table table-striped">

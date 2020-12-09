@@ -2,7 +2,7 @@
   <nav class="navbar navbar-expand navbar-dark bg-dark" *ngIf="(user$ |async) as user">
     <div class="navbar-nav">
       <a class="nav-item nav-link" routerLink="/" routerLinkActive="active"
-        [routerLinkActiveOptions]="{ exact: false }" [translate]>dk.console-table</a>
+        [routerLinkActiveOptions]="{ exact: false }" [translate]>dk.console-tables</a>
       <a class="nav-item nav-link" (click)="editUser(user)" routerLinkActive="active"
         [translate]>app.users</a>
       <a class="nav-item nav-link" (click)="logout()">{{'app.logout' | translate}}

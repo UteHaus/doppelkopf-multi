@@ -1,8 +1,6 @@
-import { state } from '@angular/animations';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { AccountService } from '@app/services';
-import { stat } from 'fs';
-import { Observable, Subject } from 'rxjs';
+import { BehaviorSubject, Observable, Subject } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { TableState } from 'src/doppelkopf/models/table-players.model';
 import { PlayTableService } from 'src/doppelkopf/services/play-table.service';
@@ -15,7 +13,7 @@ import { TableHubService } from 'src/doppelkopf/services/table-hub.service';
   styleUrls: ['./spectator-view.component.less'],
 })
 export class SpectatorViewComponent implements OnInit, OnDestroy {
-  tableStateSub = new Subject<TableState>();
+  tableStateSub = new BehaviorSubject<TableState>(null);
   tableState$: Observable<TableState>;
 
   constructor(

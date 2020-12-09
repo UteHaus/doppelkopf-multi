@@ -1,5 +1,5 @@
 import { Component, Input, OnDestroy, OnInit, Output } from '@angular/core';
-import { Subject } from 'rxjs';
+import { BehaviorSubject, Subject } from 'rxjs';
 import { Card } from 'src/doppelkopf/models/card.model';
 import { CardUtil } from 'src/doppelkopf/utils/card.util';
 
@@ -29,7 +29,7 @@ export class CardMapComponent implements OnInit, OnDestroy {
   }
 
   @Output()
-  cardSelected: Subject<Card> = new Subject<Card>();
+  cardSelected: BehaviorSubject<Card> = new BehaviorSubject<Card>(null);
 
   constructor() {}
 
