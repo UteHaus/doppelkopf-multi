@@ -6,18 +6,24 @@
             <span [ngClass]="{ 'puls':(player.playerPosition==positionOnMove)}"></span>
         </div>
 
-        <h4>{{ player.userName }} </h4>
-        <p *ngIf="currentGiverPos == player.playerPosition" [translate]>dk.giver</p>
-        <p class="addition-info" *ngIf="player.gameVariant |valideGameVariant ">
-            <span *ngIf="tableGameVariant ">{{('dk.variant.'+tableGameVariant) | translate}}</span>
-            ({{ ('dk.variant.'+player.gameVariant) | translate }})
-        </p>
-        <p *ngIf="(player.playerId==thisPlayerId || showPointsForAllPlayers)">
-            {{'dk.points' | translate}}:
-            {{player.roundsPoints}}</p>
-        <p *ngIf="player.shuffleRound" class="shuffle-round" [translate]>dk.player-wants-assign-
-            cards
-        </p>
+        <ul>
+            <li>
+                <h4>{{ player.userName }} </h4>
+            </li>
+            <li *ngIf="currentGiverPos == player.playerPosition" [translate]>
+                dk.giver
+            </li>
+            <li class="addition-info" *ngIf="player.gameVariant |valideGameVariant "><span
+                    *ngIf="tableGameVariant ">{{('dk.variant.'+tableGameVariant) | translate}}</span>
+                ({{ ('dk.variant.'+player.gameVariant) | translate }})
+            </li>
+            <li *ngIf="(player.playerId==thisPlayerId || showPointsForAllPlayers)">
+                {{'dk.points' | translate}}:
+                {{player.roundsPoints}}
+            </li>
+            <li *ngIf="player.shuffleRound" class="shuffle-round" translate>
+                dk.player-wants-assign-cards</li>
+        </ul>
 
     </div>
     <div class="player-cards">

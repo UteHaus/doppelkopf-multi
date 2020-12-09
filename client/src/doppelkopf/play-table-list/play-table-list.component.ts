@@ -1,9 +1,9 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { AfterViewInit, Component, OnDestroy, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { User } from '@app/models';
 import { AccountService, AlertService } from '@app/services';
-import { Observable, of, Subject } from 'rxjs';
-import { catchError, first, map } from 'rxjs/operators';
+import { BehaviorSubject, Observable, of, Subject } from 'rxjs';
+import { catchError, first, map, switchMap, take } from 'rxjs/operators';
 import { PlayTableCount } from 'src/doppelkopf/models/play-table-count.model';
 import { PlayTable } from 'src/doppelkopf/models/play-table.model';
 import { PlayTableService } from 'src/doppelkopf/services/play-table.service';
@@ -15,11 +15,13 @@ import { TableHubService } from '../services/table-hub.service';
   templateUrl: './play-table-list.component.html',
   styleUrls: ['./play-table-list.component.less'],
 })
-export class PlayTableListComponent implements OnInit, OnDestroy {
-  tables$ = new Subject<PlayTableCount[]>();
+export class PlayTableListComponent
+  implements OnInit, OnDestroy, AfterViewInit {
+  tables$ = new BehaviorSubject<PlayTableCount[]>([]);
   onHubConnect$: Observable<boolean>;
   testValue: any;
   userTableId$: Observable<number>;
+  userTableIdSub: BehaviorSubject<void> = new BehaviorSubject(null);
   get user(): User {
     return this.accountService.userValue;
   }
@@ -32,20 +34,36 @@ export class PlayTableListComponent implements OnInit, OnDestroy {
     private accountService: AccountService,
     private tableHub: TableHubService
   ) {}
-  ngOnDestroy(): void {}
+
+  ngAfterViewInit(): void {
+    this.userTableIdSub.next();
+  }
+
+  ngOnDestroy(): void {
+    this.userTableIdSub.complete();
+    this.tables$.complete();
+  }
 
   ngOnInit(): void {
-    this.userTableId$ = this.tableService
-      .getUserPlayTable(Number(this.accountService.userValue.id))
-      .pipe(
-        map((tp) => (tp != undefined ? tp.id : -1)),
-        catchError(() => of(-1))
-      );
+    this.userTableId$ = this.userTableIdSub.pipe(
+      switchMap(() =>
+        this.tableService.getUserPlayTable(
+          Number(this.accountService.userValue.id)
+        )
+      ),
+      map((tp) => {
+        console.log(tp);
+        return tp != undefined ? tp.id : -1;
+      }),
+      catchError(() => of(-1))
+    );
 
     this.onHubConnect$ = this.tableHub.connectionEstablished$;
-    this.tableHub.onMethode(TableMethods.Tables, (tables) =>
-      this.tables$.next(tables)
-    );
+    this.tableHub.onMethode(TableMethods.Tables, (tables) => {
+      this.tables$.next(tables);
+      this.userTableIdSub.next();
+    });
+
     this.tableHub.invokeMethode(TableMethods.Tables);
   }
 
@@ -64,6 +82,15 @@ export class PlayTableListComponent implements OnInit, OnDestroy {
           }
         });
     }
+  }
+
+  goOutOfTable(): void {
+    this.tableService
+      .logoutOfTable(this.accountService.userValue.id)
+      .pipe(take(1))
+      .toPromise()
+      .then(() => this.router.navigate([]));
+    this.userTableIdSub.next();
   }
 
   watchTable(playTable: PlayTableCount) {

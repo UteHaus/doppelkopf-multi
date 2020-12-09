@@ -4,13 +4,10 @@ import {
   HubConnection,
   HubConnectionBuilder,
   HubConnectionState,
-  IStreamResult,
   LogLevel,
 } from '@aspnet/signalr';
 import { environment } from '@environments/environment';
-import { BehaviorSubject, Subject } from 'rxjs';
-import { PlayTableCount } from '../models/play-table-count.model';
-import { TablePlayerState } from '../models/table-player-state.model';
+import { BehaviorSubject } from 'rxjs';
 import { TableMethods as TableHubMethods } from './table-hub-method.enum';
 
 @Injectable({

@@ -1,6 +1,6 @@
 <div *ngIf="onHubConnect$ | async; else loading">
   <div *ngIf="tables$ | async as tables">
-    <h1 [translate]>dk.console-table</h1>
+    <h1 [translate]>dk.console-tables</h1>
     <a *ngIf="(user.editTables || user.admin)" routerLink="table"
       class="btn btn-sm btn-success mb-2" [translate]>dk.new-play-table</a>
     <table class="table table-striped">
@@ -19,7 +19,7 @@
           <td>{{ '' }}</td>
           <td style="white-space: nowrap">
             <!--  <a routerLink="edit/{{playTable.id}}" class="btn btn-sm btn-primary mr-1">Edit</a>-->
-            <div class="btn-group">
+            <div class="btn-group" *ngIf="userTableId$ | async as userTableId">
               <button type="button" *ngIf="user.editTables || user.admin"
                 (click)="deleteTable(playTable)" class="btn btn-sm btn-danger mb-2"
                 [disabled]="!user.admin">
@@ -27,13 +27,18 @@
                   class="spinner-border spinner-border-sm"></span>
                 <span *ngIf="!deleteTableIds[playTable.id]" [translate]>dk.delete</span>
               </button>
-              <button type="button" *ngIf="userTableId$ | async as userTableId"
-                class="btn btn-sm btn-success mb-2"
+              <button type="button" class="btn btn-sm btn-success mb-2"
                 (click)="runWithOnTable(playTable.id, userTableId == playTable.id)"
                 [disabled]="playTable.userCount == 4 && userTableId != playTable.id">
                 <span *ngIf="userTableId != playTable.id; else goIntoGame"
                   [translate]>dk.play-with</span>
                 <ng-template #goIntoGame> <span [translate]>dk.play-on</span></ng-template>
+              </button>
+              <button type="button" *ngIf="userTableId == playTable.id" (click)="goOutOfTable()"
+                class="btn btn-sm btn-danger mb-2">
+                <span *ngIf="deleteTableIds[playTable.id]"
+                  class="spinner-border spinner-border-sm"></span>
+                <span *ngIf="!deleteTableIds[playTable.id]" [translate]>dk.go-out</span>
               </button>
               <button type="button" (click)="watchTable(playTable)"
                 class="btn btn-sm btn-success mb-2">

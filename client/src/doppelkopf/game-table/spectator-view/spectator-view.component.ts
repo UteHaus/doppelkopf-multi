@@ -1,13 +1,13 @@
-import { state } from '@angular/animations';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { AccountService } from '@app/services';
-import { stat } from 'fs';
-import { Observable, Subject } from 'rxjs';
+import { BehaviorSubject, Observable, Subject } from 'rxjs';
 import { map } from 'rxjs/operators';
+import { PlayStatus } from 'src/doppelkopf/models/play-table.model';
 import { TableState } from 'src/doppelkopf/models/table-players.model';
 import { PlayTableService } from 'src/doppelkopf/services/play-table.service';
 import { TableMethods } from 'src/doppelkopf/services/table-hub-method.enum';
 import { TableHubService } from 'src/doppelkopf/services/table-hub.service';
+import { TableUtil } from 'src/doppelkopf/utils/table.util';
 
 @Component({
   selector: 'app-spectator-view',
@@ -15,7 +15,7 @@ import { TableHubService } from 'src/doppelkopf/services/table-hub.service';
   styleUrls: ['./spectator-view.component.less'],
 })
 export class SpectatorViewComponent implements OnInit, OnDestroy {
-  tableStateSub = new Subject<TableState>();
+  tableStateSub = new BehaviorSubject<TableState>(null);
   tableState$: Observable<TableState>;
 
   constructor(
@@ -38,12 +38,11 @@ export class SpectatorViewComponent implements OnInit, OnDestroy {
     );
     this.tableState$ = this.tableStateSub.pipe(
       map((tableState) => {
-        if (tableState.players) {
-          let positionIndex = 1;
-          tableState.players.forEach((player) => {
-            player.viewPosition = positionIndex;
-            positionIndex++;
-          });
+        if (tableState && tableState.players) {
+          tableState.players = TableUtil.orderPlayersByPositionAndSetViewPosition(
+            tableState.players,
+            1
+          );
         }
 
         return tableState;

@@ -6,7 +6,6 @@ import {
   Output,
 } from '@angular/core';
 
-import { Subject } from 'rxjs';
 import { GamesVariants } from 'src/doppelkopf/models/play-table.model';
 
 @Component({
