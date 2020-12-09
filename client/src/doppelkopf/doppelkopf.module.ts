@@ -26,6 +26,7 @@ import { PlayerViewComponent } from './game-table/player-view/player-view.compon
 import { AuthGuardEditTables } from '@app/helpers/auth-edit-tables.guard';
 import { AuthAdminGuard } from '@app/helpers/auth-admin.guard';
 import { SelectVariantComponent } from './game-table/player-view/select-variant/select-variant.component';
+import { HoverStepBoardComponent } from './game-table/player-view/hover-step-board/hover-step-board.component';
 const routes: Routes = [
   {
     path: 'table',
@@ -77,6 +78,7 @@ const routes: Routes = [
     CardIndexPositionPipe,
     SpectatorViewComponent,
     PlayerViewComponent,
+    HoverStepBoardComponent,
   ],
   imports: [
     ReactiveFormsModule,
