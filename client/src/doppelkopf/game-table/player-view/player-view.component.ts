@@ -10,6 +10,7 @@ import { TablePlayerState } from 'src/doppelkopf/models/table-player-state.model
 import { PlayTableService } from 'src/doppelkopf/services/play-table.service';
 import { TableMethods } from 'src/doppelkopf/services/table-hub-method.enum';
 import { TableHubService } from 'src/doppelkopf/services/table-hub.service';
+import { TableUtil } from 'src/doppelkopf/utils/table.util';
 
 @Component({
   selector: 'app-player-view',
@@ -57,11 +58,9 @@ export class PlayerViewComponent implements OnInit, OnDestroy {
           playTable.thisPlayer = playTable.players.find(
             (p) => p.playerId == Number(this.userService.userValue.id)
           );
-          playTable.players.forEach((player) => {
-            this.setViewPositionOfPlayer(player, playTable);
-          });
-          playTable.players = playTable.players.sort(
-            (playerA, playerB) => playerA.viewPosition - playerB.viewPosition
+          playTable.players = TableUtil.orderPlayersByPositionAndSetViewPosition(
+            playTable.players,
+            playTable.playerPosition
           );
         }
 
@@ -126,13 +125,5 @@ export class PlayerViewComponent implements OnInit, OnDestroy {
 
   private addSubscription<T>(sub: Observable<T>): void {
     this.subscription.add(sub.subscribe());
-  }
-
-  private setViewPositionOfPlayer(
-    player: AdditionPlayerInfo,
-    playTable: TablePlayerState
-  ): void {
-    const player1Pos = player.playerPosition + 4 - playTable.playerPosition;
-    player.viewPosition = player1Pos > 4 ? player1Pos - 4 : player1Pos;
   }
 }
