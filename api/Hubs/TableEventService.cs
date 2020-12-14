@@ -67,8 +67,8 @@ namespace DoppelkopfApi.Hubs
             _hub.Clients.User(userId.ToString()).PlayerCards(cards);
 
             //for viewers
-            var viewers = playTableService.GetTableViewer(tableId);
-            if (viewers == null && viewers.Length > 0)
+            var viewers = playTableService.GetTableViewerOfCardPlayers(userId);
+            if (viewers.Length > 0)
             {
                 foreach (var viewer in viewers)
                 {

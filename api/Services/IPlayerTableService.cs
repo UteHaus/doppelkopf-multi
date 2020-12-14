@@ -49,6 +49,13 @@ namespace DoppelkopfApi.Services
 
         TableViewer GetTableViewerByUserId(int userId);
 
+        /// <summary>
+        /// Get this viewer back that show cards of the given player.
+        /// </summary>
+        /// <param name="playerId">The table player Id</param>
+        /// <returns></returns>
+        TableViewer[] GetTableViewerOfCardPlayers(int playerId);
+
         bool ShowCardsOf(int userId, int playerId);
 
     }

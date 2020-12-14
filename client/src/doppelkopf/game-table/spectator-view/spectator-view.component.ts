@@ -1,7 +1,8 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { AfterViewInit, Component, OnDestroy, OnInit } from '@angular/core';
 import { AccountService } from '@app/services';
 import { BehaviorSubject, Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { map, take } from 'rxjs/operators';
+import { AdditionPlayerInfo } from 'src/doppelkopf/models/additional-player-info.model';
 import { TableState } from 'src/doppelkopf/models/table-state.model';
 import { ViewerState } from 'src/doppelkopf/models/viewer-state.model';
 import { SpectatorService } from 'src/doppelkopf/services/spectator.service';
@@ -14,17 +15,24 @@ import { TableUtil } from 'src/doppelkopf/utils/table.util';
   templateUrl: './spectator-view.component.html',
   styleUrls: ['./spectator-view.component.less'],
 })
-export class SpectatorViewComponent implements OnInit, OnDestroy {
+export class SpectatorViewComponent
+  implements OnInit, OnDestroy, AfterViewInit {
   tableStateSub = new BehaviorSubject<TableState>(null);
   spectatorStateSub = new BehaviorSubject<ViewerState>(null);
   tableState$: Observable<TableState>;
   cardSourceMethode: TableMethods = TableMethods.PlayerCardsForSpectator;
+  private showPlayerId: number = -1;
 
   constructor(
     private tableHubService: TableHubService,
     private accountService: AccountService,
     private spectatorService: SpectatorService
   ) {}
+
+  ngAfterViewInit(): void {
+    this.tableHubService.invokeMethode(TableMethods.SpectatorTable);
+    this.tableHubService.invokeMethode(TableMethods.SpectatorState);
+  }
 
   ngOnDestroy(): void {
     this.tableHubService.offMethode(TableMethods.SpectatorTable);
@@ -38,26 +46,55 @@ export class SpectatorViewComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    this.tableHubService.onMethode(TableMethods.SpectatorTable, (data) =>
-      this.tableStateSub.next(data)
-    );
+    this.tableHubService.onMethode(TableMethods.SpectatorTable, (data) => {
+      const tableState = data as TableState;
+      if (tableState && tableState.players) {
+        tableState.players = TableUtil.orderPlayersByPositionAndSetViewPosition(
+          tableState.players,
+          this.getPlayerPosition(tableState.players, this.showPlayerId)
+        );
+      }
+      this.tableStateSub.next(tableState);
+    });
     this.tableState$ = this.tableStateSub.pipe(
       map((tableState) => {
         if (tableState && tableState.players) {
           tableState.players = TableUtil.orderPlayersByPositionAndSetViewPosition(
             tableState.players,
-            1
+            this.getPlayerPosition(tableState.players, this.showPlayerId)
           );
         }
 
         return tableState;
       })
     );
-    this.tableHubService.invokeMethode(TableMethods.SpectatorTable);
 
     this.tableHubService.onMethode(TableMethods.SpectatorState, (data) =>
       this.spectatorStateSub.next(data)
     );
-    this.tableHubService.invokeMethode(TableMethods.SpectatorState);
+  }
+
+  cardsOfPlayerSelected(player: AdditionPlayerInfo): void {
+    this.spectatorService
+      .showCardsOf(Number(this.accountService.userValue.id), player.playerId)
+      .pipe(take(1))
+      .toPromise()
+      .then((canShow) => {
+        if (canShow) {
+          this.showPlayerId = player.playerId;
+          this.tableHubService.invokeMethode(TableMethods.SpectatorTable);
+        }
+      });
+  }
+
+  private getPlayerPosition(
+    players: AdditionPlayerInfo[],
+    showPlayerId: number
+  ): number {
+    if (showPlayerId < 0) {
+      return 1;
+    }
+    const player = players.find((player) => player.playerId == showPlayerId);
+    return player ? player.playerPosition : 1;
   }
 }

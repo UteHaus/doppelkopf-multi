@@ -1,14 +1,16 @@
-<table class="table">
-    <thead>
-        <tr>
-            <th scope="col-2" [translate]>dk.users</th>
-            <th scope="col-2" [translate]>dk.points</th>
-        </tr>
-    </thead>
-    <tbody>
-        <tr *ngFor="let player of tablePlayerState.players">
-            <td>{{player.userName}}</td>
-            <td>{{player.roundsPoints}}</td>
-        </tr>
-    </tbody>
-</table>
+<div class="card">
+    <table class="table card-body">
+        <thead>
+            <tr>
+                <th scope="col-2" [translate]>dk.users</th>
+                <th scope="col-2" [translate]>dk.points</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr *ngFor="let player of tablePlayerState.players">
+                <td>{{player.userName}}</td>
+                <td>{{player.roundsPoints}}</td>
+            </tr>
+        </tbody>
+    </table>
+</div>

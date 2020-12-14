@@ -6,20 +6,18 @@
             <span [ngClass]="{ 'puls':(player.playerPosition==positionOnMove)}"></span>
         </div>
         <div>
-            <h4>{{ player.userName }} </h4>
+            <h4>{{ player.userName }}
+                <span *ngIf="(player.playerId==thisPlayerId || showPointsForAllPlayers)">
+                    ({{player.roundsPoints}})
+                </span>
+            </h4>
             <div>
                 <ul>
-                    <li>
-                    </li>
                     <li *ngIf="currentGiverPos == player.playerPosition" [translate]>
                         dk.giver
                     </li>
                     <li class="addition-info" *ngIf="player.gameVariant |valideGameVariant ">
                         {{ ('dk.variant.'+player.gameVariant) | translate }}
-                    </li>
-                    <li *ngIf="(player.playerId==thisPlayerId || showPointsForAllPlayers)">
-                        {{'dk.points' | translate}}:
-                        {{player.roundsPoints}}
                     </li>
                     <li *ngIf="player.shuffleRound" class="shuffle-round" translate>
                         dk.player-wants-assign-cards</li>

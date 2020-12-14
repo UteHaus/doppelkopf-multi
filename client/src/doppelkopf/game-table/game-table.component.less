@@ -2,9 +2,9 @@
     z-index: 1;
     width: 100%;
     width: 100%;
-    height: calc(100vh - 125px);
+    height: calc(100vh - 100px);
     position: absolute;
-    top: 125px;
+    top: 100px;
     left: 0;
     background-color: #163a0a9c;
     display: grid;
@@ -29,7 +29,7 @@
 div.table-container {
     display: grid;
     height: 100%;
-    grid-template-rows: 50px 50px calc(100% - 100px);
+    grid-template-rows: 50px 0px calc(100% - 50px);
     padding: 10px;
     background-color: transparent;
     z-index: 5;
@@ -65,5 +65,11 @@ div.table-container {
         grid-row: 3;
         z-index: 1;
         background-color: transparent;
+        height: 100;
+        display: grid;
+    }
+
+    router-outlet {
+        display: none;
     }
 }

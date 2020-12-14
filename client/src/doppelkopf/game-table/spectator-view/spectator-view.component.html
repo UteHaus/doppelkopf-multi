@@ -1,10 +1,11 @@
 <div *ngIf="spectatorStateSub | async as spectatorState">
-    <ng-container *ngIf="tableState$ | async as tableState">
+    <ng-container *ngIf="tableStateSub | async as tableState">
         <app-players-table [players]="tableState.players" [thisPlayerId]="-1"
             [positionOnMove]="tableState.currentPlayerPosition"
             [currentGiverPos]="tableState.roundCardsGiversPosition"
             [tableGameVariant]="tableState.gameVariant" [showPointsForAllPlayers]="true"
-            [showCardsOfPlayer]="spectatorState.seePlayerCard" [enableShowCardsOfPlayer]="true">
+            [showCardsOfPlayer]="spectatorState.seePlayerCard" [enableShowCardsOfPlayer]="true"
+            (showCardsOfPlayersSelected)="cardsOfPlayerSelected($event)">
         </app-players-table>
 
         <app-card-map *ngIf="spectatorState.seePlayerCard>0"

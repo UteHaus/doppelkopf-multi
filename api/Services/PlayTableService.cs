@@ -214,6 +214,8 @@ namespace DoppelkopfApi.Services
                 player.NextTurn = false;
                 _context.TablePlayer.Update(player);
                 _context.SaveChanges();
+                OnPlayerCardsChanged(playerId, player.TableId);
+
 
                 bool allPlayerSetCards = this.GetPlayersOfTable(player.TableId).Count((p) => !String.IsNullOrWhiteSpace(p.PlayedCard)) == 4;
                 var table = GetTableById(player.TableId);
@@ -227,7 +229,6 @@ namespace DoppelkopfApi.Services
                     table.SetToNextPlayerTurn();
                 }
                 _context.SaveChanges();
-                OnPlayerCardsChanged(playerId, table.Id);
                 OnTableChanged(player.TableId);
             }
         }
@@ -360,8 +361,12 @@ namespace DoppelkopfApi.Services
             {
                 viewer.SeePlayerCard = playerId;
                 _context.TableViewers.Update(viewer);
-                OnSpectatorStateChanged(userId);
-                return _context.SaveChanges() > 0;
+                var savedContent = _context.SaveChanges() > 0;
+
+                if (savedContent)
+                    OnSpectatorStateChanged(userId);
+
+                return savedContent;
             }
             return false;
         }
@@ -475,8 +480,10 @@ namespace DoppelkopfApi.Services
         }
 
 
-
-
+        public TableViewer[] GetTableViewerOfCardPlayers(int playerId)
+        {
+            return _context.TableViewers.Where((viewer) => viewer.SeePlayerCard == playerId).ToArray();
+        }
 
 
 

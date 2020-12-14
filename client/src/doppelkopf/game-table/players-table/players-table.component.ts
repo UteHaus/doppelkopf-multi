@@ -1,11 +1,17 @@
-import { Component, Input, OnDestroy, OnInit, Output } from '@angular/core';
+import {
+  Component,
+  EventEmitter,
+  Input,
+  OnDestroy,
+  OnInit,
+  Output,
+} from '@angular/core';
 import { AccountService } from '@app/services';
 import { Subject } from 'rxjs';
 import { take } from 'rxjs/operators';
 import { AdditionPlayerInfo } from 'src/doppelkopf/models/additional-player-info.model';
 import { Card } from 'src/doppelkopf/models/card.model';
 import { GamesVariants } from 'src/doppelkopf/models/play-table.model';
-import { PlayTableService } from 'src/doppelkopf/services/play-table.service';
 import { SpectatorService } from 'src/doppelkopf/services/spectator.service';
 
 @Component({
@@ -39,26 +45,20 @@ export class PlayersTableComponent implements OnInit, OnDestroy {
   enableShowCardsOfPlayer: boolean = false;
 
   @Output()
-  showCardsOfPlayersSelected: Subject<number>;
+  showCardsOfPlayersSelected: EventEmitter<
+    AdditionPlayerInfo
+  > = new EventEmitter();
 
-  constructor(
-    private spectatorService: SpectatorService,
-    private accountService: AccountService
-  ) {}
+  constructor() {}
 
   ngOnDestroy(): void {
     this.showCardsOfPlayersSelected.complete();
   }
 
-  ngOnInit(): void {
-    this.showCardsOfPlayersSelected = new Subject();
-  }
+  ngOnInit(): void {}
 
   showCardsOf(player: AdditionPlayerInfo) {
-    this.spectatorService
-      .showCardsOf(Number(this.accountService.userValue.id), player.playerId)
-      .pipe(take(1))
-      .subscribe();
+    this.showCardsOfPlayersSelected.emit(player);
   }
 
   trackCards(index: number, card: Card): string {
