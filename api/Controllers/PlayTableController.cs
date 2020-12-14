@@ -175,7 +175,7 @@ namespace DoppelkopfApi.Controllers
         {
             try
             {
-                return Ok(GetTableState(playerId));
+                return Ok(TableHubUtils.GetTablePLayerState(playerId, _playTableService, _mapper));
             }
             catch (AppException ex)
             {
@@ -252,35 +252,18 @@ namespace DoppelkopfApi.Controllers
             return Forbid();
         }
 
-        [HttpPost("spectator")]
-        public IActionResult WatchTable(int tableId, int userId)
+
+
+        [HttpPut("player/replace")]
+        public IActionResult ReplaceTablePlayer(int currentPlayerId, int newPlayerId)
         {
             try
             {
-                bool result = _playTableService.WatchTable(userId, tableId);
-
-                return Ok(result);
+                return Ok(_playTableService.ReplaceTablePlayer(currentPlayerId, newPlayerId));
             }
-
-            catch (AppException ex)
+            catch (System.Exception ex)
             {
-                return BadRequest(new { message = ex.Message });
-            }
-        }
-
-        [HttpPut("spectator")]
-        public IActionResult CancelWatchTable(int userId)
-        {
-            try
-            {
-                bool result = _playTableService.CancelWatchTable(userId);
-
-                return Ok(result);
-            }
-
-            catch (AppException ex)
-            {
-                return BadRequest(new { message = ex.Message });
+                return BadRequest(ex);
             }
         }
 
@@ -326,25 +309,6 @@ namespace DoppelkopfApi.Controllers
             return model;
         }
 
-        private PlayerStateModel GetTableState(int playerId)
-        {
-            var tablePlayer = _playTableService.GettablePlayerOfId(playerId);
-
-            if (tablePlayer == null)
-            {
-                return null;
-            }
-            var table = _playTableService.GetTableById(tablePlayer.TableId);
-            var tablePlayers = _playTableService.GetPlayersOfTable(tablePlayer.TableId);
-            var model = _mapper.Map<PlayerStateModel>(table);
-            model.UserCount = tablePlayers.Length;
-            model.Cards = tablePlayer.GetHandCards();
-            model.Players = tablePlayers.Select((p) => new AdditionPlayerInfoModel(p)).ToArray();
-            model.ShuffleCount = tablePlayers.Count(p => p.ShuffleRound);
-            model.NextTurnCount = tablePlayers.Count(p => p.NextTurn);
-            model.PlayerPosition = tablePlayer.PlayerPosition;
-            return model;
-        }
 
     }
 

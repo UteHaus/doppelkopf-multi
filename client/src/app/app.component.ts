@@ -1,4 +1,4 @@
-﻿import { Component, HostListener } from '@angular/core';
+﻿import { Component } from '@angular/core';
 
 import { AccountService } from './services';
 import { User } from './models';
@@ -6,7 +6,6 @@ import { TranslateService } from '@ngx-translate/core';
 import { Observable } from 'rxjs';
 import { Router } from '@angular/router';
 import { PlayTableService } from 'src/doppelkopf/services/play-table.service';
-import { TableHubService } from 'src/doppelkopf/services/table-hub.service';
 
 @Component({ selector: 'app', templateUrl: 'app.component.html' })
 export class AppComponent {

@@ -32,12 +32,10 @@ namespace DoppelkopfApi.Helpers
             return cards;
         }
 
-        public List<Card> ShuffleCards()
+        public List<Card> ShuffleCards(List<Card> cards = null)
         {
-            var cards = GetNewCards();
-            Random random = new Random(4);
+            cards = cards == null ? GetNewCards() : cards;
             return cards.OrderBy(x => Guid.NewGuid()).ToList();
-            //return new List<Card>(ShuffelCards.Shuffle<Card>(cards.ToArray(), random));
         }
 
 
@@ -62,9 +60,9 @@ namespace DoppelkopfApi.Helpers
             return cards;
         }
 
-        public List<Card>[] DistributeCards(bool withNiner)
+        public List<Card>[] DistributeCards(bool withNiner, List<Card> cards = null)
         {
-            var cards = ShuffleCards();
+            cards = ShuffleCards(cards);
             List<Card>[] playerCards = new List<Card>[4];
             for (int i = 0; i < playerCards.Length; i++)
             {
@@ -177,18 +175,6 @@ namespace DoppelkopfApi.Helpers
             return playedVariant;
         }
 
-        public void SetPlayerGameVariant(GamesVariants playVariant, TablePlayer[] players)
-        {
-            foreach (var player in players)
-            {
-                if (playVariant != GamesVariants.Normal && player.GameVariant != playVariant)
-                {
-                    player.GameVariant = GamesVariants.Normal;
-                }
-            }
-
-        }
-
         public PlayCard[] OrderPlayersByPosition(PlayCard[] playedCards, int currentPlayerPosition)
         {
             int initialPlayerPosition = GetNextPosition(currentPlayerPosition);
@@ -256,6 +242,9 @@ namespace DoppelkopfApi.Helpers
 
         private int SuitRating(Card card)
         {
+            if (card == null)
+                return -1;
+
             switch (card.Suit)
             {
                 case Suits.clubs:
@@ -326,6 +315,8 @@ namespace DoppelkopfApi.Helpers
         }
         private int NormalRating(PlayTable table, Card card)
         {
+            if (card == null)
+                return -1;
 
             if (table.DiamondsAceAsMaster && card == Ranks.ace && card == Suits.diamonds)
             {
@@ -412,7 +403,7 @@ namespace DoppelkopfApi.Helpers
                 int rating = ratingFunc(cards[i]);
                 if (rating == -1)
                 {
-                    throw new Exception("Card suit or rank could not be determined.");
+                    return -1;
                 }
 
                 if (ratingMin > rating)

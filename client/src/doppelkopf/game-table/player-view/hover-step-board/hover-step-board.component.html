@@ -15,17 +15,24 @@
 
     <div class="next-step"
         *ngIf="(tablePlayerState | playStatusWaitNextRound) || (tablePlayerState | playStatusWinnerTime)">
+        <p>{{tablePlayerState.thisPlayer.nextTurn}}</p>
         <div *ngIf="!tablePlayerState.thisPlayer.nextTurn; else waitForNextPlayer">
-            <button (click)="nextTurn()" class="btn" [translate]>
-                dk.next
-            </button>
+            <app-next-turn-button [withTimer]="tablePlayerState |playStatusWaitNextRound"
+                (runNextTurn)="nextTurn()"></app-next-turn-button>
             <app-result-table *ngIf="(tablePlayerState | playStatusWinnerTime)"
                 [tablePlayerState]="tablePlayerState"></app-result-table>
         </div>
         <ng-template #waitForNextPlayer>
-            <h3 [translate]>dk.wait-for-other-players</h3>
+            <h2 [translate]>dk.wait-for-other-players</h2>
+            <ng-content []></ng-content>
         </ng-template>
 
     </div>
 
 </div>
+
+<ng-template>
+    <ul *ngIf="waitingForPlayers$| async as waitingForPlayers">
+        <li *ngFor="let playerName of waitingForPlayers">{{playerName}}</li>
+    </ul>
+</ng-template>

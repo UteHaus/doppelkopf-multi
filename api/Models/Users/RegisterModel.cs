@@ -13,5 +13,9 @@ namespace DoppelkopfApi.Models.Users
 
         [Required]
         public string Password { get; set; }
+
+        public bool EditUser { get; set; }
+
+        public bool EditTables { get; set; }
     }
 }

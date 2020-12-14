@@ -16,6 +16,10 @@ namespace DoppelkopfApi.Entities
 
         public string Username { get; set; }
 
+        /// <summary>
+        /// Seat position of the player on the table, started with 1 to 4,
+        /// </summary>
+        /// <value></value>
         public int PlayerPosition { get; set; }
 
         public string HandCards { get; set; }

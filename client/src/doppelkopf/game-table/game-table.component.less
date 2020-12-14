@@ -2,26 +2,26 @@
     z-index: 1;
     width: 100%;
     width: 100%;
-    height: calc(100vh - 65px);
+    height: calc(100vh - 125px);
     position: absolute;
+    top: 125px;
     left: 0;
-    background-color: rgb(233, 227, 193);
+    background-color: #163a0a9c;
     display: grid;
     grid-template-columns: 100%;
-    grid-template-rows: 80px 35% calc(65% - 80px);
+    grid-template-rows: 35% 65%;
 
     .back-top {
         grid-column: 1;
-        grid-row: 2;
-        background-color: rgb(190, 164, 124);
+        grid-row: 1;
+        background-color: #f8f8f8d7;
         clip-path: polygon(50% 100%, 100% 18%, 100% 0, 0 0, 0 18%);
     }
 
     .back-bottom {
         grid-column: 1;
-        grid-row: 3;
-        background-color: rgb(190, 164, 124);
-
+        grid-row: 2;
+        background-color: #f8f8f8d7;
         clip-path: polygon(50% 0%, 100% 38%, 100% 100%, 0 100%, 0% 38%);
     }
 }

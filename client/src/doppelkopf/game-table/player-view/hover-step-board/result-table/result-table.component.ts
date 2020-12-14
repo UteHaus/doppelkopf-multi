@@ -1,5 +1,5 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { TablePlayerState } from 'src/doppelkopf/models/table-player-state.model';
+import { TableState } from 'src/doppelkopf/models/table-state.model';
 
 @Component({
   selector: 'app-result-table',
@@ -8,7 +8,7 @@ import { TablePlayerState } from 'src/doppelkopf/models/table-player-state.model
 })
 export class ResultTableComponent implements OnInit {
   @Input()
-  tablePlayerState: TablePlayerState;
+  tablePlayerState: TableState;
 
   constructor() {}
 

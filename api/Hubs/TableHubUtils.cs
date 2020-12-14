@@ -22,13 +22,13 @@ namespace DoppelkopfApi.Hubs
             return model;
         }
 
-        public static PlayerStateModel GetTablePLayerState(int playerId, IPlayTableService playTableService, IMapper mapper)
+        public static PlayTableStaeModel GetTablePLayerState(int playerId, IPlayTableService playTableService, IMapper mapper)
         {
             var tablePlayer = playTableService.GettablePlayerOfId(playerId);
             if (tablePlayer != null)
             {
                 var tableState = GetTableState(tablePlayer.TableId, playTableService, mapper);
-                return AddPlayerInfosToTableState(tablePlayer, tableState, mapper);
+                return tableState;
             }
             return null;
         }
@@ -49,17 +49,20 @@ namespace DoppelkopfApi.Hubs
             return null;
         }
 
-        public static PlayerStateModel AddPlayerInfosToTableState(TablePlayer player, PlayTableStaeModel tableState, IMapper mapper)
+
+        public static ViewWerModel GetViewWerModel(int userId, IPlayTableService playTableService, IMapper mapper)
         {
-            var playerState = mapper.Map<PlayerStateModel>(tableState);
-
-            if (player != null)
-            {
-                playerState.PlayerPosition = player.PlayerPosition;
-                playerState.Cards = player.GetHandCards();
-            }
-
-            return playerState;
+            var viewer = playTableService.GetTableViewerByUserId(userId);
+            return viewer == null ? null : mapper.Map<ViewWerModel>(viewer);
         }
+
+        public static Card[] GetPlayerCards(int userId, IPlayTableService tableService)
+        {
+            var player = tableService.GettablePlayerOfId(userId);
+            var cards = player?.GetHandCards();
+
+            return cards;
+        }
+
     }
 }

@@ -51,7 +51,7 @@ namespace DoppelkopfApi.Entities
 
         public static bool operator ==(Card card, Suits suit)
         {
-            return card.Suit == suit;
+            return card != null && card.Suit == suit;
         }
 
         public static bool operator !=(Card card, Suits suit)
@@ -61,7 +61,7 @@ namespace DoppelkopfApi.Entities
 
         public static bool operator ==(Card card, Ranks rank)
         {
-            return card.Rank == rank;
+            return card != null && card.Rank == rank;
         }
 
         public static bool operator !=(Card card, Ranks rank)

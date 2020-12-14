@@ -1,32 +1,29 @@
-import { Component, Input, OnDestroy, OnInit, Output } from '@angular/core';
-import { BehaviorSubject, Subject } from 'rxjs';
-import { subscribeOn } from 'rxjs/operators';
+import { Component, Input, OnDestroy, Output } from '@angular/core';
+import { Observable, Subject } from 'rxjs';
 import { GamesVariants } from 'src/doppelkopf/models/play-table.model';
-import { TablePlayerState } from 'src/doppelkopf/models/table-player-state.model';
+import { TableState } from 'src/doppelkopf/models/table-state.model';
 
 @Component({
   selector: 'app-hover-step-board',
   templateUrl: './hover-step-board.component.html',
   styleUrls: ['./hover-step-board.component.less'],
 })
-export class HoverStepBoardComponent implements OnInit, OnDestroy {
+export class HoverStepBoardComponent implements OnDestroy {
   @Input()
-  tablePlayerState: TablePlayerState;
+  tablePlayerState: TableState;
   @Output()
-  gameVariantSelected: Subject<GamesVariants>;
+  gameVariantSelected: Subject<GamesVariants> = new Subject();
   @Output()
-  runNextTurn: Subject<void>;
+  runNextTurn: Subject<void> = new Subject();
+
+  @Input()
+  waitingForPlayers$: Observable<string[]>;
 
   constructor() {}
 
   ngOnDestroy(): void {
     if (this.gameVariantSelected) this.gameVariantSelected.complete();
     if (this.runNextTurn) this.runNextTurn.complete();
-  }
-
-  ngOnInit(): void {
-    this.gameVariantSelected = new Subject();
-    this.runNextTurn = new Subject();
   }
 
   variantSelected(variant: GamesVariants) {

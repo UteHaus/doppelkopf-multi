@@ -1,5 +1,5 @@
-﻿<div class="app-container">
-  <nav class="navbar navbar-expand navbar-dark bg-dark" *ngIf="(user$ |async) as user">
+﻿<div class="app-container background-image">
+  <nav class="navbar navbar-expand navbar-dark" *ngIf="(user$ |async) as user">
     <div class="navbar-nav">
       <a class="nav-item nav-link" routerLink="/" routerLinkActive="active"
         [routerLinkActiveOptions]="{ exact: false }" [translate]>dk.console-tables</a>
@@ -8,6 +8,7 @@
       <a class="nav-item nav-link" (click)="logout()">{{'app.logout' | translate}}
         ({{user.username}})</a>
       <!--  <button (click)="useLanguage('de')">de</button> -->
+
     </div>
 
   </nav>

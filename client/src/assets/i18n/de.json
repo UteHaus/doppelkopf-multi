@@ -51,6 +51,7 @@
         "giver": "Geber",
         "name": "Name",
         "go-out": "austeigen",
+        "show-cards": "Karten anzeigen",
         "variant": {
             "None": "Keine Auswahl",
             "Normal": "Gesund",

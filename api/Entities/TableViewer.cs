@@ -10,6 +10,8 @@ namespace DoppelkopfApi.Entities
         {
             this.tableId = tableId;
             this.userId = userId;
+            AsAdditionPlayer = false;
+            SeePlayerCard = -1;
         }
 
         [Key]
@@ -17,6 +19,14 @@ namespace DoppelkopfApi.Entities
 
         public int tableId { get; set; }
         public int userId { get; set; }
+
+        public bool AsAdditionPlayer { get; set; }
+
+        /// <summary>
+        /// Define if the user can see of one player the cards
+        /// </summary>
+        /// <value></value>
+        public int SeePlayerCard { get; set; }
 
     }
 }
