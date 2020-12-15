@@ -73,6 +73,7 @@ export class CardMapComponent implements OnInit, OnDestroy {
     ) {
       this.orderedCards = CardUtil.orderCards(
         this.cardsSub.value,
+        this._gameVariant,
         this._diamondsAceAsMaster
       );
     }

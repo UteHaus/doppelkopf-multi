@@ -24,7 +24,8 @@
                 <app-card-map [diamondsAceAsMaster]="tablePlayerState.diamondsAceAsMaster"
                     [disabled]="
             tablePlayerState.players[3].playerPosition != tablePlayerState.currentPlayerPosition
-          " (cardSelected)="cardSelected($event)" [sourceHubMethode]="cardSourceMethode">
+          " (cardSelected)="cardSelected($event)" [sourceHubMethode]="cardSourceMethode"
+                    [gameVariant]="tablePlayerState.gameVariant">
                 </app-card-map>
             </div>
         </div>
