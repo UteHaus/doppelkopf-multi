@@ -502,7 +502,7 @@ namespace DoppelkopfApi.Services
             var playerCards = _cardHandler.DistributeCards(withNiner);
             for (int i = 0; i < tablePlayers.Length; i++)
             {
-                tablePlayers[i].HandCards = JsonSerializer.Serialize(playerCards[i].GetRange(0, 1)); // //for test
+                tablePlayers[i].HandCards = JsonSerializer.Serialize(playerCards[i]); //.GetRange(0, 1) //for test
                 tablePlayers[i].RoundsPoints = 0;
                 tablePlayers[i].HasDiamondClubsOnHand = playerCards[i].Count((card) => card.IsDiamondClub()) > 0;
             }
