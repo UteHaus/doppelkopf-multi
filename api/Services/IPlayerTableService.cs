@@ -58,6 +58,8 @@ namespace DoppelkopfApi.Services
 
         bool ShowCardsOf(int userId, int playerId);
 
+        void SetPlayerMessage(int playerId, string message);
+
     }
 
 }

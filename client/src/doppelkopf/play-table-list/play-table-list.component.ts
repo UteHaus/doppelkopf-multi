@@ -23,6 +23,7 @@ export class PlayTableListComponent
   testValue: any;
   userTableId$: Observable<number>;
   userTableIdSub: BehaviorSubject<void> = new BehaviorSubject(null);
+  currentUser$: Observable<User>;
   get user(): User {
     return this.accountService.userValue;
   }
@@ -47,6 +48,7 @@ export class PlayTableListComponent
   }
 
   ngOnInit(): void {
+    this.currentUser$  =  this.accountService.user;
     this.userTableId$ = this.userTableIdSub.pipe(
       switchMap(() =>
         this.tableService.getUserPlayTable(

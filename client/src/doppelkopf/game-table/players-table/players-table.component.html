@@ -21,6 +21,14 @@
                     </li>
                     <li *ngIf="player.shuffleRound" class="shuffle-round" translate>
                         dk.player-wants-assign-cards</li>
+                    <li class="message-input"
+                        *ngIf="(player.playerId==thisPlayerId); else showMessage">
+                        <inplace-input (focusOut)="messageEdit($event)" [value]="player.message">
+                        </inplace-input>
+                    </li>
+                    <ng-template #showMessage>
+                        <li *ngIf="player.message" class="message"> {{player.message}} </li>
+                    </ng-template>
 
                     <!--                     <li>
                         <button class="btn btn-smal"><i class="fas fa-check"></i></button>

@@ -15,7 +15,8 @@
                 [thisPlayerId]="tablePlayerState.thisPlayer? tablePlayerState.thisPlayer.playerId: -1"
                 [positionOnMove]="tablePlayerState.currentPlayerPosition"
                 [currentGiverPos]="tablePlayerState.roundCardsGiversPosition"
-                [tableGameVariant]="tablePlayerState.gameVariant"></app-players-table>
+                [tableGameVariant]="tablePlayerState.gameVariant"
+                (messageChanged)="playerMessageChanged($event)"></app-players-table>
         </div>
 
         <div class="this-player-cards">
@@ -29,8 +30,7 @@
         </div>
     </div>
 
-    <app-hover-step-board
-        *ngIf=" !(tablePlayerState | playStatusRun) && tablePlayerState.thisPlayer"
+    <app-hover-step-board *ngIf=" !(tablePlayerState | playStatusRun)"
         [tablePlayerState]="tablePlayerState" (gameVariantSelected)="variantSelected($event)"
         (runNextTurn)="nextTurn()" [waitingForPlayers$]="waitingForNextTurnPlayers$">
     </app-hover-step-board>

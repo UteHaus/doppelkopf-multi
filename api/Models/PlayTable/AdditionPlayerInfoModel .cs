@@ -19,6 +19,8 @@ namespace DoppelkopfApi.Models.PlayTable
             RoundWinner = player.RoundWinner;
             RoundsPoints = player.RoundsPoints;
             PlayedRoundCards = player.GetPlayedRoundCards();
+            Message = player.Message;
+            DutyAnnouncement = player.DutyAnnouncement;
         }
 
         public int PlayerId { get; set; }
@@ -38,5 +40,9 @@ namespace DoppelkopfApi.Models.PlayTable
         public int RoundsPoints { get; set; }
 
         public GamesVariants GameVariant { get; set; }
+
+        public string Message { get; set; }
+
+        public string DutyAnnouncement { get; set; }
     }
 }

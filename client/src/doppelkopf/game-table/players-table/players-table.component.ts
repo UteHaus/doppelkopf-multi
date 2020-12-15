@@ -6,13 +6,9 @@ import {
   OnInit,
   Output,
 } from '@angular/core';
-import { AccountService } from '@app/services';
-import { Subject } from 'rxjs';
-import { take } from 'rxjs/operators';
 import { AdditionPlayerInfo } from 'src/doppelkopf/models/additional-player-info.model';
 import { Card } from 'src/doppelkopf/models/card.model';
 import { GamesVariants } from 'src/doppelkopf/models/play-table.model';
-import { SpectatorService } from 'src/doppelkopf/services/spectator.service';
 
 @Component({
   selector: 'app-players-table',
@@ -49,6 +45,9 @@ export class PlayersTableComponent implements OnInit, OnDestroy {
     AdditionPlayerInfo
   > = new EventEmitter();
 
+  @Output()
+  messageChanged: EventEmitter<string> = new EventEmitter();
+
   constructor() {}
 
   ngOnDestroy(): void {
@@ -61,7 +60,11 @@ export class PlayersTableComponent implements OnInit, OnDestroy {
     this.showCardsOfPlayersSelected.emit(player);
   }
 
-  trackCards(index: number, card: Card): string {
+  trackCards(card: Card): string {
     return `${card.rank}-${card.suit}`;
+  }
+
+  messageEdit(message: string) {
+    this.messageChanged.emit(message);
   }
 }

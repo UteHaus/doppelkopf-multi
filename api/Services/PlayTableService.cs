@@ -143,7 +143,7 @@ namespace DoppelkopfApi.Services
 
                         table.StitchCounter++;
                         // when the round is over
-                        if (table.StitchCounter == 12 || (!table.WithNiner && table.StitchCounter == 10))
+                        if (table.StitchCounter >= 12 || (!table.WithNiner && table.StitchCounter >= 10) || tablePlayers.All((player) => player.AnyCards()))
                         {
                             SetWinners(tablePlayers, table);
                             table.Status = PlayStatus.WinnersTime;
@@ -230,6 +230,19 @@ namespace DoppelkopfApi.Services
                 }
                 _context.SaveChanges();
                 OnTableChanged(player.TableId);
+            }
+        }
+
+        public void SetPlayerMessage(int playerId, string message)
+        {
+            var player = _context.TablePlayer.FirstOrDefault((player) => player.PlayerId == playerId);
+            if (player != null)
+            {
+                player.Message = message;
+                _context.TablePlayer.Update(player);
+                if (_context.SaveChanges() > 0)
+                    OnTableChanged(player.TableId);
+
             }
         }
 
@@ -492,7 +505,7 @@ namespace DoppelkopfApi.Services
             var playerCards = _cardHandler.DistributeCards(withNiner);
             for (int i = 0; i < tablePlayers.Length; i++)
             {
-                tablePlayers[i].HandCards = JsonSerializer.Serialize(playerCards[i]);
+                tablePlayers[i].HandCards = JsonSerializer.Serialize(playerCards[i]); //.GetRange(0, 1) //for test
                 tablePlayers[i].RoundsPoints = 0;
                 tablePlayers[i].HasDiamondClubsOnHand = playerCards[i].Count((card) => card.IsDiamondClub()) > 0;
             }

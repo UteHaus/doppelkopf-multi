@@ -33,7 +33,7 @@
 
             >img {
                 width: 100%;
-                height: 100%;
+                height: auto;
             }
 
             &.on-move {
@@ -80,6 +80,8 @@
             list-style-type: none;
             margin: 0;
             padding: 0;
+            color: white;
+            min-width: max-content;
         }
 
         li.addition-info {
@@ -96,6 +98,20 @@
             color: #741b1b;
             padding: 2px;
             display: contents;
+        }
+
+        li.message-input {
+            background-color: white;
+            color: black;
+            height: max-content;
+            min-height: 20px;
+            display: flex;
+            min-width: max-content;
+        }
+
+        li.message {
+            border-bottom-style: groove;
+            border-bottom-color: white;
         }
     }
 

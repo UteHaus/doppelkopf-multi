@@ -44,10 +44,19 @@ namespace DoppelkopfApi.Entities
         public bool AnnouncementReParty { get; set; }
         public int CancellationOfparty { get; set; }
 
-        public string Massage { get; set; }
-        public bool BidRe { get; set; }
+        public string Message { get; set; }
 
-        public bool BidKontra { get; set; }
+        /// <summary>
+        /// User id of the user with will show the cards of the player.
+        /// </summary>
+        /// <value></value>
+        public int UserIdRequestCanShowCarts { get; set; }
+
+        /// <summary>
+        /// Re Kontra announcement 
+        /// </summary>
+        /// <value></value>
+        public string DutyAnnouncement { get; set; }
 
         public bool SecondDullStitches { get; set; }
         public Card[] GetHandCards() => String.IsNullOrWhiteSpace(HandCards) ? new Card[0] : JsonSerializer.Deserialize<Card[]>(HandCards);
@@ -55,6 +64,11 @@ namespace DoppelkopfApi.Entities
         public void SetHandCards(Card[] cards)
         {
             HandCards = JsonSerializer.Serialize(cards);
+        }
+
+        public bool AnyCards()
+        {
+            return string.IsNullOrWhiteSpace(HandCards) || GetHandCards().Length == 0;
         }
 
         public void SetAsWinner()

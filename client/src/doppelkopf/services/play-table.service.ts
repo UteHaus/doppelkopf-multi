@@ -99,6 +99,13 @@ export class PlayTableService {
     );
   }
 
+  public setPlayerMessage(playerId: number, message: string) {
+    return this.http.put<void>(
+      `${this.defaultApiPath}/player/${playerId}/message?message=${message}`,
+      {}
+    );
+  }
+
   public isTableUpdated(
     tableId: number,
     lastUpdate: number

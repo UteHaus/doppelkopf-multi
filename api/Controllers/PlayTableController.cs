@@ -197,6 +197,20 @@ namespace DoppelkopfApi.Controllers
             }
         }
 
+        [HttpPut("player/{playerId}/message")]
+        public IActionResult SetPlayerMessage(int playerId, string message)
+        {
+            try
+            {
+                _playTableService.SetPlayerMessage(playerId, message);
+                return Ok();
+            }
+            catch (AppException ex)
+            {
+                return BadRequest(new { message = ex.Message });
+            }
+        }
+
         [HttpPut("player/{playerId}/variant")]
         public IActionResult SetGameVariant(int playerId, string variant)
         {

@@ -2,7 +2,7 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { AccountService } from '@app/services';
 import { BehaviorSubject, Observable, Subject, Subscription } from 'rxjs';
-import { map, shareReplay, switchMap } from 'rxjs/operators';
+import { map, shareReplay, switchMap, take } from 'rxjs/operators';
 import { AdditionPlayerInfo } from 'src/doppelkopf/models/additional-player-info.model';
 import { Card } from 'src/doppelkopf/models/card.model';
 import { GamesVariants } from 'src/doppelkopf/models/play-table.model';
@@ -135,5 +135,12 @@ export class PlayerViewComponent implements OnInit, OnDestroy {
 
   private addSubscription<T>(sub: Observable<T>): void {
     this.subscription.add(sub.subscribe());
+  }
+
+  playerMessageChanged(message: string) {
+    this.tableService
+      .setPlayerMessage(this.userId, message)
+      .pipe(take(1))
+      .subscribe();
   }
 }

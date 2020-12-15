@@ -58,9 +58,10 @@ export class CardMapComponent implements OnInit, OnDestroy {
     return `${card.rank}-${card.suit}`;
   }
 
-  selectCard(card: Card) {
+  selectCard(card: Card, index: number) {
     if (!this.disabled) {
       this.cardSelected.next(card);
+      this.orderedCards.splice(index, 1);
     }
   }
 

@@ -54,7 +54,7 @@
         "show-cards": "Karten anzeigen",
         "variant": {
             "None": "Keine Auswahl",
-            "Normal": "Gesund",
+            "Normal": "keine Ansage",
             "Wedding": "Hochzeit",
             "Solo": "Solo",
             "QueenSolo": "Obersolo Solo",
