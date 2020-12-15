@@ -30,6 +30,7 @@ import { HoverStepBoardComponent } from './game-table/player-view/hover-step-boa
 import { ResultTableComponent } from './game-table/player-view/hover-step-board/result-table/result-table.component';
 import { NextTurnButtonComponent } from './game-table/player-view/hover-step-board/next-turn-button/next-turn-button.component';
 import { InplaceInputComponent } from './game-table/players-table/inplace-input/inplace-input.component';
+import { GameVariantNormalPipe } from './game-table/game-variant-normal.pipe';
 const routes: Routes = [
   {
     path: 'table',
@@ -85,6 +86,7 @@ const routes: Routes = [
     ResultTableComponent,
     NextTurnButtonComponent,
     InplaceInputComponent,
+    GameVariantNormalPipe,
   ],
   imports: [
     ReactiveFormsModule,

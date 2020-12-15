@@ -30,7 +30,8 @@
         </div>
     </div>
 
-    <app-hover-step-board *ngIf=" !(tablePlayerState | playStatusRun)"
+    <app-hover-step-board
+        *ngIf=" !(tablePlayerState | playStatusRun) || (tablePlayerState | playStatusWinnerTime)"
         [tablePlayerState]="tablePlayerState" (gameVariantSelected)="variantSelected($event)"
         (runNextTurn)="nextTurn()" [waitingForPlayers$]="waitingForNextTurnPlayers$">
     </app-hover-step-board>

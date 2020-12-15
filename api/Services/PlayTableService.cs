@@ -114,17 +114,19 @@ namespace DoppelkopfApi.Services
             var tablePlayer = GettablePlayerOfId(playerId);
             if (tablePlayer != null)
             {
-                bool newGame = false;
                 tablePlayer.NextTurn = true;
                 _context.TablePlayer.Update(tablePlayer);
                 _context.SaveChanges();
+                OnTableChanged(tablePlayer.TableId);
+
                 var tablePlayers = GetPlayersOfTable(tablePlayer.TableId);
                 var table = _context.PlayTables.FirstOrDefault(pt => pt.Id == tablePlayer.TableId);
                 var nextTurnCount = tablePlayers.Count(tp => tp.NextTurn);
+                bool newGame = table.Status == PlayStatus.WinnersTime;
 
                 if (nextTurnCount == 4)
                 {
-                    if (table.Status != PlayStatus.WinnersTime)
+                    if (!newGame)
                     {
                         var playedRoundCards = tablePlayers.Select((tp) => new PlayCard(tp)).ToArray();
                         table.SetLastCardSet(playedRoundCards.Select((prc) => prc.Card).ToArray());
@@ -153,11 +155,7 @@ namespace DoppelkopfApi.Services
                             table.Status = PlayStatus.Run;
                         }
                         _context.PlayTables.Update(table);
-
-                    }
-                    else
-                    {
-                        newGame = true;
+                        _context.SaveChanges();
                     }
 
                     // reset the next turn state for all player of the table
@@ -165,17 +163,16 @@ namespace DoppelkopfApi.Services
                     {
                         player.ClearForNextTurn();
                     }
+
                     _context.TablePlayer.UpdateRange(tablePlayers);
                     _context.SaveChanges();
-
+                    OnTableChanged(table.Id);
                 }
-                if (newGame)
+
+                if (newGame && nextTurnCount == 4)
                 {
                     StartNewRound(table.Id);
                 }
-                else
-                    OnTableChanged(table.Id);
-
             }
         }
 
@@ -505,7 +502,7 @@ namespace DoppelkopfApi.Services
             var playerCards = _cardHandler.DistributeCards(withNiner);
             for (int i = 0; i < tablePlayers.Length; i++)
             {
-                tablePlayers[i].HandCards = JsonSerializer.Serialize(playerCards[i]); //.GetRange(0, 1) //for test
+                tablePlayers[i].HandCards = JsonSerializer.Serialize(playerCards[i].GetRange(0, 1)); // //for test
                 tablePlayers[i].RoundsPoints = 0;
                 tablePlayers[i].HasDiamondClubsOnHand = playerCards[i].Count((card) => card.IsDiamondClub()) > 0;
             }
