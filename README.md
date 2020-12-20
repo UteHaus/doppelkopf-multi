@@ -35,13 +35,17 @@ To change the port of the client, at docker compose file change the client ports
 
 
 ## ToDoś:
-- spielverlauf anzeigen
+- die lezte Karte bleibt liegen obwohl gespielt, nach dem letzten 
+spieler wird diese aktualisiert
+- Ton beim spielen eier Karte
 - aktellen Stich nur für 3 sekunden Anzeigen 
+- 
+- spielverlauf anzeigen
 - Re Kontra --> DB vorhanden 
 - Auflisten der Stiche am Ende
 - info an wen man wartet
 - Chate eine Zeile --> DB vorhanden 
-- Ton beim spielen eier Karte
+
 - Übersetzungen beim Tisch überprüfen
 - Bilder auf ihrer Größe Komprimieren bzw optimieren
 - eventuell Tisch Bild
@@ -57,6 +61,8 @@ To change the port of the client, at docker compose file change the client ports
 - Geber und Anspieler mit angeben
 - Update des Tisch states
 - beim Client die Karten nach gesund sortieren
+
+
 
 ## Update State
 - https://www.tpeczek.com/2017/02/server-sent-events-sse-support-for.html --> mit nuget repo

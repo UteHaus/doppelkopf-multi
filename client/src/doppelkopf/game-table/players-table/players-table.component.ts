@@ -1,5 +1,13 @@
-import { Component, Input } from '@angular/core';
+import {
+  Component,
+  EventEmitter,
+  Input,
+  OnDestroy,
+  OnInit,
+  Output,
+} from '@angular/core';
 import { AdditionPlayerInfo } from 'src/doppelkopf/models/additional-player-info.model';
+import { Card } from 'src/doppelkopf/models/card.model';
 import { GamesVariants } from 'src/doppelkopf/models/play-table.model';
 
 @Component({
@@ -7,7 +15,7 @@ import { GamesVariants } from 'src/doppelkopf/models/play-table.model';
   templateUrl: './players-table.component.html',
   styleUrls: ['./players-table.component.less'],
 })
-export class PlayersTableComponent {
+export class PlayersTableComponent implements OnInit, OnDestroy {
   @Input()
   players: AdditionPlayerInfo[];
 
@@ -26,5 +34,37 @@ export class PlayersTableComponent {
   @Input()
   showPointsForAllPlayers: boolean = false;
 
+  @Input()
+  showCardsOfPlayer: number = -1;
+
+  @Input()
+  enableShowCardsOfPlayer: boolean = false;
+
+  @Output()
+  showCardsOfPlayersSelected: EventEmitter<
+    AdditionPlayerInfo
+  > = new EventEmitter();
+
+  @Output()
+  messageChanged: EventEmitter<string> = new EventEmitter();
+
   constructor() {}
+
+  ngOnDestroy(): void {
+    this.showCardsOfPlayersSelected.complete();
+  }
+
+  ngOnInit(): void {}
+
+  showCardsOf(player: AdditionPlayerInfo) {
+    this.showCardsOfPlayersSelected.emit(player);
+  }
+
+  trackCards(card: Card): string {
+    return `${card.rank}-${card.suit}`;
+  }
+
+  messageEdit(message: string) {
+    this.messageChanged.emit(message);
+  }
 }

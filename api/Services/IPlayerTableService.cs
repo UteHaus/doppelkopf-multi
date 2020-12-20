@@ -34,17 +34,31 @@ namespace DoppelkopfApi.Services
 
         TablePlayer[] GetPlayersOfTable(int tableId);
         void ShuffleCards(int playerId);
-        void SetGameVariant(int playerId, GamesVariants variant);
+        bool SetGameVariant(int playerId, GamesVariants variant);
 
         bool WatchTable(int userId, int tableId);
 
         bool CancelWatchTable(int userId, bool saveContext = true);
 
         void CloseAllSessions(int userId);
+        bool ReplaceTablePlayer(int currentPlayerId, int newPlayerId);
+
+        bool SetAsAdditionPlayer(int userId, bool seeOn);
 
         TableViewer[] GetTableViewer(int tableId);
 
         TableViewer GetTableViewerByUserId(int userId);
+
+        /// <summary>
+        /// Get this viewer back that show cards of the given player.
+        /// </summary>
+        /// <param name="playerId">The table player Id</param>
+        /// <returns></returns>
+        TableViewer[] GetTableViewerOfCardPlayers(int playerId);
+
+        bool ShowCardsOf(int userId, int playerId);
+
+        void SetPlayerMessage(int playerId, string message);
 
     }
 

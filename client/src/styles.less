@@ -22,17 +22,75 @@ div.app-container {
     grid-template-rows: 56px auto;
     height: 100%;
 
-    >nav.navbar.navbar-expand {
-    grid-row: 1;
-}
+    &.background-image {
+        background: url(./assets/images/header-cards.jpg) no-repeat center top;
+        //text-align: center;
+        background-attachment: relative;
+        background-position: center center;
+        min-height: 700px;
+        width: 100%;
+        -webkit-background-size: 100%;
+        -moz-background-size: 100%;
+        -o-background-size: 100%;
+        background-size: 100%;
+        -webkit-background-size: cover;
+        -moz-background-size: cover;
+        -o-background-size: cover;
+        background-size: cover;
+        background-blend-mode: luminosity;
+        background-color: white;
+    }
+
+    >nav {
+        background-color: #343a40a6;
+        border-radius: 5px;
+
+        &.navbar.navbar-expand {
+            grid-row: 1;
+
+        }
+    }
 
     >div.app-outlet {
+        padding-left: 20px;
+        padding-right: 20px;
         grid-row: 2;
         min-height: 320px;
         overflow: hidden;
         height: 100%;
         display: block;
-        margin: 10px;
     }
 
+}
+
+div.card {
+    padding-top: 20px;
+    background-color: #a69a6ad6;
+    margin-top: 20px;
+    color: white;
+    border-radius: 5px;
+}
+
+
+
+
+th,
+td,
+span,
+p,
+h1,
+h2,
+h3,
+h4 {
+    color: white;
+}
+
+.alert-danger {
+    color: white;
+    background-color: #ee3748;
+    border-color: #ee3748;
+}
+
+.alert {
+    border-radius: 5px;
 }

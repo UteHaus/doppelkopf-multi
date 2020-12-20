@@ -20,6 +20,10 @@ namespace DoppelkopfApi.Hubs
     {
         void TableListChanged(IPlayTableService playTableService);
         void TableChanged(int tableId, IPlayTableService playTableService);
+        void OnPlayerCardsChanged(int userId, int tableId, IPlayTableService playTableService);
+
+        void OnSpectatorStateChanged(int userId, IPlayTableService playTableService);
+
     }
 
     public class TableEventService : ITableEventService
@@ -39,15 +43,14 @@ namespace DoppelkopfApi.Hubs
 
 
 
-        public async void TableChanged(int tableId, IPlayTableService playTableService)
+        public void TableChanged(int tableId, IPlayTableService playTableService)
         {
             var tablePlayers = playTableService.GetPlayersOfTable(tableId);
             var tableViewers = playTableService.GetTableViewer(tableId);
             var tableState = TableHubUtils.GetTableState(tableId, playTableService, _mapper);
             Parallel.ForEach(tablePlayers, (tablePlayer) =>
             {
-                var playerState = TableHubUtils.AddPlayerInfosToTableState(tablePlayer, tableState, _mapper);
-                _hub.Clients.User(tablePlayer.PlayerId.ToString()).PlayerTableState(playerState);
+                _hub.Clients.User(tablePlayer.PlayerId.ToString()).PlayerTableState(tableState);
             });
 
             // for all viewers of the table
@@ -56,6 +59,28 @@ namespace DoppelkopfApi.Hubs
                 _hub.Clients.User(tableViewer.userId.ToString()).SpectatorTable(tableState);
             });
 
+        }
+
+        public void OnPlayerCardsChanged(int userId, int tableId, IPlayTableService playTableService)
+        {
+            var cards = TableHubUtils.GetPlayerCards(userId, playTableService);
+            _hub.Clients.User(userId.ToString()).PlayerCards(cards);
+
+            //for viewers
+            var viewers = playTableService.GetTableViewerOfCardPlayers(userId);
+            if (viewers.Length > 0)
+            {
+                foreach (var viewer in viewers)
+                {
+                    _hub.Clients.User(viewer.userId.ToString()).PlayerCardsForSpectator(cards);
+                }
+            }
+        }
+
+
+        public void OnSpectatorStateChanged(int userId, IPlayTableService playTableService)
+        {
+            _hub.Clients.User(userId.ToString()).SpectatorState(TableHubUtils.GetViewWerModel(userId, playTableService, _mapper));
         }
 
     }

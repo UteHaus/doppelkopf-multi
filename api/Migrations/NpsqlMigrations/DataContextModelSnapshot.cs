@@ -92,14 +92,11 @@ namespace DoppelkopfApi.Migrations.NpsqlMigrations
                     b.Property<bool>("AnnouncementVersusParty")
                         .HasColumnType("boolean");
 
-                    b.Property<bool>("BidKontra")
-                        .HasColumnType("boolean");
-
-                    b.Property<bool>("BidRe")
-                        .HasColumnType("boolean");
-
                     b.Property<int>("CancellationOfparty")
                         .HasColumnType("integer");
+
+                    b.Property<string>("DutyAnnouncement")
+                        .HasColumnType("text");
 
                     b.Property<int>("GameVariant")
                         .HasColumnType("integer");
@@ -110,7 +107,7 @@ namespace DoppelkopfApi.Migrations.NpsqlMigrations
                     b.Property<bool>("HasDiamondClubsOnHand")
                         .HasColumnType("boolean");
 
-                    b.Property<string>("Massage")
+                    b.Property<string>("Message")
                         .HasColumnType("text");
 
                     b.Property<bool>("NextTurn")
@@ -143,6 +140,9 @@ namespace DoppelkopfApi.Migrations.NpsqlMigrations
                     b.Property<int>("TableId")
                         .HasColumnType("integer");
 
+                    b.Property<int>("UserIdRequestCanShowCarts")
+                        .HasColumnType("integer");
+
                     b.Property<string>("Username")
                         .HasColumnType("text");
 
@@ -160,6 +160,12 @@ namespace DoppelkopfApi.Migrations.NpsqlMigrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("integer")
                         .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
+
+                    b.Property<bool>("AsAdditionPlayer")
+                        .HasColumnType("boolean");
+
+                    b.Property<int>("SeePlayerCard")
+                        .HasColumnType("integer");
 
                     b.Property<int>("tableId")
                         .HasColumnType("integer");

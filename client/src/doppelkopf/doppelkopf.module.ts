@@ -3,13 +3,12 @@ import { CommonModule } from '@angular/common';
 import { PlayTableListComponent } from './play-table-list/play-table-list.component';
 import { RouterModule, Routes } from '@angular/router';
 import { EditTableComponent } from './play-table-list/edit-table/edit-table.component';
-import { ReactiveFormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { GameTableComponent } from './game-table/game-table.component';
 import { CardMapComponent } from './game-table/card-map/card-map.component';
 import { PlayStatusRunPipe } from './game-table/play-status-run.pipe';
 import { CardComponent } from './game-table/card-map/card/card.component';
 import { CareImagePathPipe } from './game-table/card-map/care-image-path.pipe';
-import { SelectVariantComponent } from './game-table/select-variant/select-variant.component';
 import { TranslateModule } from '@ngx-translate/core';
 import { HttpClient } from '@angular/common/http';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
@@ -26,6 +25,12 @@ import { SpectatorViewComponent } from './game-table/spectator-view/spectator-vi
 import { PlayerViewComponent } from './game-table/player-view/player-view.component';
 import { AuthGuardEditTables } from '@app/helpers/auth-edit-tables.guard';
 import { AuthAdminGuard } from '@app/helpers/auth-admin.guard';
+import { SelectVariantComponent } from './game-table/player-view/select-variant/select-variant.component';
+import { HoverStepBoardComponent } from './game-table/player-view/hover-step-board/hover-step-board.component';
+import { ResultTableComponent } from './game-table/player-view/hover-step-board/result-table/result-table.component';
+import { NextTurnButtonComponent } from './game-table/player-view/hover-step-board/next-turn-button/next-turn-button.component';
+import { InplaceInputComponent } from './game-table/players-table/inplace-input/inplace-input.component';
+import { GameVariantNormalPipe } from './game-table/game-variant-normal.pipe';
 const routes: Routes = [
   {
     path: 'table',
@@ -77,9 +82,15 @@ const routes: Routes = [
     CardIndexPositionPipe,
     SpectatorViewComponent,
     PlayerViewComponent,
+    HoverStepBoardComponent,
+    ResultTableComponent,
+    NextTurnButtonComponent,
+    InplaceInputComponent,
+    GameVariantNormalPipe,
   ],
   imports: [
     ReactiveFormsModule,
+    FormsModule,
     CommonModule,
     RouterModule.forChild(routes),
     TranslateModule.forChild(),

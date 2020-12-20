@@ -1,6 +1,9 @@
 import { Component, Input, OnDestroy, OnInit, Output } from '@angular/core';
 import { BehaviorSubject, Subject } from 'rxjs';
 import { Card } from 'src/doppelkopf/models/card.model';
+import { GamesVariants } from 'src/doppelkopf/models/play-table.model';
+import { TableMethods } from 'src/doppelkopf/services/table-hub-method.enum';
+import { TableHubService } from 'src/doppelkopf/services/table-hub.service';
 import { CardUtil } from 'src/doppelkopf/utils/card.util';
 
 @Component({
@@ -9,16 +12,17 @@ import { CardUtil } from 'src/doppelkopf/utils/card.util';
   styleUrls: ['./card-map.component.less'],
 })
 export class CardMapComponent implements OnInit, OnDestroy {
-  private _cards: Card[];
+  cardsSub: BehaviorSubject<Card[]> = new BehaviorSubject([]);
   private _diamondsAceAsMaster: boolean;
+  private _gameVariant: GamesVariants;
   orderedCards: Card[] = [];
 
   @Input()
   disabled: boolean;
 
   @Input()
-  set cards(value: Card[]) {
-    this._cards = value;
+  set gameVariant(value: GamesVariants) {
+    this._gameVariant = value;
     this.updateOrderCards();
   }
 
@@ -29,34 +33,47 @@ export class CardMapComponent implements OnInit, OnDestroy {
   }
 
   @Output()
-  cardSelected: BehaviorSubject<Card> = new BehaviorSubject<Card>(null);
+  cardSelected: Subject<Card> = new Subject<Card>();
 
-  constructor() {}
+  @Input()
+  sourceHubMethode: TableMethods;
+
+  constructor(private hubService: TableHubService) {}
 
   ngOnDestroy(): void {
     this.cardSelected.complete();
+    this.cardsSub.complete();
+    this.hubService.offMethode(this.sourceHubMethode);
   }
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    this.hubService.onMethode(this.sourceHubMethode, (data) => {
+      this.cardsSub.next(data);
+      this.updateOrderCards();
+    });
+    this.hubService.invokeMethode(this.sourceHubMethode);
+  }
 
   trackCard(card: Card): string {
     return `${card.rank}-${card.suit}`;
   }
 
-  selectCard(card: Card) {
+  selectCard(card: Card, index: number) {
     if (!this.disabled) {
       this.cardSelected.next(card);
+      this.orderedCards.splice(index, 1);
     }
   }
 
   private updateOrderCards(): void {
     if (
       this._diamondsAceAsMaster != undefined &&
-      this._cards &&
-      this._cards.length > 0
+      this.cardsSub.value &&
+      this.cardsSub.value.length > 0
     ) {
       this.orderedCards = CardUtil.orderCards(
-        this._cards,
+        this.cardsSub.value,
+        this._gameVariant,
         this._diamondsAceAsMaster
       );
     }

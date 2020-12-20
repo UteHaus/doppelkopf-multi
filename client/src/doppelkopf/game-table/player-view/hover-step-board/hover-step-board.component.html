@@ -1,0 +1,38 @@
+<div class="select-items-hover table-body">
+    <div class="select-variant">
+        <app-select-variant
+            *ngIf="!(tablePlayerState.thisPlayer.gameVariant |valideGameVariant) && (tablePlayerState | playStatusSelectVariant) ;else selectedVariant "
+            (selected)="variantSelected($event)"></app-select-variant>
+        <ng-template #selectedVariant>
+            <h3
+                *ngIf="(tablePlayerState.thisPlayer.gameVariant |valideGameVariant ) && (tablePlayerState | playStatusSelectVariant)">
+                {{ ('dk.variant.'+tablePlayerState.thisPlayer.gameVariant) | translate }}
+                <span [translate]>dk.selected-game-variant</span>
+                <h5 [translate]>dk.wait-for-other-players</h5>
+            </h3>
+        </ng-template>
+    </div>
+
+    <div class="next-step"
+        *ngIf="(tablePlayerState | playStatusWaitNextRound) || (tablePlayerState | playStatusWinnerTime)">
+        <p>{{tablePlayerState.thisPlayer.nextTurn}}</p>
+        <div *ngIf="!tablePlayerState.thisPlayer.nextTurn; else waitForNextPlayer">
+            <app-next-turn-button [withTimer]="tablePlayerState |playStatusWaitNextRound"
+                (runNextTurn)="nextTurn()"></app-next-turn-button>
+            <app-result-table *ngIf="(tablePlayerState | playStatusWinnerTime)"
+                [tablePlayerState]="tablePlayerState"></app-result-table>
+        </div>
+        <ng-template #waitForNextPlayer>
+            <h2 [translate]>dk.wait-for-other-players</h2>
+            <ng-content []></ng-content>
+        </ng-template>
+
+    </div>
+
+</div>
+
+<ng-template>
+    <ul *ngIf="waitingForPlayers$| async as waitingForPlayers">
+        <li *ngFor="let playerName of waitingForPlayers">{{playerName}}</li>
+    </ul>
+</ng-template>

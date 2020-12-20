@@ -2,11 +2,11 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { AccountService } from '@app/services';
 import { BehaviorSubject, Observable, Subject, Subscription } from 'rxjs';
-import { map, shareReplay, switchMap } from 'rxjs/operators';
+import { map, shareReplay, switchMap, take } from 'rxjs/operators';
 import { AdditionPlayerInfo } from 'src/doppelkopf/models/additional-player-info.model';
 import { Card } from 'src/doppelkopf/models/card.model';
 import { GamesVariants } from 'src/doppelkopf/models/play-table.model';
-import { TablePlayerState } from 'src/doppelkopf/models/table-player-state.model';
+import { TableState } from 'src/doppelkopf/models/table-state.model';
 import { PlayTableService } from 'src/doppelkopf/services/play-table.service';
 import { TableMethods } from 'src/doppelkopf/services/table-hub-method.enum';
 import { TableHubService } from 'src/doppelkopf/services/table-hub.service';
@@ -18,14 +18,14 @@ import { TableUtil } from 'src/doppelkopf/utils/table.util';
   styleUrls: ['./player-view.component.less'],
 })
 export class PlayerViewComponent implements OnInit, OnDestroy {
-  private tablePlayerStateSubject = new BehaviorSubject<TablePlayerState>(null);
-  playTable$: Observable<TablePlayerState>;
+  cardSourceMethode: TableMethods = TableMethods.PlayerCards;
+  private tablePlayerStateSubject = new BehaviorSubject<TableState>(null);
+  playTable$: Observable<TableState>;
   private subscription: Subscription = new Subscription();
-  nextTurnClicked$: BehaviorSubject<void>;
-  shuffleCardsClick$: BehaviorSubject<void>;
-  variantSelected$: BehaviorSubject<GamesVariants> = new BehaviorSubject<
-    GamesVariants
-  >(GamesVariants.None);
+  nextTurnClicked$: Subject<void>;
+  waitingForNextTurnPlayers$: Observable<string[]>;
+  shuffleCardsClick$: Subject<void>;
+  variantSelected$: Subject<GamesVariants> = new Subject<GamesVariants>();
   playerInOrder$: Observable<AdditionPlayerInfo[]>;
   get userId(): number {
     return Number(this.userService.userValue.id);
@@ -49,7 +49,7 @@ export class PlayerViewComponent implements OnInit, OnDestroy {
     const tableId$: Observable<number> = this.route.paramMap.pipe(
       map((params) => Number(params.get('id')))
     );
-    this.nextTurnClicked$ = new BehaviorSubject(null);
+    this.nextTurnClicked$ = new Subject();
 
     this.playTable$ = this.tablePlayerStateSubject.pipe(
       shareReplay(),
@@ -60,17 +60,27 @@ export class PlayerViewComponent implements OnInit, OnDestroy {
           );
           playTable.players = TableUtil.orderPlayersByPositionAndSetViewPosition(
             playTable.players,
-            playTable.playerPosition
+            playTable.thisPlayer.playerPosition
           );
         }
 
         return playTable;
       })
     );
-
-    this.tableHubService.onMethode(TableMethods.PlayerTableState, (state) =>
-      this.tablePlayerStateSubject.next(state)
+    this.waitingForNextTurnPlayers$ = this.playTable$.pipe(
+      map((tableState) => {
+        if (tableState) {
+          return tableState.players
+            .filter((player) => !player.nextTurn)
+            .map((player) => player.userName);
+        }
+        return [];
+      })
     );
+
+    this.tableHubService.onMethode(TableMethods.PlayerTableState, (state) => {
+      this.tablePlayerStateSubject.next(state);
+    });
     this.tableHubService.invokeMethode(TableMethods.PlayerTableState);
 
     this.addSubscription(
@@ -78,7 +88,7 @@ export class PlayerViewComponent implements OnInit, OnDestroy {
         switchMap(() => this.tableService.nextTurn(this.userId))
       )
     );
-    this.shuffleCardsClick$ = new BehaviorSubject(null);
+    this.shuffleCardsClick$ = new Subject();
     this.addSubscription(
       this.shuffleCardsClick$.pipe(
         switchMap(() => tableId$),
@@ -125,5 +135,12 @@ export class PlayerViewComponent implements OnInit, OnDestroy {
 
   private addSubscription<T>(sub: Observable<T>): void {
     this.subscription.add(sub.subscribe());
+  }
+
+  playerMessageChanged(message: string) {
+    this.tableService
+      .setPlayerMessage(this.userId, message)
+      .pipe(take(1))
+      .subscribe();
   }
 }

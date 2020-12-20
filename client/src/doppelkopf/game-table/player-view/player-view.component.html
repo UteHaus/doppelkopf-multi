@@ -1,8 +1,8 @@
-<div *ngIf="playTable$ | async as playTable;else loading">
+<div *ngIf="playTable$ | async as tablePlayerState;else loading">
 
     <!-- <div class="addition-buttons">
     <button [ngClass]="{
-        disabled: playTable.userCount !== 4 || !(playTable | showCards) || (playTable.thisPlayer && playTable.thisPlayer.shuffleRound)
+        disabled: tablePlayerState.userCount !== 4 || !(tablePlayerState | showCards) || (tablePlayerState.thisPlayer && tablePlayerState.thisPlayer.shuffleRound)
       }" (click)="shuffleCards()" class="btn btn-sm btn-success mb-2" [translate]>
         dk.assign-cards
     </button>
@@ -11,72 +11,36 @@
 
     <div class="table-body">
         <div class="table-section">
-            <app-players-table [players]="playTable.players"
-                [thisPlayerId]="playTable.thisPlayer? playTable.thisPlayer.playerId: -1"
-                [positionOnMove]="playTable.currentPlayerPosition"
-                [currentGiverPos]="playTable.roundCardsGiversPosition"
-                [tableGameVariant]="playTable.gameVariant"></app-players-table>
+            <app-players-table [players]="tablePlayerState.players"
+                [thisPlayerId]="tablePlayerState.thisPlayer? tablePlayerState.thisPlayer.playerId: -1"
+                [positionOnMove]="tablePlayerState.currentPlayerPosition"
+                [currentGiverPos]="tablePlayerState.roundCardsGiversPosition"
+                [tableGameVariant]="tablePlayerState.gameVariant"
+                (messageChanged)="playerMessageChanged($event)"></app-players-table>
         </div>
 
         <div class="this-player-cards">
-            <div *ngIf="playTable | showCards">
-                <app-card-map [cards]="playTable.cards"
-                    [diamondsAceAsMaster]="playTable.diamondsAceAsMaster" [disabled]="
-            playTable.players[3].playerPosition != playTable.currentPlayerPosition
-          " (cardSelected)="cardSelected($event)">
+            <div *ngIf="tablePlayerState | showCards">
+                <app-card-map [diamondsAceAsMaster]="tablePlayerState.diamondsAceAsMaster"
+                    [disabled]="
+            tablePlayerState.players[3].playerPosition != tablePlayerState.currentPlayerPosition
+          " (cardSelected)="cardSelected($event)" [sourceHubMethode]="cardSourceMethode"
+                    [gameVariant]="tablePlayerState.gameVariant">
                 </app-card-map>
             </div>
         </div>
     </div>
 
-    <div class="select-items-hover table-body"
-        *ngIf=" !(playTable | playStatusRun) && playTable.thisPlayer">
-        <div class="select-variant">
-            <app-select-variant
-                *ngIf="!(playTable.thisPlayer.gameVariant |valideGameVariant) && (playTable | playStatusSelectVariant) ;else selectedVariant "
-                (selected)="variantSelected($event)"></app-select-variant>
-            <ng-template #selectedVariant>
-                <h3
-                    *ngIf="(playTable.thisPlayer.gameVariant |valideGameVariant ) && (playTable | playStatusSelectVariant)">
-                    {{ ('dk.variant.'+playTable.thisPlayer.gameVariant) | translate }}
-                    <span [translate]>dk.selected-game-variant</span>
-                    <h5 [translate]>dk.wait-for-other-players</h5>
-                </h3>
-            </ng-template>
-        </div>
+    <app-hover-step-board
+        *ngIf=" !(tablePlayerState | playStatusRun) || (tablePlayerState | playStatusWinnerTime)"
+        [tablePlayerState]="tablePlayerState" (gameVariantSelected)="variantSelected($event)"
+        (runNextTurn)="nextTurn()" [waitingForPlayers$]="waitingForNextTurnPlayers$">
+    </app-hover-step-board>
 
-        <div class="next-step"
-            *ngIf="(playTable | playStatusWaitNextRound) || (playTable | playStatusWinnerTime)">
-            <div *ngIf="!playTable.thisPlayer.nextTurn; else waitForNextPlayer">
-                <button (click)="nextTurn()" class="btn" [translate]>
-                    dk.next
-                </button>
-                <table class="table" *ngIf="(playTable | playStatusWinnerTime)">
-                    <thead>
-                        <tr>
-                            <th scope="col-2" [translate]>dk.users</th>
-                            <th scope="col-2" [translate]>dk.points</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr *ngFor="let player of playTable.players">
-                            <td>{{player.userName}}</td>
-                            <td>{{player.roundsPoints}}</td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-            <ng-template #waitForNextPlayer>
-                <h3 [translate]>dk.wait-for-other-players</h3>
-            </ng-template>
-
-        </div>
-
-    </div>
 </div>
 
 <ng-template #loading>
-    <div class="spinner-border text-success" role="status">
+    <div class="spinner-grow text-success" role="status">
         <span class="sr-only">Loading...</span>
     </div>
 </ng-template>

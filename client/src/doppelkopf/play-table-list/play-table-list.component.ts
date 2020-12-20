@@ -7,6 +7,7 @@ import { catchError, first, map, switchMap, take } from 'rxjs/operators';
 import { PlayTableCount } from 'src/doppelkopf/models/play-table-count.model';
 import { PlayTable } from 'src/doppelkopf/models/play-table.model';
 import { PlayTableService } from 'src/doppelkopf/services/play-table.service';
+import { SpectatorService } from '../services/spectator.service';
 import { TableMethods } from '../services/table-hub-method.enum';
 import { TableHubService } from '../services/table-hub.service';
 
@@ -22,6 +23,7 @@ export class PlayTableListComponent
   testValue: any;
   userTableId$: Observable<number>;
   userTableIdSub: BehaviorSubject<void> = new BehaviorSubject(null);
+  currentUser$: Observable<User>;
   get user(): User {
     return this.accountService.userValue;
   }
@@ -32,7 +34,8 @@ export class PlayTableListComponent
     private alertService: AlertService,
     private router: Router,
     private accountService: AccountService,
-    private tableHub: TableHubService
+    private tableHub: TableHubService,
+    private spectatorService: SpectatorService
   ) {}
 
   ngAfterViewInit(): void {
@@ -45,6 +48,7 @@ export class PlayTableListComponent
   }
 
   ngOnInit(): void {
+    this.currentUser$  =  this.accountService.user;
     this.userTableId$ = this.userTableIdSub.pipe(
       switchMap(() =>
         this.tableService.getUserPlayTable(
@@ -94,7 +98,7 @@ export class PlayTableListComponent
   }
 
   watchTable(playTable: PlayTableCount) {
-    this.tableService
+    this.spectatorService
       .setSpectatorOnTable(Number(this.user.id), playTable.id)
       .toPromise()
       .then((canView: boolean) => {

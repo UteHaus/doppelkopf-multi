@@ -19,61 +19,33 @@
              grid-row: 2;
              background-image: "./assets/images/fwstudio.jpg";
              height: 100%;
+             max-width: 1000px;
+             justify-self: center;
+             min-width: 850px;
          }
 
      }
 
-     >div.table-body.select-items-hover {
-         width: 100%;
-         width: 100%;
-         height: calc(100vh - 65px);
-         position: absolute;
-         left: 0;
-         top: 65px;
+ }
 
-         text-align: center;
-         position: absolute;
-         width: 100%;
-         z-index: 11;
-         background-color: rgba(249, 250, 250, 0.56);
+ app-hover-step-board {
+     width: 100%;
+     width: 100%;
+     height: calc(100vh - 125px);
+     position: absolute;
+     left: 0;
+     top: 125px;
+     position: absolute;
+     width: 100%;
+     z-index: 11;
+     background-color: rgba(249, 250, 250, 0.56);
+ }
 
-         >div.select-variant {
-             width: max-content;
-             height: auto;
-             line-height: 200px;
-             position: fixed;
-             top: 30%;
-             left: 40%;
-             text-align: center;
+ .spinner-grow {
+     position: absolute;
+     top: calc(50% - 65px);
+     left: 50%;
+     height: 75px;
+     width: 75px;
 
-             span {
-                 font-size: initial;
-                 display: block;
-                 padding: 5px;
-             }
-         }
-
-         >div.next-step {
-             top: 50%;
-             position: relative;
-             text-align: center;
-
-             button.btn {
-                 background-color: rgb(10, 131, 54);
-                 border-radius: 50%;
-                 position: fixed;
-                 height: 150px;
-                 width: 150px;
-                 color: white;
-                 font-size: x-large;
-
-             }
-         }
-
-         h3 {
-             color: rgb(10, 131, 54);
-             background-color: rgba(249, 250, 250, 0.60);
-
-         }
-     }
  }

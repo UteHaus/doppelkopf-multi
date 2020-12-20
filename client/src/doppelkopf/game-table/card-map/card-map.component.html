@@ -1,7 +1,7 @@
 <div class="container-fluid">
   <div class="row">
-    <app-card class="col-1" *ngFor="let card of orderedCards; trackBy: trackCard" [card]="card"
-      (dblclick)="selectCard(card)" [overlap]="true">
+    <app-card class="col-1" *ngFor="let card of orderedCards;index as i; trackBy: trackCard"
+      [card]="card" (dblclick)="selectCard(card,i)" [overlap]="true">
     </app-card>
   </div>
 </div>

@@ -1,1 +1,1 @@
-<img [src]="card | careImagePath: withDefaultCard" alt="" />
+<img *ngIf="card | careImagePath" [src]="card | careImagePath: withDefaultCard" alt="" />

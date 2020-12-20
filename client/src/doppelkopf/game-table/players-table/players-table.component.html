@@ -1,3 +1,5 @@
+<h5 *ngIf="tableGameVariant |valideGameVariant" class="table-game-variant">
+    {{('dk.variant.'+tableGameVariant) | translate}}</h5>
 <div class="player-list">
     <div *ngFor="let player of players" class="player-info"
         [ngClass]="['player-info-'+player.viewPosition, 'player-background-'+player.viewPosition]">
@@ -5,32 +7,51 @@
             <img [src]="player | playerIcon" alt="">
             <span [ngClass]="{ 'puls':(player.playerPosition==positionOnMove)}"></span>
         </div>
+        <div>
+            <h4>{{ player.userName }}
+                <span *ngIf="(player.playerId==thisPlayerId || showPointsForAllPlayers)">
+                    ({{player.roundsPoints}})
+                </span>
+            </h4>
+            <div>
+                <ul>
+                    <li *ngIf="currentGiverPos == player.playerPosition" [translate]>
+                        dk.giver
+                    </li>
+                    <li class="addition-info"
+                        *ngIf="(player.gameVariant |valideGameVariant) && !(player.gameVariant | gameVariantNormal)">
+                        {{ ('dk.variant.'+player.gameVariant) | translate }}
+                    </li>
+                    <li *ngIf="player.shuffleRound" class="shuffle-round" translate>
+                        dk.player-wants-assign-cards</li>
+                    <li class="message-input"
+                        *ngIf="(player.playerId==thisPlayerId); else showMessage">
+                        <inplace-input (focusOut)="messageEdit($event)" [value]="player.message">
+                        </inplace-input>
+                    </li>
+                    <ng-template #showMessage>
+                        <li *ngIf="player.message" class="message"> {{player.message}} </li>
+                    </ng-template>
 
-        <ul>
-            <li>
-                <h4>{{ player.userName }} </h4>
-            </li>
-            <li *ngIf="currentGiverPos == player.playerPosition" [translate]>
-                dk.giver
-            </li>
-            <li class="addition-info" *ngIf="player.gameVariant |valideGameVariant "><span
-                    *ngIf="tableGameVariant ">{{('dk.variant.'+tableGameVariant) | translate}}</span>
-                ({{ ('dk.variant.'+player.gameVariant) | translate }})
-            </li>
-            <li *ngIf="(player.playerId==thisPlayerId || showPointsForAllPlayers)">
-                {{'dk.points' | translate}}:
-                {{player.roundsPoints}}
-            </li>
-            <li *ngIf="player.shuffleRound" class="shuffle-round" translate>
-                dk.player-wants-assign-cards</li>
-        </ul>
+                    <!--                     <li>
+                        <button class="btn btn-smal"><i class="fas fa-check"></i></button>
+                        <button class="btn btn-smal"><i class="fas fa-times"></i></button>
+                    </li> -->
+                    <li *ngIf="enableShowCardsOfPlayer && showCardsOfPlayer<0"><button
+                            class="btn btn-primary btn-sm" (click)="showCardsOf(player)"
+                            translate>dk.show-cards</button></li>
+                </ul>
+
+            </div>
+        </div>
 
     </div>
     <div class="player-cards">
-        <app-card *ngFor="let player of players"
+        <app-card *ngFor="let player of players; trackBy: trackCards"
             [ngStyle]="{'z-index':player.playerPosition | cardIndexPosition:currentGiverPos}"
             [ngClass]="['player-card-'+player.viewPosition]" [card]="player.playedCard"
             [withDefaultCard]="false">
+            <p>{{player.playedCard|json}}</p>
         </app-card>
     </div>
 </div>

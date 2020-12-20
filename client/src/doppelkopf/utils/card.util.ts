@@ -1,18 +1,68 @@
+import { GamesVariants } from '../models/play-table.model';
 import { Card, Ranks, Suits } from './../models/card.model';
 
 export class CardUtil {
   public static orderCards(
     cards: Card[],
+    gameVariant: GamesVariants,
     diamondsAceAsMaster: boolean
   ): Card[] {
+    const ratingFunktion = this.getRankingFunktion(
+      gameVariant,
+      diamondsAceAsMaster
+    );
     return cards.sort(
-      (cardA, cardB) =>
-        this.orderIndex(cardA, diamondsAceAsMaster) -
-        this.orderIndex(cardB, diamondsAceAsMaster)
+      (cardA, cardB) => ratingFunktion(cardA) - ratingFunktion(cardB)
     );
   }
 
-  private static orderIndex(card: Card, diamondsAceAsMaster: boolean) {
+  private static getRankingFunktion(
+    gameVariant: GamesVariants,
+    diamondsAceAsMaster: boolean
+  ): (card: Card) => number {
+    switch (gameVariant) {
+      case GamesVariants.AceSolo:
+        return (card: Card) => this.rankSoloRating(card, Ranks.ace);
+      case GamesVariants.JackSolo:
+        return (card) => this.rankSoloRating(card, Ranks.jack);
+      case GamesVariants.QueenSolo:
+        return (card) => this.rankSoloRating(card, Ranks.queen);
+      case GamesVariants.KingSolo:
+        return (card) => this.rankSoloRating(card, Ranks.king);
+      case GamesVariants.ColoRSoloClubs:
+        return (card) => this.colorSoloRating(card, Suits.clubs);
+      case GamesVariants.ColoRSoloDiamonds:
+        return (card) => this.colorSoloRating(card, Suits.diamonds);
+      case GamesVariants.ColoRSoloHearts:
+        return (card) => this.colorSoloRating(card, Suits.hearts);
+      case GamesVariants.ColoRSoloSpades:
+        return (card) => this.colorSoloRating(card, Suits.spades);
+      default:
+        return (card) => this.normalRating(card, diamondsAceAsMaster);
+    }
+  }
+
+  private static rankSoloRating(card: Card, soloRank: Ranks): number {
+    var suitRating = this.suitRating(card);
+
+    if (card.rank == soloRank) {
+      return 10 + suitRating;
+    }
+
+    return 20 * this.suitRating(card) + this.rankRating(card.rank);
+  }
+
+  private static colorSoloRating(card: Card, soloSuit: Suits): number {
+    var rankRating = this.rankRating(card.rank);
+
+    if (card.suit == soloSuit) {
+      return 10 + rankRating;
+    }
+
+    return 20 * this.suitRating(card) + rankRating;
+  }
+
+  private static normalRating(card: Card, diamondsAceAsMaster: boolean) {
     if (
       diamondsAceAsMaster &&
       card.rank == Ranks.ace &&

@@ -51,6 +51,7 @@
         "giver": "Giver",
         "name": "Name",
         "go-out": "go out",
+        "show-cards": "show cards",
         "variant": {
             "None": "None",
             "Normal": "Normal",

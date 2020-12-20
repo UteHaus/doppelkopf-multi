@@ -1,0 +1,42 @@
+div.table-body.select-items-hover {
+    text-align: center;
+
+    >div.select-variant {
+        width: max-content;
+        height: auto;
+        line-height: 200px;
+        position: fixed;
+        top: 30%;
+        left: 40%;
+        text-align: center;
+
+        span {
+            font-size: initial;
+            display: block;
+            padding: 5px;
+        }
+    }
+
+    >div.next-step {
+        top: 50%;
+        position: relative;
+        text-align: center;
+
+        app-next-turn-button {
+            position: fixed;
+            top: calc(50% - 90px);
+            z-index: 1000;
+            text-align: center;
+            left: calc(50% - 70px);
+        }
+    }
+
+    h3 {
+        color: rgb(10, 131, 54);
+        background-color: rgba(249, 250, 250, 0.60);
+    }
+
+    h2 {
+        color: gray;
+    }
+}

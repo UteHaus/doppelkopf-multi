@@ -1,12 +1,12 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable, of, timer } from 'rxjs';
+import { Observable, of } from 'rxjs';
 import { GamesVariants, PlayTable } from '../models/play-table.model';
 import { environment } from '@environments/environment';
-import { catchError, map, switchMap } from 'rxjs/operators';
+import { catchError, map } from 'rxjs/operators';
 import { PlayTableCount } from '../models/play-table-count.model';
-import { TablePlayerState } from '../models/table-player-state.model';
 import { Card } from '../models/card.model';
+import { TableState } from '../models/table-state.model';
 
 @Injectable({
   providedIn: 'root',
@@ -20,9 +20,9 @@ export class PlayTableService {
     return this.http.get<PlayTableCount[]>(this.defaultApiPath);
   }
 
-  public getTableGameState(userId: number): Observable<TablePlayerState> {
+  public getTableGameState(userId: number): Observable<TableState> {
     return this.http
-      .get<TablePlayerState>(`${this.defaultApiPath}/player/${userId}/state`)
+      .get<TableState>(`${this.defaultApiPath}/player/${userId}/state`)
       .pipe(
         map((playTable) => {
           playTable.thisPlayer = playTable.players.find(
@@ -99,19 +99,11 @@ export class PlayTableService {
     );
   }
 
-  public watchTable(userId: number, tableId: number): Observable<boolean> {
-    return this.http.post<boolean>(`${this.defaultApiPath}/player/spectator`, {
-      userId: userId,
-      tableId: tableId,
-    });
-  }
-  public cancelWatchTable(
-    userId: number,
-    tableId: number
-  ): Observable<boolean> {
-    return this.http.put<boolean>(`${this.defaultApiPath}/player/spectator`, {
-      userId: userId,
-    });
+  public setPlayerMessage(playerId: number, message: string) {
+    return this.http.put<void>(
+      `${this.defaultApiPath}/player/${playerId}/message?message=${message}`,
+      {}
+    );
   }
 
   public isTableUpdated(
@@ -134,23 +126,6 @@ export class PlayTableService {
   ): Observable<undefined> {
     return this.http.put<undefined>(
       `${this.defaultApiPath}/player/${playerId}/variant?variant=${variant}`,
-      {}
-    );
-  }
-
-  public setSpectatorOnTable(
-    userId: number,
-    tableId: number
-  ): Observable<boolean> {
-    return this.http.post<boolean>(
-      `${this.defaultApiPath}/spectator?tableId=${tableId}&userId=${userId}`,
-      {}
-    );
-  }
-
-  public cancelSpectatorOnTable(userId: number): Observable<boolean> {
-    return this.http.post<boolean>(
-      `${this.defaultApiPath}/spectator?userId=${userId}`,
       {}
     );
   }

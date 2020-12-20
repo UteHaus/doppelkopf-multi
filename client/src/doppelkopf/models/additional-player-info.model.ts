@@ -8,6 +8,8 @@ export class AdditionPlayerInfo {
   shuffleRound: boolean;
   gameVariant: GamesVariants;
   playedCard: Card;
+  message: string;
+  dutyAnnouncement: string;
 
   nextTurn: boolean;
   roundsPoints: number;
