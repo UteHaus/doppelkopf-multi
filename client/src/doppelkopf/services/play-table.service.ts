@@ -3,7 +3,7 @@ import { Injectable } from '@angular/core';
 import { Observable, of } from 'rxjs';
 import { GamesVariants, PlayTable } from '../models/play-table.model';
 import { environment } from '@environments/environment';
-import { catchError, map } from 'rxjs/operators';
+import { catchError, map, retry } from 'rxjs/operators';
 import { PlayTableCount } from '../models/play-table-count.model';
 import { Card } from '../models/card.model';
 import { TableState } from '../models/table-state.model';
@@ -93,10 +93,9 @@ export class PlayTableService {
   }
 
   public nextTurn(playerId: number): Observable<undefined> {
-    return this.http.put<undefined>(
-      `${this.defaultApiPath}/player/${playerId}/next`,
-      {}
-    );
+    return this.http
+      .put<undefined>(`${this.defaultApiPath}/player/${playerId}/next`, {})
+      .pipe(retry(4));
   }
 
   public setPlayerMessage(playerId: number, message: string) {
