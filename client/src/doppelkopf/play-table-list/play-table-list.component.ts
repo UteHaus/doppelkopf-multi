@@ -48,7 +48,7 @@ export class PlayTableListComponent
   }
 
   ngOnInit(): void {
-    this.currentUser$  =  this.accountService.user;
+    this.currentUser$ = this.accountService.user;
     this.userTableId$ = this.userTableIdSub.pipe(
       switchMap(() =>
         this.tableService.getUserPlayTable(
@@ -56,7 +56,6 @@ export class PlayTableListComponent
         )
       ),
       map((tp) => {
-        console.log(tp);
         return tp != undefined ? tp.id : -1;
       }),
       catchError(() => of(-1))

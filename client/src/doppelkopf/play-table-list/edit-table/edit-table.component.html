@@ -1,39 +1,46 @@
-<h1 *ngIf="isAddMode" [translate]>dk.add-play-table</h1>
-<h1 *ngIf="!isAddMode" [translate]>dk.edit-play-table</h1>
-<form [formGroup]="form" (ngSubmit)="onSubmit()">
-  <div class="form-row">
-    <div class="form-group col-md-6 col-12">
-      <label for="tableName">Name</label>
-      <input type="text" formControlName="tableName" class="form-control"
-        [ngClass]="{ 'is-invalid': submitted && f.tableName.errors }" />
-      <div *ngIf="submitted && f.tableName.errors" class="invalid-feedback">
-        <div *ngIf="f.tableName.errors.required">table Name is required</div>
-      </div>
-      <div class="play-table-configs">
-        <h4 [translate]> dk.play-table-configs </h4>
-        <div class="form-row">
-          <div class="form-group form-check">
-            <input type="checkbox" class="form-check-input" formControlName="diamondsAceAsMaster">
-            <label class="form-check-label" for="diamondsAceAsMaster"
-              [translate]>dk.diamonds-ace-as-master</label>
+<div class="card">
+  <div class="card-header">
+    <h1 *ngIf="isAddMode" [translate]>dk.add-play-table</h1>
+    <h1 *ngIf="!isAddMode" [translate]>dk.edit-play-table</h1>
+  </div>
+  <div class="card-block">
+    <form [formGroup]="form" (ngSubmit)="onSubmit()">
+      <div class="form-row">
+        <div class="form-group col-md-6 col-12">
+          <label for="tableName">Name</label>
+          <input type="text" formControlName="tableName" class="form-control"
+            [ngClass]="{ 'is-invalid': submitted && f.tableName.errors }" />
+          <div *ngIf="submitted && f.tableName.errors" class="invalid-feedback">
+            <div *ngIf="f.tableName.errors.required">table Name is required</div>
           </div>
-        </div>
-        <div class="form-row">
-          <div class="form-group form-check">
-            <input type="checkbox" class="form-check-input" formControlName="withNiner">
-            <label class="form-check-label" for="withNiner" [translate]>dk.with-niner</label>
+          <div class="play-table-configs">
+            <h4 [translate]> dk.play-table-configs </h4>
+            <div class="form-row">
+              <div class="form-group form-check">
+                <input type="checkbox" class="form-check-input"
+                  formControlName="diamondsAceAsMaster">
+                <label class="form-check-label" for="diamondsAceAsMaster"
+                  [translate]>dk.diamonds-ace-as-master</label>
+              </div>
+            </div>
+            <div class="form-row">
+              <div class="form-group form-check">
+                <input type="checkbox" class="form-check-input" formControlName="withNiner">
+                <label class="form-check-label" for="withNiner" [translate]>dk.with-niner</label>
+              </div>
+            </div>
           </div>
+
         </div>
       </div>
 
-    </div>
+      <div class="form-group">
+        <button [disabled]="loading" class="btn btn-primary">
+          <span *ngIf="loading" class="spinner-border spinner-border-sm mr-1"></span>
+          Save
+        </button>
+        <a routerLink="" class="btn btn-link">Cancel</a>
+      </div>
+    </form>
   </div>
-
-  <div class="form-group">
-    <button [disabled]="loading" class="btn btn-primary">
-      <span *ngIf="loading" class="spinner-border spinner-border-sm mr-1"></span>
-      Save
-    </button>
-    <a routerLink="" class="btn btn-link">Cancel</a>
-  </div>
-</form>
+</div>

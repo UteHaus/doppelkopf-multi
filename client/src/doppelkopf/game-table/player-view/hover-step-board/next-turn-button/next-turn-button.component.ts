@@ -43,7 +43,6 @@ export class NextTurnButtonComponent
       take(this.timerSecondsCount + 1),
       map((count) => {
         if (count == this.timerSecondsCount) {
-          console.log('counter ' + count);
           this.runNextTurn.next();
         } else {
           return this.timerSecondsCount - count;
