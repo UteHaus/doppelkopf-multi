@@ -622,7 +622,7 @@ namespace DoppelkopfApi.Services
             var viewerAs5thPlayer = _context.TableViewers.FirstOrDefault((viewer) => viewer.tableId == table.Id && viewer.AsAdditionPlayer);
             if (viewerAs5thPlayer != null)
             {
-                var giverPlayer = _context.TablePlayer.FirstOrDefault((player) => player.PlayerPosition == table.RoundCardsGiversPosition);
+                var giverPlayer = _context.TablePlayer.FirstOrDefault((player) => player.TableId == table.Id && player.PlayerPosition == table.RoundCardsGiversPosition);
                 var user = _context.Users.FirstOrDefault((user) => user.Id == viewerAs5thPlayer.userId);
                 if (giverPlayer != null && user != null)
                 {
