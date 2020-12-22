@@ -5,4 +5,5 @@ export enum TableMethods {
   'PlayerCards' = 'PlayerCards',
   'SpectatorState' = 'SpectatorState',
   'PlayerCardsForSpectator' = 'PlayerCardsForSpectator',
+  'UserUseCase' = 'UserUseCase',
 }

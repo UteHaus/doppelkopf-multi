@@ -6,6 +6,7 @@ using DoppelkopfApi.Hubs;
 using DoppelkopfApi.Helpers;
 using System.Linq;
 using System.Text.Json;
+using DoppelkopfApi.Enums;
 
 namespace DoppelkopfApi.Services
 {
@@ -49,6 +50,7 @@ namespace DoppelkopfApi.Services
                     throw new System.Exception("This Table hase not 4 players");
                 }
                 table.Status = PlayStatus.SelectGameVarian;
+                SwitchPlayer(table);
                 foreach (var player in tablePlayers)
                 {
                     player.ClearForNextRound();
@@ -612,24 +614,60 @@ namespace DoppelkopfApi.Services
             return -1;
         }
 
+        /// <summary>
+        /// Is a 5th Player (of the viewers checked)m switch player and checked viewer. 
+        /// /// </summary>
+        private void SwitchPlayer(PlayTable table)
+        {
+            var viewerAs5thPlayer = _context.TableViewers.FirstOrDefault((viewer) => viewer.tableId == table.Id && viewer.AsAdditionPlayer);
+            if (viewerAs5thPlayer != null)
+            {
+                var giverPlayer = _context.TablePlayer.FirstOrDefault((player) => player.PlayerPosition == table.RoundCardsGiversPosition);
+                var user = _context.Users.FirstOrDefault((user) => user.Id == viewerAs5thPlayer.userId);
+                if (giverPlayer != null && user != null)
+                {
+                    //replace the giver player with the viewer (5th player)
+                    int giverPlayerId = giverPlayer.PlayerId;
+                    giverPlayer.PlayerId = viewerAs5thPlayer.userId;
+                    giverPlayer.Username = user.Username;
+                    _context.TablePlayer.Update(giverPlayer);
+
+                    //set the player as the 5th player (viewer)
+                    viewerAs5thPlayer.userId = giverPlayerId;
+                    _context.TableViewers.Update(viewerAs5thPlayer);
+                    _context.SaveChanges();
+
+                    UserUseCaseChanged(viewerAs5thPlayer.userId, table.Id, UseCase.Viewer);
+                    UserUseCaseChanged(giverPlayer.PlayerId, table.Id, UseCase.Player);
+                }
+            }
+        }
+
+
         protected void OnTableListChanged()
         {
             _tableEventService.TableListChanged(this);
         }
 
-        protected virtual void OnTableChanged(int tableId)
+        protected void OnTableChanged(int tableId)
         {
             _tableEventService.TableChanged(tableId, this);
         }
 
-        protected virtual void OnPlayerCardsChanged(int userId, int tableId)
+        protected void OnPlayerCardsChanged(int userId, int tableId)
         {
             _tableEventService.OnPlayerCardsChanged(userId, tableId, this);
         }
 
-        protected virtual void OnSpectatorStateChanged(int userId)
+        protected void OnSpectatorStateChanged(int userId)
         {
             _tableEventService.OnSpectatorStateChanged(userId, this);
+        }
+
+
+        protected void UserUseCaseChanged(int userId, int tableId, UseCase useCase)
+        {
+            _tableEventService.UserUseCaseChanged(userId, tableId, useCase);
         }
 
     }

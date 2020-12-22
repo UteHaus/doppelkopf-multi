@@ -1,17 +1,9 @@
-using System;
-using System.Linq;
-using System.Collections.Generic;
-using DoppelkopfApi.Models.PlayTable;
-using DoppelkopfApi.Entities;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc;
 using AutoMapper;
-using DoppelkopfApi.Helpers;
 using DoppelkopfApi.Services;
-using DoppelkopfApi.Hubs;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.SignalR;
-using System.Threading;
+using DoppelkopfApi.Models.PlayTable;
+using DoppelkopfApi.Enums;
 
 namespace DoppelkopfApi.Hubs
 {
@@ -23,6 +15,8 @@ namespace DoppelkopfApi.Hubs
         void OnPlayerCardsChanged(int userId, int tableId, IPlayTableService playTableService);
 
         void OnSpectatorStateChanged(int userId, IPlayTableService playTableService);
+
+        void UserUseCaseChanged(int userId, int tableId, UseCase useCase);
 
     }
 
@@ -83,5 +77,9 @@ namespace DoppelkopfApi.Hubs
             _hub.Clients.User(userId.ToString()).SpectatorState(TableHubUtils.GetViewWerModel(userId, playTableService, _mapper));
         }
 
+        public void UserUseCaseChanged(int userId, int tableId, UseCase useCase)
+        {
+            _hub.Clients.User(userId.ToString()).UserUseCase(new UserUseCaseModel(tableId, useCase));
+        }
     }
 }

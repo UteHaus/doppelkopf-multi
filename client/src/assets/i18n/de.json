@@ -52,6 +52,7 @@
         "name": "Name",
         "go-out": "austeigen",
         "show-cards": "Karten anzeigen",
+        "5th-player": "5er Spieler (Geberrunde)",
         "variant": {
             "None": "Keine Auswahl",
             "Normal": "keine Ansage",
