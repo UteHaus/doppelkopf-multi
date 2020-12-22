@@ -25,6 +25,8 @@ namespace DoppelkopfApi.Hubs
 
         Task PlayerCardsForSpectator(Card[] cards);
 
+        Task UserUseCase(UserUseCaseModel useCase);
+
     }
 
     [Authorize]

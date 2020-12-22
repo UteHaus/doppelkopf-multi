@@ -31,8 +31,8 @@ export class SpectatorService {
     userId: number,
     seeOn: boolean
   ): Observable<boolean> {
-    return this.http.post<boolean>(
-      `${this.defaultApiPath}/asAdditionPlayer?userId=${userId}&seeOn=${seeOn}`,
+    return this.http.put<boolean>(
+      `${this.defaultApiPath}/${userId}/asAdditionPlayer?seeOn=${seeOn}`,
       {}
     );
   }

@@ -87,6 +87,13 @@ export class SpectatorViewComponent
       });
   }
 
+  playerAsAdditionPlayerChecked(value: boolean) {
+    this.spectatorService
+      .setAsAdditionPlayer(Number(this.accountService.userValue.id), value)
+      .pipe(take(1))
+      .subscribe();
+  }
+
   private getPlayerPosition(
     players: AdditionPlayerInfo[],
     showPlayerId: number

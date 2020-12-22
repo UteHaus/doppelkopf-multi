@@ -1,18 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Security.Claims;
-using System.IdentityModel.Tokens.Jwt;
-using System.Text;
-using Microsoft.IdentityModel.Tokens;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Options;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authorization;
 using DoppelkopfApi.Helpers;
 using DoppelkopfApi.Services;
-using DoppelkopfApi.Entities;
-using DoppelkopfApi.Models.Users;
 using AutoMapper;
-using System.Reflection;
 namespace DoppelkopfApi.Controllers
 {
     [Authorize]
@@ -32,8 +22,7 @@ namespace DoppelkopfApi.Controllers
             _mapper = mapper;
         }
 
-        [AllowAnonymous]
-        [HttpPut("asAdditionPlayer")]
+        [HttpPut("{userId}/asAdditionPlayer")]
         public IActionResult SetAsAdditionPlayer(int userId, bool seeOn = true)
         {
             try

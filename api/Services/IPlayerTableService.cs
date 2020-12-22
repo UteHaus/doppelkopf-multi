@@ -41,6 +41,12 @@ namespace DoppelkopfApi.Services
         bool CancelWatchTable(int userId, bool saveContext = true);
 
         void CloseAllSessions(int userId);
+        /// <summary>
+        /// Replace a player on a table with a user.
+        /// </summary>
+        /// <param name="currentPlayerId">Player ID wish play on a table.</param>
+        /// <param name="newPlayerId">The user ID of the new table player.</param>
+        /// <returns></returns>
         bool ReplaceTablePlayer(int currentPlayerId, int newPlayerId);
 
         bool SetAsAdditionPlayer(int userId, bool seeOn);
