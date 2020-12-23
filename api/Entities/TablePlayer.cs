@@ -53,7 +53,7 @@ namespace DoppelkopfApi.Entities
         public int UserIdRequestCanShowCarts { get; set; }
 
         /// <summary>
-        /// Re Kontra announcement 
+        /// Re, Kontra, .... announcement
         /// </summary>
         /// <value></value>
         public string DutyAnnouncement { get; set; }

@@ -26,8 +26,9 @@ namespace DoppelkopfApi.Services
         PlayTable GetUserTable(int userId);
         TablePlayer GettablePlayerOfId(int playerId);
 
-        void NextTurn(int playerId);
-        bool StartNewRound(int tableId);
+        Task NextTurn(int playerId);
+
+        ValueTask<bool> StartNewRound(int tableId);
         DateTime GetLastTableUpdate(int tableId);
 
         void SetPlayedCard(int playerId, Card card);
@@ -65,6 +66,8 @@ namespace DoppelkopfApi.Services
         bool ShowCardsOf(int userId, int playerId);
 
         void SetPlayerMessage(int playerId, string message);
+
+        void SetDutyAnnouncement(int playerId, string announcement);
 
     }
 

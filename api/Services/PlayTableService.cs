@@ -36,7 +36,7 @@ namespace DoppelkopfApi.Services
             return table;
         }
 
-        public bool StartNewRound(int tableId)
+        public async ValueTask<bool> StartNewRound(int tableId)
         {
 
             PlayTable table = _context.PlayTables.Find(tableId);
@@ -58,7 +58,7 @@ namespace DoppelkopfApi.Services
                 SetHandCards(tablePlayers, table.WithNiner);
                 _context.TablePlayer.UpdateRange(tablePlayers);
                 _context.PlayTables.Update(table);
-                int changeCount = _context.SaveChanges();
+                int changeCount = await _context.SaveChangesAsync();
 
                 clinetUpdateAction.Invoke();
                 OnTableChanged(table.Id);
@@ -111,7 +111,7 @@ namespace DoppelkopfApi.Services
         }
 
 
-        public void NextTurn(int playerId)
+        public async Task NextTurn(int playerId)
         {
 
             var tablePlayer = GettablePlayerOfId(playerId);
@@ -119,7 +119,7 @@ namespace DoppelkopfApi.Services
             {
                 tablePlayer.NextTurn = true;
                 _context.TablePlayer.Update(tablePlayer);
-                _context.SaveChanges();
+                await _context.SaveChangesAsync();
                 OnTableChanged(tablePlayer.TableId);
 
                 var tablePlayers = GetPlayersOfTable(tablePlayer.TableId);
@@ -165,14 +165,25 @@ namespace DoppelkopfApi.Services
                         _context.PlayTables.Update(table);
                     }
 
-                    _context.SaveChanges();
+                    await _context.SaveChangesAsync();
                     OnTableChanged(table.Id);
                 }
 
                 if (newGame && nextTurnCount == 4)
                 {
-                    StartNewRound(table.Id);
+                    await StartNewRound(table.Id);
                 }
+            }
+        }
+
+        public void SetDutyAnnouncement(int playerId, string announcement)
+        {
+            var player = GettablePlayerOfId(playerId);
+            if (player != null)
+            {
+                player.DutyAnnouncement = announcement;
+                _context.TablePlayer.Update(player);
+                _context.SaveChanges();
             }
         }
 

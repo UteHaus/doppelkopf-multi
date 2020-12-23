@@ -1,5 +1,4 @@
 using System;
-using System.Linq;
 using System.Collections.Generic;
 using DoppelkopfApi.Models.PlayTable;
 using DoppelkopfApi.Entities;
@@ -197,6 +196,20 @@ namespace DoppelkopfApi.Controllers
             }
         }
 
+        [HttpPut("player/{playerId}/announcement")]
+        public IActionResult SetDutyAnnouncement(int playerId, string announcement)
+        {
+            try
+            {
+                _playTableService.SetDutyAnnouncement(playerId, announcement);
+                return Ok();
+            }
+            catch (AppException ex)
+            {
+                return BadRequest(new { message = ex.Message });
+            }
+        }
+
         [HttpPut("player/{playerId}/message")]
         public IActionResult SetPlayerMessage(int playerId, string message)
         {
@@ -247,14 +260,14 @@ namespace DoppelkopfApi.Controllers
 
 
         [HttpPut("{id}/start")]
-        public IActionResult StartGame(int id)
+        public async Task<IActionResult> StartGame(int id)
         {
             try
             {
-                bool canRun = _playTableService.StartNewRound(id);
+                bool canRun = await _playTableService.StartNewRound(id);
                 if (canRun)
                 {
-                    return Ok();
+                    return Ok(canRun);
                 }
             }
 
@@ -282,11 +295,11 @@ namespace DoppelkopfApi.Controllers
         }
 
         [HttpPut("player/{playerId}/next")]
-        public IActionResult NextTurn(int playerId)
+        public async Task<IActionResult> NextTurn(int playerId)
         {
             try
             {
-                _playTableService.NextTurn(playerId);
+                await _playTableService.NextTurn(playerId);
 
                 return Ok();
             }
