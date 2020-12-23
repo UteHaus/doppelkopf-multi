@@ -44,13 +44,13 @@ namespace DoppelkopfApi.Services
             (table.Status == PlayStatus.End || table.Status == PlayStatus.None || table.Status == PlayStatus.Stop || table.Status == PlayStatus.WinnersTime))
             {
                 table.SetTableToNextGameTurn();
+                var clinetUpdateAction = SwitchPlayer(table);
                 var tablePlayers = GetPlayersOfTable(tableId);
                 if (tablePlayers.Length < 4)
                 {
                     throw new System.Exception("This Table hase not 4 players");
                 }
                 table.Status = PlayStatus.SelectGameVarian;
-                SwitchPlayer(table);
                 foreach (var player in tablePlayers)
                 {
                     player.ClearForNextRound();
@@ -60,6 +60,7 @@ namespace DoppelkopfApi.Services
                 _context.PlayTables.Update(table);
                 int changeCount = _context.SaveChanges();
 
+                clinetUpdateAction.Invoke();
                 OnTableChanged(table.Id);
                 foreach (var player in tablePlayers)
                 {
@@ -122,12 +123,13 @@ namespace DoppelkopfApi.Services
                 OnTableChanged(tablePlayer.TableId);
 
                 var tablePlayers = GetPlayersOfTable(tablePlayer.TableId);
-                var table = _context.PlayTables.FirstOrDefault(pt => pt.Id == tablePlayer.TableId);
                 var nextTurnCount = tablePlayers.Count(tp => tp.NextTurn);
+                var table = _context.PlayTables.FirstOrDefault(pt => pt.Id == tablePlayer.TableId);
                 bool newGame = table.Status == PlayStatus.WinnersTime;
 
                 if (nextTurnCount == 4)
                 {
+
                     if (!newGame)
                     {
                         var playedRoundCards = tablePlayers.Select((tp) => new PlayCard(tp)).ToArray();
@@ -138,35 +140,31 @@ namespace DoppelkopfApi.Services
 
                         foreach (var player in tablePlayers)
                         {
+                            player.ClearForNextTurn();
                             if (player.PlayerId == stitchWinnerId)
                             {
                                 player.RoundsPoints += _cardHandler.CardPoints(playedRoundCards);
                                 table.CurrentPlayerPosition = player.PlayerPosition;
                             }
                         }
+                        _context.TablePlayer.UpdateRange(tablePlayers);
 
                         table.StitchCounter++;
-                        // when the round is over
+                        // if the round is over
                         if (table.StitchCounter >= 12 || (!table.WithNiner && table.StitchCounter >= 10) || tablePlayers.All((player) => player.AnyCards()))
                         {
                             SetWinners(tablePlayers, table);
                             table.Status = PlayStatus.WinnersTime;
+                            _context.TablePlayer.UpdateRange(tablePlayers);
+
                         }
                         else
                         {
                             table.Status = PlayStatus.Run;
                         }
                         _context.PlayTables.Update(table);
-                        _context.SaveChanges();
                     }
 
-                    // reset the next turn state for all player of the table
-                    foreach (var player in tablePlayers)
-                    {
-                        player.ClearForNextTurn();
-                    }
-
-                    _context.TablePlayer.UpdateRange(tablePlayers);
                     _context.SaveChanges();
                     OnTableChanged(table.Id);
                 }
@@ -189,7 +187,7 @@ namespace DoppelkopfApi.Services
             var table = _context.PlayTables.Find(tableId);
             var tablePlayersCount = TableUserCount(table.Id);
 
-            if (table != null && (hard || tablePlayersCount <= 0))
+            if (table != null && (hard || tablePlayersCount < 4))
             {
                 OnTableChanged(table.Id);
                 _context.Entry(table).State = Microsoft.EntityFrameworkCore.EntityState.Deleted;
@@ -207,7 +205,8 @@ namespace DoppelkopfApi.Services
             var player = GettablePlayerOfId(playerId);
             if (player == null)
                 throw new Exception("Cant find player on table");
-            if (string.IsNullOrEmpty(player.PlayedCard))
+
+            if (!player.PlayerCardSet())
             {
                 player.SetPlayedCard(card);
                 player.NextTurn = false;
@@ -221,12 +220,13 @@ namespace DoppelkopfApi.Services
                 if (allPlayerSetCards)
                 {
                     table.Status = PlayStatus.WaitForNextRund;
-                    _context.PlayTables.Update(table);
                 }
                 else
                 {
                     table.SetToNextPlayerTurn();
                 }
+
+                _context.PlayTables.Update(table);
                 _context.SaveChanges();
                 OnTableChanged(player.TableId);
             }
@@ -520,6 +520,7 @@ namespace DoppelkopfApi.Services
                 player.SetAsWinner();
             }
         }
+
         private void SetWinners(TablePlayer[] players, PlayTable table)
         {
             if (table.GameVariant == GamesVariants.Normal || table.GameVariant == GamesVariants.Wedding)
@@ -617,7 +618,7 @@ namespace DoppelkopfApi.Services
         /// <summary>
         /// Is a 5th Player (of the viewers checked)m switch player and checked viewer. 
         /// /// </summary>
-        private void SwitchPlayer(PlayTable table)
+        private Action SwitchPlayer(PlayTable table)
         {
             var viewerAs5thPlayer = _context.TableViewers.FirstOrDefault((viewer) => viewer.tableId == table.Id && viewer.AsAdditionPlayer);
             if (viewerAs5thPlayer != null)
@@ -637,10 +638,14 @@ namespace DoppelkopfApi.Services
                     _context.TableViewers.Update(viewerAs5thPlayer);
                     _context.SaveChanges();
 
-                    UserUseCaseChanged(viewerAs5thPlayer.userId, table.Id, UseCase.Viewer);
-                    UserUseCaseChanged(giverPlayer.PlayerId, table.Id, UseCase.Player);
+                    return () =>
+                    {
+                        UserUseCaseChanged(viewerAs5thPlayer.userId, table.Id, UseCase.Viewer);
+                        UserUseCaseChanged(giverPlayer.PlayerId, table.Id, UseCase.Player);
+                    };
                 }
             }
+            return null;
         }
 
 

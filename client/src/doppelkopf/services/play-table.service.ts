@@ -86,10 +86,12 @@ export class PlayTableService {
   }
 
   public playedCard(card: Card, userId: number): Observable<undefined> {
-    return this.http.put<undefined>(
-      `${this.defaultApiPath}/player/${userId}/played-cards`,
-      card
-    );
+    return this.http
+      .put<undefined>(
+        `${this.defaultApiPath}/player/${userId}/played-cards`,
+        card
+      )
+      .pipe(retry(3));
   }
 
   public nextTurn(playerId: number): Observable<undefined> {
