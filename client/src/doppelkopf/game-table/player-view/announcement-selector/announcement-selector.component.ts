@@ -1,5 +1,4 @@
-import { Component, Input, OnInit, Output } from '@angular/core';
-import { EventEmitter } from 'events';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 
 @Component({
   selector: 'app-announcement-selector',
@@ -13,12 +12,13 @@ export class AnnouncementSelectorComponent implements OnInit {
   @Input()
   announcement: string;
   @Output()
-  announcementSelected: EventEmitter = new EventEmitter();
+  announcementSelected = new EventEmitter<string>();
   constructor() {}
 
   ngOnInit(): void {}
 
   setAnnouncements(announcement: string) {
     this.announcementSelected.emit(announcement);
+    this.show = false;
   }
 }

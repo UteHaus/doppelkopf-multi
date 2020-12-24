@@ -184,6 +184,7 @@ namespace DoppelkopfApi.Services
                 player.DutyAnnouncement = announcement;
                 _context.TablePlayer.Update(player);
                 _context.SaveChanges();
+                OnTableChanged(player.TableId);
             }
         }
 

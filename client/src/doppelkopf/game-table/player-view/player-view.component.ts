@@ -138,6 +138,9 @@ export class PlayerViewComponent implements OnInit, OnDestroy {
   }
 
   announcementChanged(announcement: string) {
-    this.tableService.seta(this.userId, announcement).pipe(take(1)).subscribe();
+    this.tableService
+      .setPlayerAnnouncement(this.userId, announcement)
+      .pipe(take(1))
+      .subscribe();
   }
 }

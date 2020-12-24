@@ -25,13 +25,13 @@
                     <li *ngIf="player.shuffleRound" class="shuffle-round" translate>
                         dk.player-wants-assign-cards</li>
                     <li class="announcement"
-                        *ngIf="(player.playerId==thisPlayerId); else showMessage">
+                        *ngIf="(player.playerId==thisPlayerId); else showAnnouncement">
                         <app-announcement-selector
                             (announcementSelected)="announcementSelected($event)"
                             [announcement]="player.dutyAnnouncement">
                         </app-announcement-selector>
                     </li>
-                    <ng-template #showMessage>
+                    <ng-template #showAnnouncement>
                         <li *ngIf="player.message" class="message"> {{player.message}} </li>
                     </ng-template>
 
