@@ -53,6 +53,7 @@
         "go-out": "go out",
         "show-cards": "show cards",
         "5th-player": "5th player (giver round)",
+        "announcement": "announcement",
         "variant": {
             "None": "None",
             "Normal": "Normal",

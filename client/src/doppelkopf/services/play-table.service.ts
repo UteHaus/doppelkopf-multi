@@ -107,6 +107,13 @@ export class PlayTableService {
     );
   }
 
+  public setPlayerAnnouncement(playerId: number, announcement: string) {
+    return this.http.put<void>(
+      `${this.defaultApiPath}/player/${playerId}/announcement?announcement=${announcement}`,
+      {}
+    );
+  }
+
   public isTableUpdated(
     tableId: number,
     lastUpdate: number

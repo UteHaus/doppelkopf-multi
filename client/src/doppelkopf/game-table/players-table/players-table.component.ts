@@ -46,7 +46,7 @@ export class PlayersTableComponent implements OnInit, OnDestroy {
   > = new EventEmitter();
 
   @Output()
-  messageChanged: EventEmitter<string> = new EventEmitter();
+  announcementChanged: EventEmitter<string> = new EventEmitter();
 
   constructor() {}
 
@@ -64,7 +64,7 @@ export class PlayersTableComponent implements OnInit, OnDestroy {
     return `${card.rank}-${card.suit}`;
   }
 
-  messageEdit(message: string) {
-    this.messageChanged.emit(message);
+  announcementSelected(announcement: string) {
+    this.announcementChanged.emit(announcement);
   }
 }

@@ -137,10 +137,7 @@ export class PlayerViewComponent implements OnInit, OnDestroy {
     this.subscription.add(sub.subscribe());
   }
 
-  playerMessageChanged(message: string) {
-    this.tableService
-      .setPlayerMessage(this.userId, message)
-      .pipe(take(1))
-      .subscribe();
+  announcementChanged(announcement: string) {
+    this.tableService.seta(this.userId, announcement).pipe(take(1)).subscribe();
   }
 }

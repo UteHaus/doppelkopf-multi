@@ -1,0 +1,72 @@
+{
+    "app": {
+        "logout": "wotzjewić",
+        "home": "doma",
+        "users": "hrajerjo"
+    },
+    "user": {
+        "username": "mjeno",
+        "user-required": "mjeno trěbne",
+        "password": "tajne hesło",
+        "password-required": "tajne hesło trěbne",
+        "login": "přizjewić",
+        "register": "registrować",
+        "add-user": "wužiwarja připołožić",
+        "edit-user": "wužiwarja wobdźěłać",
+        "edit": "wobdźěłać",
+        "save": "składować",
+        "cancel": "wotłamać",
+        "could-edit-users": "móže hrajerja wobdźěłać",
+        "could-edit-tables": "móže tabulku wobdźěłać",
+        "leave-blank-for-same-password": "(swobodnje wostanyć za samsne tajne hesło).",
+        "password-6-characters": "tajne hesło znajmjeńša 6 pismikow",
+        "password-is-required": "tajne hesło trěbne!"
+    },
+    "error": {
+        "full-table": "blido je połnje wobsadźene."
+    },
+    "dk": {
+        "play-with": "sobu hrać",
+        "play-on": "dale hrać",
+        "choose-a-game-variant": "što hraješ",
+        "next": "dale",
+        "selected-game-variant": "wolena hra",
+        "next-round": "dale z přichodnym kołom",
+        "game-variant": "hrajna warianta",
+        "player-wants-assign-cards": "nowe karty rozdźělić chcyć!",
+        "assign-cards": "karty znowa rozdźělić",
+        "wait-for-other-players": "čakamy na hrajerja",
+        "console-table": "blido",
+        "console-tables": "blida",
+        "new-play-table": "blida wočinić",
+        "edit-play-table": "blida wobdźěłać",
+        "add-play-table": "nowe blido",
+        "diamonds-ace-as-master": "rancu horjeka",
+        "play-table-configs": "blidowe opcije",
+        "with-niner": "z dźewjatku",
+        "watch": "přihladować",
+        "users": "hrajer",
+        "points": "dypki",
+        "delete": "wotstronić",
+        "giver": "dawar",
+        "name": "mjeno",
+        "go-out": "wustupić",
+        "show-cards": "karty pokazać",
+        "5th-player": "pjaty hrajer",
+        "announcement": "připowědźenje",
+        "variant": {
+            "None": "ničo wuzwolene",
+            "Normal": "ničo prajić",
+            "Wedding": "kwas",
+            "Solo": "solo",
+            "QueenSolo": "solo horjenki",
+            "JackSolo": "solo delenki",
+            "AceSolo": "rancowy solo",
+            "KingSolo": "kralowy solo",
+            "ColoRSoloClubs": "solo žołdźe",
+            "ColoRSoloDiamonds": "šelski solo",
+            "ColoRSoloHearts": "čerwjeny solo",
+            "ColoRSoloSpades": "zeleny solo"
+        }
+    }
+}

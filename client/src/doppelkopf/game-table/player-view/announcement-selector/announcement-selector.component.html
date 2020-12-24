@@ -1,0 +1,15 @@
+<div class="dropdown">
+    <button class="btn btn-primary dropdown-toggle" type="button" id="dropdownMenuButton"
+        data-toggle="dropdown" aria-haspopup="true" aria-expanded="showMenu" [translate]
+        (click)="showMenu=!show">
+        <span *ngIf="announcement;else">{{announcement}}</span>
+        <ng-template #announcementDefault>
+            <span [translate]>dk.announcement</span>
+        </ng-template>
+    </button>
+    <div class="dropdown-menu" [ngClass]="{'show':show}" aria-labelledby="dropdownMenuButton">
+        <button *ngFor="let announcement of announcements" type="button"
+            class="dropdown-item btn btn-secondary" (click)="setAnnouncements(announcement)"
+            [translate]>{{announcement }}</button>
+    </div>
+</div>
