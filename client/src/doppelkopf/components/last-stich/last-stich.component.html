@@ -1,0 +1,4 @@
+<div class="row" *ngIf="stichCards$|async as cards">
+    <app-card class="col" *ngFor="let card of cards" [card]="card">
+    </app-card>
+</div>

@@ -27,6 +27,7 @@ export class PlayerViewComponent implements OnInit, OnDestroy {
   shuffleCardsClick$: Subject<void>;
   variantSelected$: Subject<GamesVariants> = new Subject<GamesVariants>();
   playerInOrder$: Observable<AdditionPlayerInfo[]>;
+  lastStich: boolean = false;
   get userId(): number {
     return Number(this.userService.userValue.id);
   }
@@ -142,5 +143,8 @@ export class PlayerViewComponent implements OnInit, OnDestroy {
       .setPlayerAnnouncement(this.userId, announcement)
       .pipe(take(1))
       .subscribe();
+  }
+  showLastStich(visible: boolean): void {
+    this.lastStich = visible;
   }
 }

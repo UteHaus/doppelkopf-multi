@@ -48,6 +48,9 @@ export class PlayersTableComponent implements OnInit, OnDestroy {
   @Output()
   announcementChanged: EventEmitter<string> = new EventEmitter();
 
+  @Output()
+  showLastStich = new EventEmitter<void>();
+
   constructor() {}
 
   ngOnDestroy(): void {
@@ -66,5 +69,9 @@ export class PlayersTableComponent implements OnInit, OnDestroy {
 
   announcementSelected(announcement: string) {
     this.announcementChanged.emit(announcement);
+  }
+
+  lastStich(): void {
+    this.showLastStich.emit();
   }
 }

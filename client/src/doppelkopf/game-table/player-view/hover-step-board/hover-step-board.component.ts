@@ -1,4 +1,10 @@
-import { Component, Input, OnDestroy, Output } from '@angular/core';
+import {
+  Component,
+  EventEmitter,
+  Input,
+  OnDestroy,
+  Output,
+} from '@angular/core';
 import { Observable, Subject } from 'rxjs';
 import { GamesVariants } from 'src/doppelkopf/models/play-table.model';
 import { TableState } from 'src/doppelkopf/models/table-state.model';
@@ -15,9 +21,14 @@ export class HoverStepBoardComponent implements OnDestroy {
   gameVariantSelected: Subject<GamesVariants> = new Subject();
   @Output()
   runNextTurn: Subject<void> = new Subject();
-
   @Input()
   waitingForPlayers$: Observable<string[]>;
+  @Input()
+  showLastStich: boolean;
+  @Input()
+  tableId: number;
+  @Output()
+  closeBoard = new EventEmitter<void>();
 
   constructor() {}
 
@@ -30,7 +41,11 @@ export class HoverStepBoardComponent implements OnDestroy {
     this.gameVariantSelected.next(variant);
   }
 
-  nextTurn() {
+  nextTurn(): void {
     this.runNextTurn.next();
+  }
+
+  closeLastStich(): void {
+    this.closeBoard.emit();
   }
 }

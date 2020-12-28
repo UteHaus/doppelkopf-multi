@@ -41,6 +41,12 @@ export class PlayTableService {
     return this.http.delete<boolean>(`${this.defaultApiPath}/${tableId}`);
   }
 
+  public getLastCardStich(tableId: number): Observable<Card[]> {
+    return this.http.get<Card[]>(
+      `${this.defaultApiPath}/${tableId}/last-stich`
+    );
+  }
+
   public updateTable(playTable: PlayTable): Observable<PlayTable> {
     return of(playTable);
   }

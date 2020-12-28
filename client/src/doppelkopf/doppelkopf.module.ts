@@ -32,6 +32,7 @@ import { NextTurnButtonComponent } from './game-table/player-view/hover-step-boa
 import { InplaceInputComponent } from './game-table/players-table/inplace-input/inplace-input.component';
 import { GameVariantNormalPipe } from './game-table/game-variant-normal.pipe';
 import { AnnouncementSelectorComponent } from './game-table/player-view/announcement-selector/announcement-selector.component';
+import { LastStichComponent } from './components/last-stich/last-stich.component';
 const routes: Routes = [
   {
     path: 'table',
@@ -89,6 +90,7 @@ const routes: Routes = [
     InplaceInputComponent,
     GameVariantNormalPipe,
     AnnouncementSelectorComponent,
+    LastStichComponent,
   ],
   imports: [
     ReactiveFormsModule,

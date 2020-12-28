@@ -41,6 +41,7 @@ namespace DoppelkopfApi.Hubs
                 var tablePlayers = playTableService.GetPlayersOfTable(tableId);
                 var tableState = mapper.Map<PlayTableStaeModel>(table);
                 tableState.UserCount = tablePlayers.Length;
+                tableState.TableId = table.Id;
                 tableState.Players = tablePlayers.Select((p) => new AdditionPlayerInfoModel(p)).ToArray();
                 tableState.ShuffleCount = tablePlayers.Count(p => p.ShuffleRound);
                 tableState.NextTurnCount = tablePlayers.Count(p => p.NextTurn);

@@ -504,6 +504,13 @@ namespace DoppelkopfApi.Services
         }
 
 
+        public Card[] GetLastStich(int tableId)
+        {
+            var table = _context.PlayTables.FirstOrDefault((table) => table.Id == tableId);
+            return table != null ? table.GetLastCardSet() : new Card[0];
+        }
+
+
         public TableViewer[] GetTableViewerOfCardPlayers(int playerId)
         {
             return _context.TableViewers.Where((viewer) => viewer.SeePlayerCard == playerId).ToArray();

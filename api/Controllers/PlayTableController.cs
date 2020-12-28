@@ -154,6 +154,12 @@ namespace DoppelkopfApi.Controllers
             return Ok(model);
         }
 
+        [HttpGet("{tableId}/last-stich")]
+        public IActionResult GetLastStich(int tableId)
+        {
+            return Ok(_playTableService.GetLastStich(tableId));
+        }
+
         [HttpGet("player/{userId}")]
         public IActionResult GetUserTable(int userId)
         {

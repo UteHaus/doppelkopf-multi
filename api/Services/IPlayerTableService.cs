@@ -69,6 +69,8 @@ namespace DoppelkopfApi.Services
 
         void SetDutyAnnouncement(int playerId, string announcement);
 
+        Card[] GetLastStich(int tableId);
+
     }
 
 }

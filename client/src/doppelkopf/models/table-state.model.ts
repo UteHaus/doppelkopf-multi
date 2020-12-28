@@ -7,6 +7,7 @@ export class TableState extends PlayTableCount {
   players: AdditionPlayerInfo[];
   nextTurnCount: number;
   gameVariant: GamesVariants;
+  tableId: number;
 
   thisPlayer?: AdditionPlayerInfo;
 }

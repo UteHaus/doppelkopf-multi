@@ -16,7 +16,8 @@
                 [positionOnMove]="tablePlayerState.currentPlayerPosition"
                 [currentGiverPos]="tablePlayerState.roundCardsGiversPosition"
                 [tableGameVariant]="tablePlayerState.gameVariant"
-                (announcementChanged)="announcementChanged($event)"></app-players-table>
+                (announcementChanged)="announcementChanged($event)"
+                (showLastStich)="showLastStich(true)"></app-players-table>
         </div>
 
         <div class="this-player-cards">
@@ -32,9 +33,11 @@
     </div>
 
     <app-hover-step-board
-        *ngIf=" !(tablePlayerState | playStatusRun) || (tablePlayerState | playStatusWinnerTime)"
+        *ngIf=" !(tablePlayerState | playStatusRun) || (tablePlayerState | playStatusWinnerTime) ||lastStich"
         [tablePlayerState]="tablePlayerState" (gameVariantSelected)="variantSelected($event)"
-        (runNextTurn)="nextTurn()" [waitingForPlayers$]="waitingForNextTurnPlayers$">
+        (runNextTurn)="nextTurn()" [waitingForPlayers$]="waitingForNextTurnPlayers$"
+        [tableId]="tablePlayerState.tableId" (closeBoard)="showLastStich(false)"
+        [showLastStich]="lastStich">
     </app-hover-step-board>
 
 </div>

@@ -54,6 +54,7 @@
         "show-cards": "show cards",
         "5th-player": "5th player (giver round)",
         "announcement": "announcement",
+        "last-stich": "last stich",
         "variant": {
             "None": "None",
             "Normal": "Normal",

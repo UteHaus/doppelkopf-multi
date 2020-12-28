@@ -1,5 +1,12 @@
-<h5 *ngIf="tableGameVariant |valideGameVariant" class="table-game-variant">
-    {{('dk.variant.'+tableGameVariant) | translate}}</h5>
+<div class="player-header">
+    <h5 *ngIf="tableGameVariant |valideGameVariant" class="table-game-variant">
+        {{('dk.variant.'+tableGameVariant) | translate}}</h5>
+    <div class="buttons">
+        <button (click)="lastStich()" class="btn btn-sm btn-success mb-2"
+            [translate]>dk.last-stich</button>
+    </div>
+</div>
+
 <div class="player-list">
     <div *ngFor="let player of players" class="player-info"
         [ngClass]="['player-info-'+player.viewPosition, 'player-background-'+player.viewPosition]">

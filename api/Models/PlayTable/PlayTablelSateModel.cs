@@ -11,5 +11,7 @@ namespace DoppelkopfApi.Models.PlayTable
 
         public int NextTurnCount { get; set; }
 
+        public int TableId { get; set; }
+
     }
 }
