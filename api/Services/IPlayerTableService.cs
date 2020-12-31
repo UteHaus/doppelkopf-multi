@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using DoppelkopfApi.Entities;
-using System.Threading.Tasks;
 
 namespace DoppelkopfApi.Services
 {
@@ -21,14 +20,13 @@ namespace DoppelkopfApi.Services
         IEnumerable<PlayTable> GetAllTables();
 
         PlayTable GetTableById(int tableId);
-        ValueTask<PlayTable> GetTableByIdAsync(int id);
 
         PlayTable GetUserTable(int userId);
         TablePlayer GettablePlayerOfId(int playerId);
 
-        Task NextTurn(int playerId);
+        void NextTurn(int playerId);
 
-        ValueTask<bool> StartNewRound(int tableId);
+        bool StartNewRound(int tableId);
         DateTime GetLastTableUpdate(int tableId);
 
         void SetPlayedCard(int playerId, Card card);

@@ -1,4 +1,3 @@
-using System.Threading.Tasks;
 using System;
 using System.Collections.Generic;
 using DoppelkopfApi.Entities;
@@ -36,7 +35,7 @@ namespace DoppelkopfApi.Services
             return table;
         }
 
-        public async ValueTask<bool> StartNewRound(int tableId)
+        public bool StartNewRound(int tableId)
         {
 
             PlayTable table = _context.PlayTables.Find(tableId);
@@ -58,14 +57,10 @@ namespace DoppelkopfApi.Services
                 SetHandCards(tablePlayers, table.WithNiner);
                 _context.TablePlayer.UpdateRange(tablePlayers);
                 _context.PlayTables.Update(table);
-                int changeCount = await _context.SaveChangesAsync();
+                int changeCount = _context.SaveChanges();
 
-                clinetUpdateAction.Invoke();
+                clinetUpdateAction?.Invoke();
                 OnTableChanged(table.Id);
-                foreach (var player in tablePlayers)
-                {
-                    OnTableChanged(player.PlayerId);
-                }
                 return changeCount > 0;
 
             }
@@ -111,7 +106,7 @@ namespace DoppelkopfApi.Services
         }
 
 
-        public async Task NextTurn(int playerId)
+        public void NextTurn(int playerId)
         {
 
             var tablePlayer = GettablePlayerOfId(playerId);
@@ -119,7 +114,7 @@ namespace DoppelkopfApi.Services
             {
                 tablePlayer.NextTurn = true;
                 _context.TablePlayer.Update(tablePlayer);
-                await _context.SaveChangesAsync();
+                _context.SaveChanges();
                 OnTableChanged(tablePlayer.TableId);
 
                 var tablePlayers = GetPlayersOfTable(tablePlayer.TableId);
@@ -165,13 +160,13 @@ namespace DoppelkopfApi.Services
                         _context.PlayTables.Update(table);
                     }
 
-                    await _context.SaveChangesAsync();
+                    _context.SaveChanges();
                     OnTableChanged(table.Id);
                 }
 
                 if (newGame && nextTurnCount == 4)
                 {
-                    await StartNewRound(table.Id);
+                    StartNewRound(table.Id);
                 }
             }
         }
@@ -409,11 +404,6 @@ namespace DoppelkopfApi.Services
         public PlayTable GetTableById(int tableId)
         {
             return _context.PlayTables.Find(tableId);
-        }
-
-        public ValueTask<PlayTable> GetTableByIdAsync(int id)
-        {
-            return _context.PlayTables.FindAsync(id);
         }
 
 

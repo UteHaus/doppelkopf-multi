@@ -144,6 +144,7 @@ export class PlayerViewComponent implements OnInit, OnDestroy {
       .pipe(take(1))
       .subscribe();
   }
+
   showLastStich(visible: boolean): void {
     this.lastStich = visible;
   }

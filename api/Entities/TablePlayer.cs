@@ -105,6 +105,7 @@ namespace DoppelkopfApi.Entities
             AnnouncementVersusParty = false;
             CancellationOfparty = 0;
             NextTurn = false;
+            DutyAnnouncement = "";
         }
 
 

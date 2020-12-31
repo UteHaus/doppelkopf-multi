@@ -53,7 +53,7 @@ namespace DoppelkopfApi.Entities
             LastCardSet = JsonSerializer.Serialize(cards);
         }
 
-        public Card[] GetLastCardSet() => JsonSerializer.Deserialize<Card[]>(LastCardSet);
+        public Card[] GetLastCardSet() => string.IsNullOrWhiteSpace(LastCardSet) ? new Card[0] : JsonSerializer.Deserialize<Card[]>(LastCardSet);
 
         public void SetTableToNextGameTurn()
         {

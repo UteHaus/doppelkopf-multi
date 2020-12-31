@@ -39,7 +39,8 @@
                         </app-announcement-selector>
                     </li>
                     <ng-template #showAnnouncement>
-                        <li *ngIf="player.message" class="message"> {{player.message}} </li>
+                        <li *ngIf="player.dutyAnnouncement" class="message">
+                            {{player.dutyAnnouncement}} </li>
                     </ng-template>
 
                     <!--                     <li>
@@ -60,7 +61,6 @@
             [ngStyle]="{'z-index':player.playerPosition | cardIndexPosition:currentGiverPos}"
             [ngClass]="['player-card-'+player.viewPosition]" [card]="player.playedCard"
             [withDefaultCard]="false">
-            <p>{{player.playedCard|json}}</p>
         </app-card>
     </div>
 </div>

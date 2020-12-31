@@ -17,7 +17,7 @@ import { map, switchMap, take } from 'rxjs/operators';
 export class NextTurnButtonComponent
   implements OnInit, OnDestroy, AfterViewInit {
   private timerSub = new Subject<void>();
-  private timerSecondsCount: number = 3;
+  private timerSecondsCount: number = 2;
   countDown$: Observable<number>;
 
   @Output()

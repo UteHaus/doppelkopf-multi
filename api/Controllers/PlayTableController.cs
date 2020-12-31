@@ -247,11 +247,11 @@ namespace DoppelkopfApi.Controllers
         }
 
         [HttpGet("{tableId}/last-update")]
-        public async Task<IActionResult> GetLastTableUpdate(int tableId)
+        public IActionResult GetLastTableUpdate(int tableId)
         {
             try
             {
-                var table = await _playTableService.GetTableByIdAsync(tableId);
+                var table = _playTableService.GetTableById(tableId);
                 if (table != null)
                 {
                     return Ok(table.LastUpdate.ToUniversalTime());
@@ -266,11 +266,11 @@ namespace DoppelkopfApi.Controllers
 
 
         [HttpPut("{id}/start")]
-        public async Task<IActionResult> StartGame(int id)
+        public IActionResult StartGame(int id)
         {
             try
             {
-                bool canRun = await _playTableService.StartNewRound(id);
+                bool canRun = _playTableService.StartNewRound(id);
                 if (canRun)
                 {
                     return Ok(canRun);
@@ -301,11 +301,11 @@ namespace DoppelkopfApi.Controllers
         }
 
         [HttpPut("player/{playerId}/next")]
-        public async Task<IActionResult> NextTurn(int playerId)
+        public IActionResult NextTurn(int playerId)
         {
             try
             {
-                await _playTableService.NextTurn(playerId);
+                _playTableService.NextTurn(playerId);
 
                 return Ok();
             }
