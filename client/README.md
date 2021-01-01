@@ -1,9 +1,8 @@
-# doppelkopf-multi
+# doppelkopf-multi client
 
-Angular 9 - User Registration and Login Example
-
-Full tutorial with example available at https://jasonwatmore.com/post/2020/04/28/angular-9-user-registration-and-login-example-tutorial
-
+## start 
+1. yarn 
+1. yarn start
 
 ## Develop
 
