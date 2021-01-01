@@ -18,7 +18,10 @@ import {
 import { map, switchMap, take } from 'rxjs/operators';
 import { AdditionPlayerInfo } from 'src/doppelkopf/models/additional-player-info.model';
 import { Card } from 'src/doppelkopf/models/card.model';
-import { GamesVariants } from 'src/doppelkopf/models/play-table.model';
+import {
+  GamesVariants,
+  PlayStatus,
+} from 'src/doppelkopf/models/play-table.model';
 import { TableState } from 'src/doppelkopf/models/table-state.model';
 import { PlayTableService } from 'src/doppelkopf/services/play-table.service';
 import { TableMethods } from 'src/doppelkopf/services/table-hub-method.enum';
@@ -179,15 +182,15 @@ export class PlayerViewComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   private setLastCard(table: TableState, cardMap: CardMapComponent): boolean {
+    const firstCardPlayer = TableUtil.getNextPlayerPosition(
+      table.roundCardsGiversPosition
+    );
     if (
+      table.status == PlayStatus.Run &&
       table.thisPlayer &&
       table.currentPlayerPosition == table.thisPlayer.playerPosition &&
-      TableUtil.getNextPlayerPosition(table.roundCardsGiversPosition) !=
-        table.thisPlayer.playerPosition &&
-      TableUtil.getPlayedCardOfPlayerPosition(
-        table,
-        TableUtil.getNextPlayerPosition(table.roundCardsGiversPosition)
-      ) &&
+      firstCardPlayer != table.thisPlayer.playerPosition &&
+      TableUtil.getPlayedCardOfPlayerPosition(table, firstCardPlayer) &&
       cardMap &&
       cardMap.orderedCards &&
       cardMap.orderedCards.length == 1
