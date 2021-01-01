@@ -1,8 +1,21 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import {
+  AfterViewInit,
+  Component,
+  OnDestroy,
+  OnInit,
+  QueryList,
+  ViewChildren,
+} from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { AccountService } from '@app/services';
-import { BehaviorSubject, Observable, Subject, Subscription } from 'rxjs';
-import { map, shareReplay, switchMap, take } from 'rxjs/operators';
+import {
+  BehaviorSubject,
+  combineLatest,
+  Observable,
+  Subject,
+  Subscription,
+} from 'rxjs';
+import { map, switchMap, take } from 'rxjs/operators';
 import { AdditionPlayerInfo } from 'src/doppelkopf/models/additional-player-info.model';
 import { Card } from 'src/doppelkopf/models/card.model';
 import { GamesVariants } from 'src/doppelkopf/models/play-table.model';
@@ -11,16 +24,16 @@ import { PlayTableService } from 'src/doppelkopf/services/play-table.service';
 import { TableMethods } from 'src/doppelkopf/services/table-hub-method.enum';
 import { TableHubService } from 'src/doppelkopf/services/table-hub.service';
 import { TableUtil } from 'src/doppelkopf/utils/table.util';
+import { CardMapComponent } from '../card-map/card-map.component';
 
 @Component({
   selector: 'app-player-view',
   templateUrl: './player-view.component.html',
   styleUrls: ['./player-view.component.less'],
 })
-export class PlayerViewComponent implements OnInit, OnDestroy {
+export class PlayerViewComponent implements OnInit, OnDestroy, AfterViewInit {
   cardSourceMethode: TableMethods = TableMethods.PlayerCards;
-  private tablePlayerStateSubject = new BehaviorSubject<TableState>(null);
-  playTable$: Observable<TableState>;
+  playTable$ = new BehaviorSubject<TableState>(null);
   private subscription: Subscription = new Subscription();
   nextTurnClicked$: Subject<void>;
   waitingForNextTurnPlayers$: Observable<string[]>;
@@ -28,9 +41,12 @@ export class PlayerViewComponent implements OnInit, OnDestroy {
   variantSelected$: Subject<GamesVariants> = new Subject<GamesVariants>();
   playerInOrder$: Observable<AdditionPlayerInfo[]>;
   lastStich: boolean = false;
+  private autoSetLastCard: Subscription;
   get userId(): number {
     return Number(this.userService.userValue.id);
   }
+  @ViewChildren(CardMapComponent)
+  private cardMap: QueryList<CardMapComponent>;
 
   constructor(
     private route: ActivatedRoute,
@@ -38,12 +54,27 @@ export class PlayerViewComponent implements OnInit, OnDestroy {
     private userService: AccountService,
     private tableHubService: TableHubService
   ) {}
+
+  ngAfterViewInit(): void {
+    this.autoSetLastCard = combineLatest([
+      this.cardMap.changes,
+      this.playTable$,
+    ])
+      .pipe(
+        map((state) =>
+          this.setLastCard(state[1], state[0] ? state[0].first : null)
+        )
+      )
+      .subscribe();
+  }
+
   ngOnDestroy(): void {
     this.tableHubService.offMethode(TableMethods.PlayerTableState);
     this.nextTurnClicked$.complete();
     this.shuffleCardsClick$.complete();
     this.variantSelected$.complete();
     this.subscription.unsubscribe();
+    this.autoSetLastCard.unsubscribe();
   }
 
   ngOnInit(): void {
@@ -52,22 +83,6 @@ export class PlayerViewComponent implements OnInit, OnDestroy {
     );
     this.nextTurnClicked$ = new Subject();
 
-    this.playTable$ = this.tablePlayerStateSubject.pipe(
-      shareReplay(),
-      map((playTable) => {
-        if (playTable) {
-          playTable.thisPlayer = playTable.players.find(
-            (p) => p.playerId == Number(this.userService.userValue.id)
-          );
-          playTable.players = TableUtil.orderPlayersByPositionAndSetViewPosition(
-            playTable.players,
-            playTable.thisPlayer.playerPosition
-          );
-        }
-
-        return playTable;
-      })
-    );
     this.waitingForNextTurnPlayers$ = this.playTable$.pipe(
       map((tableState) => {
         if (tableState) {
@@ -80,7 +95,7 @@ export class PlayerViewComponent implements OnInit, OnDestroy {
     );
 
     this.tableHubService.onMethode(TableMethods.PlayerTableState, (state) => {
-      this.tablePlayerStateSubject.next(state);
+      this.playTable$.next(this.mapTableStateToThisPlayerState(state));
     });
     this.tableHubService.invokeMethode(TableMethods.PlayerTableState);
 
@@ -115,7 +130,7 @@ export class PlayerViewComponent implements OnInit, OnDestroy {
   }
 
   cardSelected(card: Card) {
-    this.tableService.playedCard(card, this.userId).subscribe();
+    this.tableService.playedCard(card, this.userId).pipe(take(1)).subscribe();
   }
 
   variantSelected(variant: GamesVariants) {
@@ -147,5 +162,39 @@ export class PlayerViewComponent implements OnInit, OnDestroy {
 
   showLastStich(visible: boolean): void {
     this.lastStich = visible;
+  }
+
+  private mapTableStateToThisPlayerState(state: TableState): TableState {
+    if (state) {
+      state.thisPlayer = state.players.find(
+        (p) => p.playerId == Number(this.userService.userValue.id)
+      );
+      state.players = TableUtil.orderPlayersByPositionAndSetViewPosition(
+        state.players,
+        state.thisPlayer.playerPosition
+      );
+    }
+
+    return state;
+  }
+
+  private setLastCard(table: TableState, cardMap: CardMapComponent): boolean {
+    if (
+      table.thisPlayer &&
+      table.currentPlayerPosition == table.thisPlayer.playerPosition &&
+      TableUtil.getNextPlayerPosition(table.roundCardsGiversPosition) !=
+        table.thisPlayer.playerPosition &&
+      TableUtil.getPlayedCardOfPlayerPosition(
+        table,
+        TableUtil.getNextPlayerPosition(table.roundCardsGiversPosition)
+      ) &&
+      cardMap &&
+      cardMap.orderedCards &&
+      cardMap.orderedCards.length == 1
+    ) {
+      cardMap.setLastCard();
+      return true;
+    }
+    return false;
   }
 }

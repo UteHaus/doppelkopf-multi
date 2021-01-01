@@ -1,4 +1,5 @@
 import { AdditionPlayerInfo } from '../models/additional-player-info.model';
+import { TableState } from '../models/table-state.model';
 
 export class TableUtil {
   /**
@@ -16,6 +17,20 @@ export class TableUtil {
     return players.sort(
       (playerA, playerB) => playerA.viewPosition - playerB.viewPosition
     );
+  }
+
+  public static getNextPlayerPosition(position: number) {
+    return position + 1 > 4 ? 1 : position + 1;
+  }
+
+  public static getPlayedCardOfPlayerPosition(
+    table: TableState,
+    position: number
+  ) {
+    const playerOfPosition = table.players.find(
+      (player) => player.playerPosition == position
+    );
+    return playerOfPosition.playedCard;
   }
 
   private static setViewPositionOfPlayer(

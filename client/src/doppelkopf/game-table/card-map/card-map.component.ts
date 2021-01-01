@@ -1,4 +1,11 @@
-import { Component, Input, OnDestroy, OnInit, Output } from '@angular/core';
+import {
+  Component,
+  EventEmitter,
+  Input,
+  OnDestroy,
+  OnInit,
+  Output,
+} from '@angular/core';
 import { BehaviorSubject, Subject } from 'rxjs';
 import { Card } from 'src/doppelkopf/models/card.model';
 import { GamesVariants } from 'src/doppelkopf/models/play-table.model';
@@ -12,7 +19,7 @@ import { CardUtil } from 'src/doppelkopf/utils/card.util';
   styleUrls: ['./card-map.component.less'],
 })
 export class CardMapComponent implements OnInit, OnDestroy {
-  cardsSub: BehaviorSubject<Card[]> = new BehaviorSubject([]);
+  cards: BehaviorSubject<Card[]> = new BehaviorSubject([]);
   private _diamondsAceAsMaster: boolean;
   private _gameVariant: GamesVariants;
   orderedCards: Card[] = [];
@@ -42,13 +49,13 @@ export class CardMapComponent implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {
     this.cardSelected.complete();
-    this.cardsSub.complete();
+    this.cards.complete();
     this.hubService.offMethode(this.sourceHubMethode);
   }
 
   ngOnInit(): void {
     this.hubService.onMethode(this.sourceHubMethode, (data) => {
-      this.cardsSub.next(data);
+      this.cards.next(data);
       this.updateOrderCards();
     });
     this.hubService.invokeMethode(this.sourceHubMethode);
@@ -58,21 +65,27 @@ export class CardMapComponent implements OnInit, OnDestroy {
     return `${card.rank}-${card.suit}`;
   }
 
-  selectCard(card: Card, index: number) {
-    if (!this.disabled) {
+  selectCard(card: Card, index: number, autoSet: boolean = false) {
+    if (!this.disabled || autoSet) {
       this.cardSelected.next(card);
       this.orderedCards.splice(index, 1);
+    }
+  }
+
+  setLastCard(): void {
+    if (this.cards.value.length == 1) {
+      this.selectCard(this.cards.value[0], 0, true);
     }
   }
 
   private updateOrderCards(): void {
     if (
       this._diamondsAceAsMaster != undefined &&
-      this.cardsSub.value &&
-      this.cardsSub.value.length > 0
+      this.cards.value &&
+      this.cards.value.length > 0
     ) {
       this.orderedCards = CardUtil.orderCards(
-        this.cardsSub.value,
+        this.cards.value,
         this._gameVariant,
         this._diamondsAceAsMaster
       );

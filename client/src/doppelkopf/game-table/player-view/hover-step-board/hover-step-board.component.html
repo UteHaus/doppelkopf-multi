@@ -15,7 +15,6 @@
 
     <div class="next-step"
         *ngIf="(tablePlayerState | playStatusWaitNextRound) || (tablePlayerState | playStatusWinnerTime)">
-        <p>{{tablePlayerState.thisPlayer.nextTurn}}</p>
         <div *ngIf="!tablePlayerState.thisPlayer.nextTurn; else waitForNextPlayer">
             <app-next-turn-button [withTimer]="tablePlayerState |playStatusWaitNextRound"
                 (runNextTurn)="nextTurn()"></app-next-turn-button>
