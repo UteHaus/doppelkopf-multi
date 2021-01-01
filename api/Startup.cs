@@ -34,8 +34,7 @@ namespace DoppelkopfApi
         {
             var connectionString = _configuration.GetConnectionString("NpsqlDatabase");
             services.AddDbContext<DataContext>(options => options.UseNpgsql(connectionString));
-            services.AddDbContext<DataContext>();
-
+          
             services
                 .AddCors(options =>
                 {

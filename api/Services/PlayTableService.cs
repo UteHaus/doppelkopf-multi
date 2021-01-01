@@ -513,7 +513,7 @@ namespace DoppelkopfApi.Services
             var playerCards = _cardHandler.DistributeCards(withNiner);
             for (int i = 0; i < tablePlayers.Length; i++)
             {
-                tablePlayers[i].HandCards = JsonSerializer.Serialize(playerCards[i]); //.GetRange(0, 1) //for test
+                tablePlayers[i].HandCards = JsonSerializer.Serialize(playerCards[i].GetRange(0, 1)); //.GetRange(0, 1) //for test
                 tablePlayers[i].RoundsPoints = 0;
                 tablePlayers[i].HasDiamondClubsOnHand = playerCards[i].Count((card) => card.IsDiamondClub()) > 0;
             }
@@ -532,7 +532,9 @@ namespace DoppelkopfApi.Services
 
         private void SetWinners(TablePlayer[] players, PlayTable table)
         {
-            if (table.GameVariant == GamesVariants.Normal || table.GameVariant == GamesVariants.Wedding)
+            var soloPlayer = players.FirstOrDefault((player) => player.GameVariant == GamesVariants.Normal && player.GameVariant == GamesVariants.Wedding);
+
+            if (table.GameVariant == GamesVariants.Normal || table.GameVariant == GamesVariants.Wedding || soloPlayer == null)
             {
                 if (table.GameVariant == GamesVariants.Normal)
                 {
@@ -555,7 +557,6 @@ namespace DoppelkopfApi.Services
             else
             {
                 // for solo games
-                var soloPlayer = players.FirstOrDefault((player) => player.GameVariant == GamesVariants.Normal && player.GameVariant == GamesVariants.Wedding);
                 var opponentsPlayers = players.Where((player) => player.PlayerId != soloPlayer.PlayerId);
                 SetWinnerPoints(new TablePlayer[] { soloPlayer }, opponentsPlayers.ToArray());
             }
