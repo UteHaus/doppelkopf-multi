@@ -26,10 +26,12 @@ export class AppComponent implements OnInit {
     this.user$ = this.accountService.user.pipe(
       tap((user) => {
         if (
+          user &&
           user.languageKey &&
           this.translateService.currentLang != user.languageKey
         )
           this.translateService.use(user.languageKey);
+        else this.translateService.use(this.translateService.getBrowserLang());
       })
     );
   }
