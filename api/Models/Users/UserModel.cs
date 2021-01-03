@@ -12,5 +12,7 @@ namespace DoppelkopfApi.Models.Users
 
         public bool EditTables { get; set; }
         public string Icon { get; set; }
+
+        public string LanguageKey { get; set; }
     }
 }

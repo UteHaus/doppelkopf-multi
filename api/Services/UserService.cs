@@ -14,6 +14,8 @@ namespace DoppelkopfApi.Services
         User Create(User user, string password);
         void Update(User user, string password = null);
         void Delete(int id);
+
+        void SetLanguage(int id, string language);
     }
 
     public class UserService : IUserService
@@ -123,6 +125,7 @@ namespace DoppelkopfApi.Services
             }
             user.EditTables = userParam.EditTables;
             user.EditUser = userParam.EditUser;
+            user.LanguageKey = userParam.LanguageKey;
 
             _context.Users.Update(user);
             _context.SaveChanges();
@@ -134,6 +137,18 @@ namespace DoppelkopfApi.Services
             if (user != null)
             {
                 _context.Users.Remove(user);
+                _context.SaveChanges();
+            }
+        }
+
+
+        public void SetLanguage(int id, string language)
+        {
+            var user = _context.Users.Find(id);
+            if (user != null)
+            {
+                user.LanguageKey = language;
+                _context.Users.Update(user);
                 _context.SaveChanges();
             }
         }
@@ -170,5 +185,6 @@ namespace DoppelkopfApi.Services
 
             return true;
         }
+
     }
 }

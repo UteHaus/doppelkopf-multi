@@ -85,7 +85,6 @@ export class TableHubService {
 
     await this.hubConnection.start().then(
       () => {
-        console.log('Hub connection started!');
         this.onList.forEach((item) => {
           this.hubConnection.on(item.methodeName, item.method);
         });

@@ -14,6 +14,7 @@ import { AlertComponent } from './components';
 import { HomeComponent } from './home';
 import { DoppelkopfModule } from 'src/doppelkopf/doppelkopf.module';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
+import { LanguageSelectComponent } from './components/language-select/language-select.component';
 
 @NgModule({
   imports: [
@@ -30,7 +31,12 @@ import { TranslateHttpLoader } from '@ngx-translate/http-loader';
       },
     }),
   ],
-  declarations: [AppComponent, AlertComponent, HomeComponent],
+  declarations: [
+    AppComponent,
+    AlertComponent,
+    HomeComponent,
+    LanguageSelectComponent,
+  ],
   providers: [
     { provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true },
     { provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptor, multi: true },

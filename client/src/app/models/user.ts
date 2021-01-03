@@ -9,4 +9,5 @@
   editUser: boolean;
   editTables: boolean;
   icon: string;
+  languageKey: string;
 }
