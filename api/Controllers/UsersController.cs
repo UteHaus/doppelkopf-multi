@@ -127,5 +127,19 @@ namespace DoppelkopfApi.Controllers
             _userService.Delete(id);
             return Ok();
         }
+
+        [HttpPut("{userId}/language")]
+        public IActionResult Update(int userid, string language)
+        {
+            try
+            {
+                _userService.SetLanguage(userid, language);
+                return Ok();
+            }
+            catch (AppException ex)
+            {
+                return BadRequest(new { message = ex.Message });
+            }
+        }
     }
 }

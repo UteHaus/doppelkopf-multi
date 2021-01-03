@@ -1,9 +1,8 @@
 ﻿import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
-import { BehaviorSubject, Observable, Subject } from 'rxjs';
+import { BehaviorSubject, Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
-
 import { environment } from '@environments/environment';
 import { User } from '@app/models';
 
@@ -32,7 +31,7 @@ export class AccountService {
       .pipe(
         map((user) => {
           // store user details and jwt token in local storage to keep user logged in between page refreshes
-          localStorage.setItem('user', JSON.stringify(user));
+          this.updateLocalUserStorage(user);
           this.userSubject.next(user);
           return user;
         })
@@ -50,6 +49,16 @@ export class AccountService {
     return this.http.post(`${environment.apiUrl}/users/register`, user);
   }
 
+  setLanguage(languageKey: string): Observable<void> {
+    const user = this.userSubject.value;
+    user.languageKey = languageKey;
+    this.userSubject.next(user);
+    return this.http.put<void>(
+      `${environment.apiUrl}/users/${this.userValue.id}/language?language=${languageKey}`,
+      {}
+    );
+  }
+
   getAll() {
     return this.http.get<User[]>(`${environment.apiUrl}/users`);
   }
@@ -65,8 +74,7 @@ export class AccountService {
         if (id == this.userValue.id) {
           // update local storage
           const user = { ...this.userValue, ...params };
-          localStorage.setItem('user', JSON.stringify(user));
-
+          this.updateLocalUserStorage(user);
           // publish updated user to subscribers
           this.userSubject.next(user);
         }
@@ -85,5 +93,9 @@ export class AccountService {
         return x;
       })
     );
+  }
+
+  private updateLocalUserStorage(user: User): void {
+    localStorage.setItem('user', JSON.stringify(user));
   }
 }

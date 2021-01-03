@@ -7,8 +7,7 @@
         [translate]>app.users</a>
       <a class="nav-item nav-link" (click)="logout()">{{'app.logout' | translate}}
         ({{user.username}})</a>
-      <!--  <button (click)="useLanguage('de')">de</button> -->
-
+      <app-language-select class="nav-item"></app-language-select>
     </div>
 
   </nav>

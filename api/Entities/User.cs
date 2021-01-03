@@ -19,5 +19,7 @@ namespace DoppelkopfApi.Entities
         public bool EditUser { get; set; }
 
         public bool EditTables { get; set; }
+
+        public string LanguageKey { get; set; }
     }
 }
