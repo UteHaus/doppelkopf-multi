@@ -1,8 +1,13 @@
 # doppelkopf-multi
-Doppelkopf -->  sometimes abbreviated to Doko, is a trick-taking card game for four players
+Doppelkopf -->  sometimes abbreviated to Doko, is a trick-taking card game.
  
  It is a multiplayer Doppelkopf game. You can add tables and user. Users can play a game or view a game.
 
+## Support
+### Languages
+- Englisch
+- German
+- Sorbian (Upper Sorbian/ hornjoserbska rěč)
 
  ## Configurations
  ### Default
