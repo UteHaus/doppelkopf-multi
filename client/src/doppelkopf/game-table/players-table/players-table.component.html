@@ -8,7 +8,7 @@
 </div>
 
 <div class="player-list">
-    <div *ngFor="let player of players" class="player-info"
+    <div *ngFor="let player of players; trackBy: trackPlayer" class="player-info"
         [ngClass]="['player-info-'+player.viewPosition, 'player-background-'+player.viewPosition]">
         <div class="img" [ngClass]="{ 'on-move':(player.playerPosition==positionOnMove)}">
             <img [src]="player | playerIcon" alt="">
@@ -58,7 +58,7 @@
     </div>
     <div class="player-cards">
         <app-card *ngFor="let player of players; trackBy: trackCards"
-            [ngStyle]="{'z-index':player.playerPosition | cardIndexPosition:currentGiverPos}"
+            [ngStyle]="{'z-index':player.playerPosition | cardIndexPosition:positionOnMove}"
             [ngClass]="['player-card-'+player.viewPosition]" [card]="player.playedCard"
             [withDefaultCard]="false">
         </app-card>

@@ -66,6 +66,9 @@ export class PlayersTableComponent implements OnInit, OnDestroy {
   trackCards(card: Card): string {
     return `${card.rank}-${card.suit}`;
   }
+  trackPlayer(player: AdditionPlayerInfo): number {
+    return player.viewPosition;
+  }
 
   announcementSelected(announcement: string) {
     this.announcementChanged.emit(announcement);
