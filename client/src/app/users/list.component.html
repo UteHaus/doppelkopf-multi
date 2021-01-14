@@ -1,39 +1,44 @@
-﻿<div class="card">
-  <div class="card-header">
-    <h1>Users</h1>
-    <a routerLink="add" class="btn btn-sm btn-success mb-2">Add User</a>
+﻿<div class="container-fluid">
+  <div class="row">
+    <div class="card col-12">
+      <div class="card-header">
+        <h1>Users</h1>
+        <a routerLink="add" class="btn btn-sm btn-success mb-2">Add User</a>
+      </div>
+      <div class="card-body ">
+        <table class="table table-striped">
+          <thead>
+            <tr>
+              <th style="width: 30%">Username</th>
+              <!--       <th style="width: 30%">First Name</th>
+            <th style="width: 30%">Last Name</th> -->
+              <th style="width: 10%"></th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let user of users">
+              <td>{{ user.username }}</td>
+              <!--  <td>{{ user.firstName }}</td>
+            <td>{{ user.lastName }}</td> -->
+              <td style="white-space: nowrap">
+                <a routerLink="edit/{{ user.id }}" class="btn btn-sm btn-primary mr-1">{{'user.edit'
+                  |translate}}</a>
+                <button (click)="deleteUser(user.id)" class="btn btn-sm btn-danger btn-delete-user"
+                  [disabled]="user.isDeleting">
+                  <span *ngIf="user.isDeleting" class="spinner-border spinner-border-sm"></span>
+                  <span *ngIf="!user.isDeleting">Delete</span>
+                </button>
+              </td>
+            </tr>
+            <tr *ngIf="!users">
+              <td colspan="4" class="text-center">
+                <span class="spinner-border spinner-border-lg align-center"></span>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
   </div>
-  <div class="card-body">
-    <table class="table table-striped">
-      <thead>
-        <tr>
-          <th style="width: 30%">Username</th>
-          <!--       <th style="width: 30%">First Name</th>
-          <th style="width: 30%">Last Name</th> -->
-          <th style="width: 10%"></th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr *ngFor="let user of users">
-          <td>{{ user.username }}</td>
-          <!--  <td>{{ user.firstName }}</td>
-          <td>{{ user.lastName }}</td> -->
-          <td style="white-space: nowrap">
-            <a routerLink="edit/{{ user.id }}" class="btn btn-sm btn-primary mr-1">{{'user.edit'
-              |translate}}</a>
-            <button (click)="deleteUser(user.id)" class="btn btn-sm btn-danger btn-delete-user"
-              [disabled]="user.isDeleting">
-              <span *ngIf="user.isDeleting" class="spinner-border spinner-border-sm"></span>
-              <span *ngIf="!user.isDeleting">Delete</span>
-            </button>
-          </td>
-        </tr>
-        <tr *ngIf="!users">
-          <td colspan="4" class="text-center">
-            <span class="spinner-border spinner-border-lg align-center"></span>
-          </td>
-        </tr>
-      </tbody>
-    </table>
-  </div>
+
 </div>
