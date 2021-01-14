@@ -1,4 +1,10 @@
-import { AfterViewInit, Component, OnDestroy, OnInit } from '@angular/core';
+import {
+  AfterViewChecked,
+  AfterViewInit,
+  Component,
+  OnDestroy,
+  OnInit,
+} from '@angular/core';
 import { Router } from '@angular/router';
 import { User } from '@app/models';
 import { AccountService, AlertService } from '@app/services';
@@ -17,7 +23,7 @@ import { TableHubService } from '../services/table-hub.service';
   styleUrls: ['./play-table-list.component.less'],
 })
 export class PlayTableListComponent
-  implements OnInit, OnDestroy, AfterViewInit {
+  implements OnInit, OnDestroy, AfterViewInit, AfterViewChecked {
   tables$ = new BehaviorSubject<PlayTableCount[]>([]);
   onHubConnect$: Observable<boolean>;
   testValue: any;
@@ -41,6 +47,12 @@ export class PlayTableListComponent
   ngAfterViewInit(): void {
     this.userTableIdSub.next();
   }
+  ngAfterViewChecked(): void {
+    // set auto hight of scrolling element
+    const overflowAuto = document.getElementsByClassName('card-body')[0];
+    const maxHeight = overflowAuto.getBoundingClientRect().top + 20;
+    overflowAuto['style'].height = 'calc(100vh - ' + maxHeight + 'px)';
+  }
 
   ngOnDestroy(): void {
     this.userTableIdSub.complete();
@@ -63,7 +75,7 @@ export class PlayTableListComponent
 
     this.onHubConnect$ = this.tableHub.connectionEstablished$;
     this.tableHub.onMethode(TableMethods.Tables, (tables) => {
-      this.tables$.next(tables);
+      this.tables$.next(this.sortTables(tables));
       this.userTableIdSub.next();
     });
 
@@ -115,5 +127,11 @@ export class PlayTableListComponent
       this.deleteTableIds[playTable.id] = true;
       this.tableService.deleteTable(playTable.id).pipe(first()).toPromise();
     }
+  }
+
+  private sortTables(tables: PlayTableCount[]): PlayTableCount[] {
+    return tables.sort((tablesA, tablesB) =>
+      tablesA.name.localeCompare(tablesB.name)
+    );
   }
 }

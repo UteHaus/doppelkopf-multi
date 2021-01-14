@@ -1,5 +1,5 @@
-﻿<div class="app-container background-image">
-  <nav class="navbar navbar-expand navbar-dark" *ngIf="(user$ |async) as user">
+﻿<div class="container-fluid background-image main-pager">
+  <nav class="row navbar navbar-expand navbar-dark" *ngIf="(user$ |async) as user">
     <div class="navbar-nav">
       <a class="nav-item nav-link" routerLink="/" routerLinkActive="active"
         [routerLinkActiveOptions]="{ exact: false }" [translate]>dk.console-tables</a>
@@ -12,8 +12,11 @@
 
   </nav>
 
-  <div class="app-outlet">
-    <alert></alert>
-    <router-outlet></router-outlet>
+  <div class="row">
+    <div class="col">
+      <alert></alert>
+      <router-outlet></router-outlet>
+    </div>
+
   </div>
 </div>

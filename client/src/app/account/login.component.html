@@ -2,8 +2,8 @@
   <div class="card-header">
     <h1 class="text">Doppelkopf</h1>
   </div>
-  <div class="card-body">
-    <form [formGroup]="form" (ngSubmit)="onSubmit()">
+  <div class="card-body container">
+    <form class="row col-md-6" [formGroup]="form" (ngSubmit)="onSubmit()">
       <div class="form-group">
         <input type="text" formControlName="username" class="form-control"
           placeholder="{{'user.username' | translate}}"

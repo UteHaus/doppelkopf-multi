@@ -9,18 +9,20 @@ a {
     box-sizing: content-box;
 }
 
-html {
-    height: 100%;
-
-    body {
-        height: 100%;
-    }
+html body {
+    height: 100vh;
+    overflow: hidden;
 }
 
-div.app-container {
-    display: grid;
-    grid-template-rows: 56px auto;
-    height: 100%;
+div.main-pager {
+    height: 100vh;
+
+    &.container-fluid {
+        padding-right: 0;
+        padding-left: 0;
+        margin-right: 0;
+        margin-left: 0;
+    }
 
     &.background-image {
         background: url(./assets/images/header-cards.jpg) no-repeat center top;
@@ -45,34 +47,21 @@ div.app-container {
         background-color: #343a40a6;
         border-radius: 5px;
 
-        &.navbar.navbar-expand {
-            grid-row: 1;
-
-        }
     }
 
-    >div.app-outlet {
-        padding-left: 20px;
-        padding-right: 20px;
-        grid-row: 2;
-        min-height: 320px;
-        overflow: hidden;
-        height: 100%;
-        display: block;
-    }
+
 
 }
 
 div.card {
-    padding-top: 20px;
     background-color: #a69a6ad6;
-    margin-top: 20px;
     color: white;
     border-radius: 5px;
 }
 
-
-
+ng-component {
+    width: 100%;
+}
 
 th,
 td,
