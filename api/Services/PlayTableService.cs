@@ -331,16 +331,24 @@ namespace DoppelkopfApi.Services
             var tablePlayer = GettablePlayerOfId(playerId);
             if (tablePlayer != null)
             {
-                var tablePlayers = GetPlayersOfTable(tablePlayer.TableId).Where((p) => p.PlayerId != playerId).ToArray();
-                foreach (var player in tablePlayers)
+                var tablePlayers = GetPlayersOfTable(tablePlayer.TableId)?.Where((p) => p.PlayerId != playerId)?.ToArray();
+                if (tablePlayers != null)
                 {
-                    player.ClearForNextTurn();
+                    foreach (var player in tablePlayers)
+                    {
+                        player.ClearForNextTurn();
+                    }
+                    _context.TablePlayer.UpdateRange(tablePlayers);
                 }
+
                 var table = GetTableById(tablePlayer.TableId);
-                table.Status = PlayStatus.Stop;
+                if (table != null)
+                {
+                    table.Status = PlayStatus.Stop;
+                    _context.PlayTables.Update(table);
+                }
+
                 _context.TablePlayer.Remove(tablePlayer);
-                _context.Update(table);
-                _context.TablePlayer.UpdateRange(tablePlayers);
                 int changeCount = _context.SaveChanges();
                 OnTableChanged(tablePlayer.TableId);
                 OnTableListChanged();
