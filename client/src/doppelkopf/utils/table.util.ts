@@ -19,10 +19,19 @@ export class TableUtil {
     );
   }
 
+  /**
+   * Giv the nex postion of the given position.
+   * @param position player position
+   */
   public static getNextPlayerPosition(position: number) {
     return position + 1 > 4 ? 1 : position + 1;
   }
 
+  /**
+   * return the card of the player position x.
+   * @param table play table
+   * @param position player position.
+   */
   public static getPlayedCardOfPlayerPosition(
     table: TableState,
     position: number
