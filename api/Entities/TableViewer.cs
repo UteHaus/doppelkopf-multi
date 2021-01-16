@@ -23,7 +23,8 @@ namespace DoppelkopfApi.Entities
         public bool AsAdditionPlayer { get; set; }
 
         /// <summary>
-        /// Define if the user can see of one player the cards
+        /// Define if the user can see of one player the cards.
+        /// Default value is -1
         /// </summary>
         /// <value></value>
         public int SeePlayerCard { get; set; }

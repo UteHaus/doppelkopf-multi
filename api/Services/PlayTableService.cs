@@ -653,6 +653,7 @@ namespace DoppelkopfApi.Services
 
                     //set the player as the 5th player (viewer)
                     viewerAs5thPlayer.userId = giverPlayerId;
+                    viewerAs5thPlayer.SeePlayerCard = -1;
                     _context.TableViewers.Update(viewerAs5thPlayer);
                     _context.SaveChanges();
 
