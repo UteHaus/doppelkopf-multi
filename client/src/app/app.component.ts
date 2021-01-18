@@ -1,5 +1,4 @@
 ﻿import { Component, OnInit } from '@angular/core';
-
 import { AccountService } from './services';
 import { User } from './models';
 import { TranslateService } from '@ngx-translate/core';

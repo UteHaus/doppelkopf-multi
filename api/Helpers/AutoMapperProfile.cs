@@ -2,6 +2,7 @@ using AutoMapper;
 using DoppelkopfApi.Entities;
 using DoppelkopfApi.Models.Users;
 using DoppelkopfApi.Models.PlayTable;
+using DoppelkopfApi.Models;
 
 namespace DoppelkopfApi.Helpers
 {
@@ -19,6 +20,7 @@ namespace DoppelkopfApi.Helpers
             CreateMap<TablePlayer, PlayTableStaeModel>();
             CreateMap<PlayTable, PlayTableStaeModel>();
             CreateMap<TableViewer, ViewWerModel>();
+            CreateMap<LogInterfaceModel, LogInterface>();
         }
     }
 }

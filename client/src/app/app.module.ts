@@ -1,4 +1,4 @@
-﻿import { NgModule } from '@angular/core';
+﻿import { ErrorHandler, NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { ReactiveFormsModule } from '@angular/forms';
 import {
@@ -15,6 +15,9 @@ import { HomeComponent } from './home';
 import { DoppelkopfModule } from 'src/doppelkopf/doppelkopf.module';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 import { LanguageSelectComponent } from './components/language-select/language-select.component';
+import { LoggerModule, NgxLoggerLevel } from 'ngx-logger';
+import { environment } from '@environments/environment';
+import { ErrorHandlerService } from './error-handler.service';
 
 @NgModule({
   imports: [
@@ -30,6 +33,13 @@ import { LanguageSelectComponent } from './components/language-select/language-s
         deps: [HttpClient],
       },
     }),
+    LoggerModule.forRoot({
+      level: NgxLoggerLevel.DEBUG,
+      serverLogLevel: NgxLoggerLevel.ERROR,
+      enableSourceMaps: false,
+      httpResponseType: 'json',
+      serverLoggingUrl: `${environment.apiUrl}/logger`,
+    }),
   ],
   declarations: [
     AppComponent,
@@ -40,6 +50,7 @@ import { LanguageSelectComponent } from './components/language-select/language-s
   providers: [
     { provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true },
     { provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptor, multi: true },
+    { provide: ErrorHandler, useClass: ErrorHandlerService },
   ],
   exports: [TranslateModule],
   bootstrap: [AppComponent],

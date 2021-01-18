@@ -3,6 +3,7 @@ import { first } from 'rxjs/operators';
 
 import { AccountService } from '@app/services';
 import { User } from '@app/models';
+import { NGXLogger } from 'ngx-logger';
 
 @Component({
   templateUrl: 'list.component.html',
@@ -11,13 +12,24 @@ import { User } from '@app/models';
 export class ListComponent implements OnInit, AfterViewChecked {
   users = null;
 
-  constructor(private accountService: AccountService) {}
+  constructor(
+    private accountService: AccountService,
+    private logger: NGXLogger
+  ) {
+    /* this.logger.debug('Debug message');
+    this.logger.info('Info message');
+    this.logger.log('Default log message');
+    this.logger.warn('Warning message');
+    this.logger.error('Error message'); */
+  }
 
   ngAfterViewChecked(): void {
     // set auto hight of scrolling element
     const overflowAuto = document.getElementsByClassName('card-body')[0];
-    const maxHeight = overflowAuto.getBoundingClientRect().top + 20;
-    overflowAuto['style'].height = 'calc(100vh - ' + maxHeight + 'px)';
+    if (overflowAuto) {
+      const maxHeight = overflowAuto.getBoundingClientRect().top + 20;
+      overflowAuto['style'].height = 'calc(100vh - ' + maxHeight + 'px)';
+    }
   }
 
   ngOnInit() {

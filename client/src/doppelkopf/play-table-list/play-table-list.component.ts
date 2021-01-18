@@ -50,8 +50,10 @@ export class PlayTableListComponent
   ngAfterViewChecked(): void {
     // set auto hight of scrolling element
     const overflowAuto = document.getElementsByClassName('card-body')[0];
-    const maxHeight = overflowAuto.getBoundingClientRect().top + 20;
-    overflowAuto['style'].height = 'calc(100vh - ' + maxHeight + 'px)';
+    if (overflowAuto) {
+      const maxHeight = overflowAuto.getBoundingClientRect().top + 20;
+      overflowAuto['style'].height = 'calc(100vh - ' + maxHeight + 'px)';
+    }
   }
 
   ngOnDestroy(): void {
