@@ -34,7 +34,7 @@ namespace DoppelkopfApi
         {
             var connectionString = _configuration.GetConnectionString("NpsqlDatabase");
             services.AddDbContext<DataContext>(options => options.UseNpgsql(connectionString));
-          
+
             services
                 .AddCors(options =>
                 {
@@ -109,6 +109,7 @@ namespace DoppelkopfApi
             services.AddScoped<ITableEventService, TableEventService>();
             services.AddScoped<IUserService, UserService>();
             services.AddScoped<IPlayTableService, PlayTableService>();
+            services.AddScoped<ILoggerService, LoggerService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
