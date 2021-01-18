@@ -38,6 +38,7 @@ import { ErrorHandlerService } from './error-handler.service';
       serverLogLevel: NgxLoggerLevel.ERROR,
       enableSourceMaps: false,
       httpResponseType: 'json',
+      disableConsoleLogging: true,
       serverLoggingUrl: `${environment.apiUrl}/logger`,
     }),
   ],
