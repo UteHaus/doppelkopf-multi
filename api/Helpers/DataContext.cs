@@ -17,5 +17,7 @@ namespace DoppelkopfApi.Helpers
         public DbSet<TablePlayer> TablePlayer { get; set; }
 
         public DbSet<TableViewer> TableViewers { get; set; }
+
+        public DbSet<LogInterface> Logs { get; set; }
     }
 }

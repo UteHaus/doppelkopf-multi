@@ -3,6 +3,7 @@ namespace DoppelkopfApi.Entities
 {
     public class LogInterface
     {
+        public long Id { get; set; }
         public LogLevel Level { get; set; }
         public DateTime timestamp { get; set; }
         public String fileName { get; set; }

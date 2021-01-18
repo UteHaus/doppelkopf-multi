@@ -1,9 +1,7 @@
 ﻿import { AfterViewChecked, Component, OnInit } from '@angular/core';
 import { first } from 'rxjs/operators';
-
 import { AccountService } from '@app/services';
 import { User } from '@app/models';
-import { NGXLogger } from 'ngx-logger';
 
 @Component({
   templateUrl: 'list.component.html',
@@ -12,16 +10,7 @@ import { NGXLogger } from 'ngx-logger';
 export class ListComponent implements OnInit, AfterViewChecked {
   users = null;
 
-  constructor(
-    private accountService: AccountService,
-    private logger: NGXLogger
-  ) {
-    /* this.logger.debug('Debug message');
-    this.logger.info('Info message');
-    this.logger.log('Default log message');
-    this.logger.warn('Warning message');
-    this.logger.error('Error message'); */
-  }
+  constructor(private accountService: AccountService) {}
 
   ngAfterViewChecked(): void {
     // set auto hight of scrolling element
