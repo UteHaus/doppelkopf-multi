@@ -22,8 +22,8 @@ export class AuthGuardEditUser implements CanActivate {
     const editUserId = route.params['id'];
     if (user && (user.admin || editUserId == user.id)) return true;
 
-    return this.accountService
-      .getById(editUserId)
-      .pipe(map((user) => !(user.admin || user.editTables || user.editTables)));
+    return this.accountService.user.pipe(
+      map((user) => user && !(user.admin || user.editTables || user.editTables))
+    );
   }
 }

@@ -8,7 +8,7 @@ import {
 import { Router } from '@angular/router';
 import { User } from '@app/models';
 import { AccountService, AlertService } from '@app/services';
-import { BehaviorSubject, Observable, of, Subject } from 'rxjs';
+import { BehaviorSubject, Observable, of } from 'rxjs';
 import { catchError, first, map, switchMap, take } from 'rxjs/operators';
 import { PlayTableCount } from 'src/doppelkopf/models/play-table-count.model';
 import { PlayTable } from 'src/doppelkopf/models/play-table.model';
@@ -30,9 +30,7 @@ export class PlayTableListComponent
   userTableId$: Observable<number>;
   userTableIdSub: BehaviorSubject<void> = new BehaviorSubject(null);
   currentUser$: Observable<User>;
-  get user(): User {
-    return this.accountService.userValue;
-  }
+  user$: Observable<User>;
   deleteTableIds = [];
 
   constructor(
@@ -62,6 +60,7 @@ export class PlayTableListComponent
   }
 
   ngOnInit(): void {
+    this.user$ = this.accountService.user;
     this.currentUser$ = this.accountService.user;
     this.userTableId$ = this.userTableIdSub.pipe(
       switchMap(() =>
@@ -111,8 +110,15 @@ export class PlayTableListComponent
   }
 
   watchTable(playTable: PlayTableCount) {
-    this.spectatorService
-      .setSpectatorOnTable(Number(this.user.id), playTable.id)
+    this.user$
+      .pipe(
+        switchMap((user) =>
+          this.spectatorService.setSpectatorOnTable(
+            Number(user.id),
+            playTable.id
+          )
+        )
+      )
       .toPromise()
       .then((canView: boolean) => {
         this.router.navigate(['table', playTable.id, 'spectator']);
@@ -125,10 +131,18 @@ export class PlayTableListComponent
   }
 
   deleteTable(playTable: PlayTable) {
-    if (this.user.admin) {
-      this.deleteTableIds[playTable.id] = true;
-      this.tableService.deleteTable(playTable.id).pipe(first()).toPromise();
-    }
+    this.user$
+      .pipe(
+        switchMap((user) => {
+          if (user.admin) {
+            this.deleteTableIds[playTable.id] = true;
+            return this.tableService.deleteTable(playTable.id);
+          }
+          return of(undefined);
+        }),
+        first()
+      )
+      .toPromise();
   }
 
   private sortTables(tables: PlayTableCount[]): PlayTableCount[] {

@@ -15,7 +15,7 @@
           <th style="width: 35%"></th>
         </tr>
       </thead>
-      <tbody>
+      <tbody *ngIf="user$ | async as user">
         <tr *ngFor="let playTable of tables; trackBy: trackPlayTable">
           <td>{{ playTable.name }}</td>
           <td>{{ playTable.userCount }}</td>
@@ -32,7 +32,7 @@
               </button>
               <button type="button" class="btn btn-sm btn-success mb-2"
                 (click)="runWithOnTable(playTable.id, userTableId == playTable.id)"
-                [disabled]="playTable.userCount == 4 && userTableId != playTable.id">
+                [disabled]="playTable.userCount === 4 && userTableId != playTable.id">
                 <span *ngIf="userTableId != playTable.id; else goIntoGame"
                   [translate]>dk.play-with</span>
                 <ng-template #goIntoGame> <span [translate]>dk.play-on</span></ng-template>
