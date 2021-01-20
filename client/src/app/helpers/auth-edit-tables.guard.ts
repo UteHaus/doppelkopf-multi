@@ -18,7 +18,8 @@ export class AuthGuardEditTables implements CanActivate {
     route: ActivatedRouteSnapshot,
     state: RouterStateSnapshot
   ): Observable<boolean> | Promise<boolean> | boolean {
-    const user = this.accountService.userValue;
-    return user && (user.admin || user.editTables);
+    return this.accountService.user.pipe(
+      map((user) => user && (user.admin || user.editTables))
+    );
   }
 }

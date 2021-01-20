@@ -2,10 +2,10 @@
 import { AccountService } from './services';
 import { User } from './models';
 import { TranslateService } from '@ngx-translate/core';
-import { Observable } from 'rxjs';
+import { Observable, of } from 'rxjs';
 import { Router } from '@angular/router';
 import { PlayTableService } from 'src/doppelkopf/services/play-table.service';
-import { tap } from 'rxjs/operators';
+import { first, switchMap, tap } from 'rxjs/operators';
 
 @Component({ selector: 'app', templateUrl: 'app.component.html' })
 export class AppComponent implements OnInit {
@@ -36,11 +36,14 @@ export class AppComponent implements OnInit {
   }
 
   logout() {
-    this.playeService
-      .logoutOfTable(this.accountService.userValue.id)
-      .toPromise()
-      .then();
-    this.accountService.logout();
+    this.accountService.user
+      .pipe(
+        switchMap((user) =>
+          user ? this.playeService.logoutOfTable(user.id) : of(undefined)
+        ),
+        first()
+      )
+      .subscribe(() => this.accountService.logout());
   }
 
   editUser(user: User) {

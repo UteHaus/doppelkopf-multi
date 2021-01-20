@@ -5,6 +5,7 @@ import { first } from 'rxjs/operators';
 
 import { AccountService, AlertService } from '@app/services';
 import { User } from '@app/models';
+import { Observable } from 'rxjs';
 
 @Component({
   templateUrl: 'add-edit.component.html',
@@ -16,10 +17,7 @@ export class AddEditComponent implements OnInit {
   isAddMode: boolean;
   loading = false;
   submitted = false;
-
-  get user(): User {
-    return this.accountService.userValue;
-  }
+ user$:Observable< User>
 
   constructor(
     private formBuilder: FormBuilder,
@@ -32,7 +30,7 @@ export class AddEditComponent implements OnInit {
   ngOnInit() {
     this.id = this.route.snapshot.params.id;
     this.isAddMode = !this.id;
-
+    this.user$ = this.accountService.user;
     // password not required in edit mode
     const passwordValidators = [Validators.minLength(6)];
     if (this.isAddMode) {

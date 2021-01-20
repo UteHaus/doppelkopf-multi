@@ -18,12 +18,12 @@ export class AuthGuardEditUser implements CanActivate {
     route: ActivatedRouteSnapshot,
     state: RouterStateSnapshot
   ): Observable<boolean> | Promise<boolean> | boolean {
-    const user = this.accountService.userValue;
     const editUserId = route.params['id'];
-    if (user && (user.admin || editUserId == user.id)) return true;
 
     return this.accountService.user.pipe(
-      map((user) => user && !(user.admin || user.editTables || user.editTables))
+      map(
+        (user) => user && (user.admin || editUserId == user.id || user.editUser)
+      )
     );
   }
 }

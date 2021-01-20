@@ -8,8 +8,15 @@ import {
 import { Router } from '@angular/router';
 import { User } from '@app/models';
 import { AccountService, AlertService } from '@app/services';
-import { BehaviorSubject, Observable, of } from 'rxjs';
-import { catchError, first, map, switchMap, take } from 'rxjs/operators';
+import { BehaviorSubject, combineLatest, forkJoin, Observable, of } from 'rxjs';
+import {
+  catchError,
+  combineAll,
+  first,
+  map,
+  switchMap,
+  take,
+} from 'rxjs/operators';
 import { PlayTableCount } from 'src/doppelkopf/models/play-table-count.model';
 import { PlayTable } from 'src/doppelkopf/models/play-table.model';
 import { PlayTableService } from 'src/doppelkopf/services/play-table.service';
@@ -62,11 +69,12 @@ export class PlayTableListComponent
   ngOnInit(): void {
     this.user$ = this.accountService.user;
     this.currentUser$ = this.accountService.user;
-    this.userTableId$ = this.userTableIdSub.pipe(
-      switchMap(() =>
-        this.tableService.getUserPlayTable(
-          Number(this.accountService.userValue.id)
-        )
+    this.userTableId$ = combineLatest([
+      this.accountService.user,
+      this.userTableIdSub,
+    ]).pipe(
+      switchMap((user) =>
+        this.tableService.getUserPlayTable(Number(user[0].id))
       ),
       map((tp) => {
         return tp != undefined ? tp.id : -1;
@@ -87,10 +95,14 @@ export class PlayTableListComponent
     if (playOn) {
       this.router.navigate(['table', tableId, 'player']);
     } else {
-      this.tableService
-        .runWithOnTable(tableId, Number(this.accountService.userValue.id))
-        .toPromise()
-        .then((result) => {
+      this.accountService.user
+        .pipe(
+          switchMap((user) =>
+            this.tableService.runWithOnTable(tableId, Number(user.id))
+          ),
+          first()
+        )
+        .subscribe((result) => {
           if (result) {
             this.router.navigate(['table', tableId, 'player']);
           } else {
@@ -101,11 +113,12 @@ export class PlayTableListComponent
   }
 
   goOutOfTable(): void {
-    this.tableService
-      .logoutOfTable(this.accountService.userValue.id)
-      .pipe(take(1))
-      .toPromise()
-      .then(() => this.router.navigate([]));
+    this.accountService.user
+      .pipe(
+        switchMap((user) => this.tableService.logoutOfTable(user.id)),
+        first()
+      )
+      .subscribe(() => this.router.navigate([]));
     this.userTableIdSub.next();
   }
 

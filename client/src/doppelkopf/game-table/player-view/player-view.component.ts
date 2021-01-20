@@ -11,11 +11,13 @@ import { AccountService } from '@app/services';
 import {
   BehaviorSubject,
   combineLatest,
+  forkJoin,
   Observable,
   Subject,
   Subscription,
+  zip,
 } from 'rxjs';
-import { map, switchMap, take } from 'rxjs/operators';
+import { first, map, switchMap, take } from 'rxjs/operators';
 import { AdditionPlayerInfo } from 'src/doppelkopf/models/additional-player-info.model';
 import { Card } from 'src/doppelkopf/models/card.model';
 import {
@@ -45,9 +47,6 @@ export class PlayerViewComponent implements OnInit, OnDestroy, AfterViewInit {
   playerInOrder$: Observable<AdditionPlayerInfo[]>;
   lastStich: boolean = false;
   private autoSetLastCard: Subscription;
-  get userId(): number {
-    return Number(this.userService.userValue.id);
-  }
   @ViewChildren(CardMapComponent)
   private cardMap: QueryList<CardMapComponent>;
 
@@ -104,21 +103,29 @@ export class PlayerViewComponent implements OnInit, OnDestroy, AfterViewInit {
 
     this.addSubscription(
       this.nextTurnClicked$.pipe(
-        switchMap(() => this.tableService.nextTurn(this.userId))
+        switchMap(() => this.userService.user),
+        switchMap((user) =>
+          this.tableService.nextTurn(Number.parseInt(user.id))
+        )
       )
     );
     this.shuffleCardsClick$ = new Subject();
     this.addSubscription(
       this.shuffleCardsClick$.pipe(
-        switchMap(() => tableId$),
-        switchMap(() => this.tableService.shuffleCards(this.userId))
+        switchMap(() => this.userService.user),
+        switchMap((user) =>
+          this.tableService.shuffleCards(Number.parseInt(user.id))
+        )
       )
     );
 
     this.addSubscription(
-      this.variantSelected$.pipe(
-        switchMap((variant) =>
-          this.tableService.setGameVariant(this.userId, variant)
+      combineLatest([this.userService.user, this.variantSelected$]).pipe(
+        switchMap((userVariant) =>
+          this.tableService.setGameVariant(
+            Number.parseInt(userVariant[0].id),
+            userVariant[1]
+          )
         )
       )
     );
@@ -133,7 +140,14 @@ export class PlayerViewComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   cardSelected(card: Card) {
-    this.tableService.playedCard(card, this.userId).pipe(take(1)).subscribe();
+    this.userService.user
+      .pipe(
+        switchMap((user) =>
+          this.tableService.playedCard(card, Number.parseInt(user.id))
+        ),
+        take(1)
+      )
+      .subscribe();
   }
 
   variantSelected(variant: GamesVariants) {
@@ -157,9 +171,16 @@ export class PlayerViewComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   announcementChanged(announcement: string) {
-    this.tableService
-      .setPlayerAnnouncement(this.userId, announcement)
-      .pipe(take(1))
+    this.userService.user
+      .pipe(
+        switchMap((user) =>
+          this.tableService.setPlayerAnnouncement(
+            Number.parseInt(user.id),
+            announcement
+          )
+        ),
+        take(1)
+      )
       .subscribe();
   }
 
@@ -169,13 +190,15 @@ export class PlayerViewComponent implements OnInit, OnDestroy, AfterViewInit {
 
   private mapTableStateToThisPlayerState(state: TableState): TableState {
     if (state) {
-      state.thisPlayer = state.players.find(
-        (p) => p.playerId == Number(this.userService.userValue.id)
-      );
-      state.players = TableUtil.orderPlayersByPositionAndSetViewPosition(
-        state.players,
-        state.thisPlayer.playerPosition
-      );
+      this.userService.user.pipe(first()).subscribe((user) => {
+        state.thisPlayer = state.players.find(
+          (p) => p.playerId == Number(user.id)
+        );
+        state.players = TableUtil.orderPlayersByPositionAndSetViewPosition(
+          state.players,
+          state.thisPlayer.playerPosition
+        );
+      });
     }
 
     return state;

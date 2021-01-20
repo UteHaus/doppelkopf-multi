@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { User } from '@app/models';
 import { AccountService } from '@app/services';
 import {
   HubConnection,
@@ -8,6 +9,7 @@ import {
 } from '@aspnet/signalr';
 import { environment } from '@environments/environment';
 import { BehaviorSubject } from 'rxjs';
+import { first } from 'rxjs/operators';
 import { TableMethods as TableHubMethods } from './table-hub-method.enum';
 
 @Injectable({
@@ -59,17 +61,19 @@ export class TableHubService {
   }
 
   private start(): void {
-    if (this.accountService.userValue.token && !this.hubConnection) {
-      this.createConnection();
-      this.registerOnServerEvents();
-      this.startConnection();
-    }
+    this.accountService.user.subscribe((user) => {
+      if (user && user.token && !this.hubConnection) {
+        this.createConnection(user);
+        this.registerOnServerEvents();
+        this.startConnection();
+      }
+    });
   }
 
-  private createConnection() {
+  private createConnection(user: User) {
     this.hubConnection = new HubConnectionBuilder()
       .withUrl(`${environment.apiUrl}/hub/playtable`, {
-        accessTokenFactory: () => this.accountService.userValue.token,
+        accessTokenFactory: () => user.token,
       })
       .withAutomaticReconnect([0, 2000, 10000, 30000, null])
       .configureLogging(LogLevel.Information)

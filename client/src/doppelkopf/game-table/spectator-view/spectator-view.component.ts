@@ -1,7 +1,7 @@
 import { AfterViewInit, Component, OnDestroy, OnInit } from '@angular/core';
 import { AccountService } from '@app/services';
-import { BehaviorSubject, Observable } from 'rxjs';
-import { map, take } from 'rxjs/operators';
+import { BehaviorSubject, EMPTY, Observable, of } from 'rxjs';
+import { first, map, switchMap, take } from 'rxjs/operators';
 import { AdditionPlayerInfo } from 'src/doppelkopf/models/additional-player-info.model';
 import { TableState } from 'src/doppelkopf/models/table-state.model';
 import { ViewerState } from 'src/doppelkopf/models/viewer-state.model';
@@ -38,11 +38,17 @@ export class SpectatorViewComponent
     this.tableHubService.offMethode(TableMethods.SpectatorTable);
     this.tableStateSub.complete();
     this.spectatorStateSub.complete();
-    if (this.accountService.userValue) {
-      this.spectatorService
-        .cancelSpectatorOnTable(Number(this.accountService.userValue.id))
-        .toPromise();
-    }
+
+    this.accountService.user
+      .pipe(
+        switchMap((user) =>
+          user
+            ? this.spectatorService.cancelSpectatorOnTable(Number(user.id))
+            : of(undefined)
+        ),
+        first()
+      )
+      .subscribe();
   }
 
   ngOnInit(): void {
@@ -75,9 +81,13 @@ export class SpectatorViewComponent
   }
 
   cardsOfPlayerSelected(player: AdditionPlayerInfo): void {
-    this.spectatorService
-      .showCardsOf(Number(this.accountService.userValue.id), player.playerId)
-      .pipe(take(1))
+    this.accountService.user
+      .pipe(
+        switchMap((user) =>
+          this.spectatorService.showCardsOf(Number(user.id), player.playerId)
+        ),
+        take(1)
+      )
       .toPromise()
       .then((canShow) => {
         if (canShow) {
@@ -88,9 +98,13 @@ export class SpectatorViewComponent
   }
 
   playerAsAdditionPlayerChecked(value: boolean) {
-    this.spectatorService
-      .setAsAdditionPlayer(Number(this.accountService.userValue.id), value)
-      .pipe(take(1))
+    this.accountService.user
+      .pipe(
+        switchMap((user) =>
+          this.spectatorService.setAsAdditionPlayer(Number(user.id), value)
+        ),
+        first()
+      )
       .subscribe();
   }
 

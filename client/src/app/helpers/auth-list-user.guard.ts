@@ -5,8 +5,6 @@ import {
   ActivatedRouteSnapshot,
   RouterStateSnapshot,
 } from '@angular/router';
-import { User } from '@app/models';
-
 import { AccountService } from '@app/services';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
@@ -19,7 +17,8 @@ export class AuthGuardListUser implements CanActivate {
     route: ActivatedRouteSnapshot,
     state: RouterStateSnapshot
   ): Observable<boolean> | Promise<boolean> | boolean {
-    const user: User = this.accountService.userValue;
-    return user && (user.admin || user.editUser);
+    return this.accountService.user.pipe(
+      map((user) => user && (user.admin || user.editUser))
+    );
   }
 }
