@@ -2,8 +2,9 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { User } from '@app/models';
 import { AccountService } from '@app/services';
 import { TranslateService } from '@ngx-translate/core';
-import { Observable, Subject, Subscription } from 'rxjs';
-import {  switchMap } from 'rxjs/operators';
+import { Observable, of, Subject, Subscription } from 'rxjs';
+import { first, switchMap } from 'rxjs/operators';
+import { PlayTableService } from 'src/doppelkopf/services/play-table.service';
 import { Language } from './language.model';
 
 @Component({
@@ -25,7 +26,8 @@ export class NavItemUserComponent implements OnInit, OnDestroy {
 
   constructor(
     private translateService: TranslateService,
-    private accountService: AccountService
+    private accountService: AccountService,
+    private playerService: PlayTableService
   ) {}
 
   ngOnDestroy(): void {
@@ -40,6 +42,17 @@ export class NavItemUserComponent implements OnInit, OnDestroy {
       )
       .subscribe();
     this.user$ = this.accountService.user;
+  }
+
+  logout() {
+    this.accountService.user
+      .pipe(
+        switchMap((user) =>
+          user ? this.playerService.logoutOfTable(user.id) : of(undefined)
+        ),
+        first()
+      )
+      .subscribe(() => this.accountService.logout());
   }
 
   setLanguage(language: Language): void {
