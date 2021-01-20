@@ -1,13 +1,11 @@
 ﻿<div class="container-fluid background-image main-pager">
-  <nav class="row navbar navbar-expand navbar-dark" *ngIf="(user$ |async) as user">
-    <div class="navbar-nav">
+  <nav class="row navbar navbar-expand navbar-dark " *ngIf="(user$ |async) as user">
+    <div class="navbar-nav  w-100 d-flex">
       <a class="nav-item nav-link " routerLink="/" routerLinkActive="active"
         [routerLinkActiveOptions]="{ exact: false }" [translate]>dk.console-tables</a>
-      <a class="nav-item nav-link " (click)="editUser(user)" routerLinkActive="active"
+      <a class="nav-item nav-link" (click)="editUser(user)" routerLinkActive="active"
         [translate]>app.users</a>
-      <a class="nav-item nav-link " (click)="logout()">{{'app.logout' | translate}}
-        ({{user.username}})</a>
-      <app-nav-item-user class="nav-item  justify-content-right"></app-nav-item-user>
+      <app-nav-item-user class="nav-item  p-2 ml-auto"></app-nav-item-user>
     </div>
 
   </nav>
