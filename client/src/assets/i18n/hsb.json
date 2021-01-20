@@ -2,7 +2,8 @@
     "app": {
         "logout": "wotzjewić",
         "home": "doma",
-        "users": "hrajerjo"
+        "users": "hrajerjo",
+        "language": "rěč"
     },
     "user": {
         "username": "mjeno",

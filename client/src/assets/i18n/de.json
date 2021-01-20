@@ -2,7 +2,8 @@
     "app": {
         "logout": "Abmelden",
         "home": "Home",
-        "users": "Nutzer"
+        "users": "Nutzer",
+        "language": "Sprache"
     },
     "user": {
         "username": "Nutzername",

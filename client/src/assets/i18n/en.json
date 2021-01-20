@@ -2,7 +2,8 @@
     "app": {
         "logout": "Logout",
         "home": "Home",
-        "users": "Users"
+        "users": "Users",
+        "language": "Language"
     },
     "user": {
         "username": "Username",
