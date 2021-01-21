@@ -3,7 +3,8 @@
         "logout": "Logout",
         "home": "Home",
         "users": "Users",
-        "language": "Language"
+        "language": "Language",
+        "delete": "Delete"
     },
     "user": {
         "username": "Username",
@@ -47,7 +48,6 @@
         "with-niner": "With niner",
         "users": "Users",
         "points": "Punkte",
-        "delete": "Delete",
         "watch": "watch",
         "giver": "Giver",
         "name": "Name",

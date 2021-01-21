@@ -7,19 +7,7 @@
         aria-labelledby="dropdownMenuButton">
 
         <div class="dropdown-item ">
-            <div class="dropdown">
-                <a class="dropdown-toggle text-dark" data-toggle="dropdown" aria-haspopup="true"
-                    aria-expanded="showMenu" (click)="showLangauges=!showLangauges">
-                    <span translate>app.language</span>
-                </a>
-                <div class="dropdown-menu " [ngClass]="{'show':showLangauges}"
-                    aria-labelledby="dropdownMenuButton">
-                    <a *ngFor="let language of languages" class="dropdown-item "
-                        (click)="setLanguage(language)">{{language.name
-                        }}</a>
-
-                </div>
-            </div>
+          
         </div>
 
         <a class="dropdown-item text-dark" (click)="logout()"><span translate>app.logout</span></a>

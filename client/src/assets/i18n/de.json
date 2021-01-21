@@ -3,7 +3,8 @@
         "logout": "Abmelden",
         "home": "Home",
         "users": "Nutzer",
-        "language": "Sprache"
+        "language": "Sprache",
+        "delete": "Löschen"
     },
     "user": {
         "username": "Nutzername",
@@ -48,7 +49,6 @@
         "watch": "zuschauen",
         "users": "Nutzer",
         "points": "Punkte",
-        "delete": "Löschen",
         "giver": "Geber",
         "name": "Name",
         "go-out": "austeigen",

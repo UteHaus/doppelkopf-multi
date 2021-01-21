@@ -2,10 +2,10 @@
 import { Router, ActivatedRoute } from '@angular/router';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { first } from 'rxjs/operators';
-
 import { AccountService, AlertService } from '@app/services';
 import { User } from '@app/models';
 import { Observable } from 'rxjs';
+import { TranslateService } from '@ngx-translate/core';
 
 @Component({
   templateUrl: 'add-edit.component.html',
@@ -17,14 +17,16 @@ export class AddEditComponent implements OnInit {
   isAddMode: boolean;
   loading = false;
   submitted = false;
- user$:Observable< User>
+  user$: Observable<User>;
+  languageKey: string;
 
   constructor(
     private formBuilder: FormBuilder,
     private route: ActivatedRoute,
     private router: Router,
     private accountService: AccountService,
-    private alertService: AlertService
+    private alertService: AlertService,
+    private translateService: TranslateService
   ) {}
 
   ngOnInit() {
@@ -44,7 +46,9 @@ export class AddEditComponent implements OnInit {
       password: ['', passwordValidators],
       editUser: [false],
       editTables: [false],
+      
     });
+    this.languageKey = this.translateService.getBrowserLang();
 
     if (!this.isAddMode) {
       this.accountService
@@ -56,6 +60,8 @@ export class AddEditComponent implements OnInit {
           this.formControls.username.setValue(x.username);
           this.formControls.editUser.setValue(x.editUser);
           this.formControls.editTables.setValue(x.editTables);
+          this.languageKey =
+            x.languageKey ?? this.translateService.getBrowserLang();
         });
     }
   }
@@ -77,19 +83,21 @@ export class AddEditComponent implements OnInit {
     } */
 
     this.loading = true;
+    const user: User = this.form.value;
+    user.languageKey = this.languageKey;
     if (this.isAddMode) {
-      this.createUser();
+      this.createUser(user);
     } else {
-      this.updateUser();
+      this.updateUser(user);
     }
   }
 
-  private createUser() {
+  private createUser(user: User) {
     this.accountService
-      .register(this.form.value)
+      .register(user)
       .pipe(first())
       .subscribe(
-        (data) => {
+        () => {
           this.alertService.success('User added successfully', {
             keepAfterRouteChange: true,
           });
@@ -102,12 +110,12 @@ export class AddEditComponent implements OnInit {
       );
   }
 
-  private updateUser() {
+  private updateUser(user: User) {
     this.accountService
-      .update(this.id, this.form.value)
+      .update(this.id, user)
       .pipe(first())
       .subscribe(
-        (data) => {
+        () => {
           this.alertService.success('Update successful', {
             keepAfterRouteChange: true,
           });

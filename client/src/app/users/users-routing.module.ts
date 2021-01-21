@@ -2,7 +2,7 @@ import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 import { LayoutComponent } from './layout.component';
 import { ListComponent } from './list.component';
-import { AddEditComponent } from './add-edit.component';
+import { AddEditComponent } from './add-edit/add-edit.component';
 import { AuthGuardEditUser } from '@app/helpers/auth-edit-user.guard';
 import { AuthGuardAddUser } from '@app/helpers/auth-add-user.guard';
 import { AuthGuardListUser } from '@app/helpers/auth-list-user.guard';

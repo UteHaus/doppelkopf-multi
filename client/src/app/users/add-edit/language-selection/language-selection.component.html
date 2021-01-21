@@ -1,0 +1,13 @@
+<div class="dropdown">
+    <button type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown"
+        aria-haspopup="true" aria-expanded="showMenu" (click)="showLangauges=!showLangauges">
+        <span>{{value | languageName }}</span>
+    </button>
+    <div class="dropdown-menu " [ngClass]="{'show':showLangauges}"
+        aria-labelledby="dropdownMenuButton">
+        <a *ngFor="let language of languagesKeys" class="dropdown-item "
+            (click)="setLanguage(language)">{{language | languageName
+            }}</a>
+
+    </div>
+</div>

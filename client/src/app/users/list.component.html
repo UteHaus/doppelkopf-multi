@@ -2,14 +2,14 @@
   <div class="row">
     <div class="card col-12">
       <div class="card-header">
-        <h1>Users</h1>
-        <a routerLink="add" class="btn btn-sm btn-success mb-2">Add User</a>
+        <h1 translate>app.users</h1>
+        <a routerLink="add" class="btn btn-sm btn-primary mb-2" translate>user.add-user</a>
       </div>
       <div class="card-body ">
         <table class="table table-striped">
           <thead>
             <tr>
-              <th style="width: 30%">Username</th>
+              <th style="width: 30%" translate>user.username</th>
               <!--       <th style="width: 30%">First Name</th>
             <th style="width: 30%">Last Name</th> -->
               <th style="width: 10%"></th>
@@ -26,7 +26,7 @@
                 <button (click)="deleteUser(user.id)" class="btn btn-sm btn-danger btn-delete-user"
                   [disabled]="user.isDeleting">
                   <span *ngIf="user.isDeleting" class="spinner-border spinner-border-sm"></span>
-                  <span *ngIf="!user.isDeleting">Delete</span>
+                  <span *ngIf="!user.isDeleting" translate>app.delete</span>
                 </button>
               </td>
             </tr>
