@@ -17,5 +17,6 @@ namespace DoppelkopfApi.Models.Users
         public bool EditUser { get; set; }
 
         public bool EditTables { get; set; }
+        public string LanguageKey { get; set; }
     }
 }
