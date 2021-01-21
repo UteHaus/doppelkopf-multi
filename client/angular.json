@@ -28,11 +28,13 @@
               "src/assets"
             ],
             "styles": [
-              "src/styles.less",
+              "node_modules/bootstrap/dist/css/bootstrap.min.css",
               "node_modules/font-awesome/less/font-awesome.less",
-              "node_modules/bootstrap/dist/css/bootstrap.min.css"
+              "src/styles.less"
             ],
-            "scripts": []
+            "scripts": [
+              "node_modules/bootstrap/dist/js/bootstrap.min.js"
+            ]
           },
           "configurations": {
             "production": {

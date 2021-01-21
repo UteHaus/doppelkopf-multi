@@ -31,7 +31,7 @@
     "@ngx-translate/core": "^13.0.0",
     "@ngx-translate/http-loader": "^6.0.0",
     "@typescript-eslint/parser": "^4.13.0",
-    "bootstrap": "^4.5.3",
+    "bootstrap": "^4.6.0",
     "ngx-logger": "^4.1.9",
     "rxjs": "~6.5.4",
     "tslib": "^2.0.0",
