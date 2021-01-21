@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { User } from '@app/models';
 import { AccountService } from '@app/services';
 import { Observable, of } from 'rxjs';
@@ -14,6 +14,14 @@ export class NavItemUserComponent implements OnInit {
   show: boolean = false;
   showLangauges: boolean = false;
   user$: Observable<User>;
+  backupRout: string;
+  @Input()
+  set previousRoute(value: string) {
+    const i = value.includes('edit');
+    if (!i) {
+      this.backupRout = value.split('/').join('_');
+    }
+  }
 
   constructor(
     private accountService: AccountService,

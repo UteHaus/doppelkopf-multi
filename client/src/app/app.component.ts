@@ -13,7 +13,7 @@ export class AppComponent implements OnInit {
   constructor(
     private accountService: AccountService,
     private translateService: TranslateService,
-    private route: Router
+    public route: Router
   ) {
     // translate.setDefaultLang('de');
     route.navigateByUrl;
@@ -34,8 +34,6 @@ export class AppComponent implements OnInit {
   }
 
   editUser(user: User) {
-    this.route.navigate(
-      user.admin || user.editUser ? ['/users'] : ['/users', 'edit', user.id]
-    );
+    this.route.navigate(['/users', 'list']);
   }
 }

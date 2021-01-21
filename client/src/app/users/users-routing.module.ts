@@ -12,11 +12,15 @@ const routes: Routes = [
     path: '',
     component: LayoutComponent,
     children: [
-      { path: '', component: ListComponent, canActivate: [AuthGuardListUser] },
+      {
+        path: 'list',
+        component: ListComponent,
+        canActivate: [AuthGuardListUser],
+      },
       {
         path: 'add',
         component: AddEditComponent,
-        canActivate: [AuthGuardAddUser],
+        canActivate: [AuthGuardEditUser],
       },
       {
         path: 'edit/:id',

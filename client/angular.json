@@ -32,9 +32,7 @@
               "node_modules/font-awesome/less/font-awesome.less",
               "src/styles.less"
             ],
-            "scripts": [
-              "node_modules/bootstrap/dist/js/bootstrap.min.js"
-            ]
+            "scripts": []
           },
           "configurations": {
             "production": {

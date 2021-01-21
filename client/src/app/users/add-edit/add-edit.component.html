@@ -25,7 +25,7 @@
     </div>
   </div> -->
       <div class="form-row">
-        <div class="form-group col-md-6 col-sm-12">
+        <div class="form-group col-md-6">
           <label for="username" [translate]>user.username</label>
           <input type="text" formControlName="username" class="form-control"
             [ngClass]="{ 'is-invalid': submitted && formControls.username.errors }" />
@@ -33,7 +33,7 @@
             <div *ngIf="formControls.username.errors.required" [translate]>user.user-required</div>
           </div>
         </div>
-        <div class="form-group col-md-6 col-sm-12">
+        <div class="form-group col">
           <label for="password" [translate]>
             user.password
             <em *ngIf="!isAddMode" [translate]>user.leave-blank-for-same-password</em>
@@ -80,7 +80,7 @@
           <span *ngIf="loading" class="spinner-border spinner-border-sm mr-1"></span>
           {{'user.save' | translate}}
         </button>
-        <a type="button" routerLink="/users" class="btn btn-outline-secondary ">{{'user.cancel' |
+        <a type="button" (click)="cancel()" class="btn btn-outline-secondary ">{{'user.cancel' |
           translate}}</a>
       </div>
     </form>

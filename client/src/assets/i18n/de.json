@@ -4,7 +4,8 @@
         "home": "Home",
         "users": "Nutzer",
         "language": "Sprache",
-        "delete": "Löschen"
+        "delete": "Löschen",
+        "settings": "Einstellungen"
     },
     "user": {
         "username": "Nutzername",

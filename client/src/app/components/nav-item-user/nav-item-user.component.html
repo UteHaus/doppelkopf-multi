@@ -5,12 +5,10 @@
     </a>
     <div class="dropdown-menu dropdown-menu-right text-dark" [ngClass]="{'show':show}"
         aria-labelledby="dropdownMenuButton">
-
         <div class="dropdown-item ">
-          
         </div>
-
+        <a class="dropdown-item text-dark" routerLink="/users/edit/{{ user.id }}?ld={{backupRout}}"
+            (click)="show=false"><span translate>app.settings</span></a>
         <a class="dropdown-item text-dark" (click)="logout()"><span translate>app.logout</span></a>
-
     </div>
 </div>

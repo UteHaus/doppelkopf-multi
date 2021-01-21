@@ -19,6 +19,7 @@ export class AddEditComponent implements OnInit {
   submitted = false;
   user$: Observable<User>;
   languageKey: string;
+  previousUrl: string = '/users/list';
 
   constructor(
     private formBuilder: FormBuilder,
@@ -30,7 +31,12 @@ export class AddEditComponent implements OnInit {
   ) {}
 
   ngOnInit() {
-    this.id = this.route.snapshot.params.id;
+    const params = (this.route.snapshot.params.id as string).split('?');
+    this.id = params[0];
+    if (params.length > 1) {
+      const url = params[1].split('=')[1];
+      this.previousUrl = url.split('_').join('/');
+    }
     this.isAddMode = !this.id;
     this.user$ = this.accountService.user;
     // password not required in edit mode
@@ -46,7 +52,6 @@ export class AddEditComponent implements OnInit {
       password: ['', passwordValidators],
       editUser: [false],
       editTables: [false],
-      
     });
     this.languageKey = this.translateService.getBrowserLang();
 
@@ -69,6 +74,10 @@ export class AddEditComponent implements OnInit {
   // convenience getter for easy access to form fields
   get formControls() {
     return this.form.controls;
+  }
+
+  cancel(): void {
+    this.router.navigate([this.previousUrl]);
   }
 
   onSubmit() {
@@ -119,7 +128,7 @@ export class AddEditComponent implements OnInit {
           this.alertService.success('Update successful', {
             keepAfterRouteChange: true,
           });
-          this.router.navigate(['..', { relativeTo: this.route }]);
+          this.router.navigate([this.previousUrl, { relativeTo: this.route }]);
         },
         (error) => {
           this.alertService.error(error);
