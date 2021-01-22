@@ -20,7 +20,7 @@ export class HoverStepBoardComponent implements OnDestroy {
   @Output()
   gameVariantSelected: Subject<GamesVariants> = new Subject();
   @Output()
-  runNextTurn: Subject<void> = new Subject();
+  runNextTurn: EventEmitter<void> = new EventEmitter();
   @Input()
   waitingForPlayers$: Observable<string[]>;
   @Input()
@@ -42,7 +42,7 @@ export class HoverStepBoardComponent implements OnDestroy {
   }
 
   nextTurn(): void {
-    this.runNextTurn.next();
+    this.runNextTurn.emit();
   }
 
   closeLastStich(): void {

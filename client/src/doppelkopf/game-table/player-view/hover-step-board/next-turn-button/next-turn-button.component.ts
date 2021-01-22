@@ -1,6 +1,7 @@
 import {
   AfterViewInit,
   Component,
+  EventEmitter,
   Input,
   OnDestroy,
   OnInit,
@@ -21,23 +22,12 @@ export class NextTurnButtonComponent
   countDown$: Observable<number>;
 
   @Output()
-  runNextTurn: Subject<void> = new Subject();
+  runNextTurn: EventEmitter<void> = new EventEmitter();
 
   @Input()
   withTimer: boolean;
 
-  constructor() {}
-  ngAfterViewInit(): void {
-    if (this.withTimer) {
-      this.timerSub.next();
-    }
-  }
-
-  ngOnDestroy(): void {
-    this.timerSub.complete();
-  }
-
-  ngOnInit(): void {
+  constructor() {
     this.countDown$ = this.timerSub.pipe(
       switchMap(() => timer(0, 1000)),
       take(this.timerSecondsCount + 1),
@@ -51,7 +41,19 @@ export class NextTurnButtonComponent
     );
   }
 
+  ngAfterViewInit(): void {
+    if (this.withTimer) {
+      this.timerSub.next();
+    }
+  }
+
+  ngOnDestroy(): void {
+    this.timerSub.complete();
+  }
+
+  ngOnInit(): void {}
+
   nextTurn() {
-    this.runNextTurn.next();
+    this.runNextTurn.emit();
   }
 }

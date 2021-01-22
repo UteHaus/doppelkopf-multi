@@ -71,6 +71,10 @@ namespace DoppelkopfApi.Entities
             return string.IsNullOrWhiteSpace(HandCards) || GetHandCards().Length == 0;
         }
 
+        /// <summary>
+        /// This player has played a card
+        /// </summary>
+        /// <returns></returns>
         public bool PlayerCardSet()
         {
             return !string.IsNullOrWhiteSpace(PlayedCard);

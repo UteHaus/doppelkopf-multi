@@ -26,6 +26,11 @@ namespace DoppelkopfApi.Services
 
         void NextTurn(int playerId);
 
+        /// <summary>
+        /// Setup the table and the player for a new round on the table.
+        /// </summary>
+        /// <param name="tableId">Id of the table.</param>
+        /// <returns>True when the a new round started otherwise false (setup fails).</returns>
         bool StartNewRound(int tableId);
         DateTime GetLastTableUpdate(int tableId);
 

@@ -7,6 +7,7 @@ import {
   ViewChildren,
 } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
+import { User } from '@app/models';
 import { AccountService } from '@app/services';
 import {
   BehaviorSubject,
@@ -17,7 +18,7 @@ import {
   Subscription,
   zip,
 } from 'rxjs';
-import { first, map, switchMap, take } from 'rxjs/operators';
+import { first, map, switchMap, take, withLatestFrom } from 'rxjs/operators';
 import { AdditionPlayerInfo } from 'src/doppelkopf/models/additional-player-info.model';
 import { Card } from 'src/doppelkopf/models/card.model';
 import {
@@ -40,9 +41,9 @@ export class PlayerViewComponent implements OnInit, OnDestroy, AfterViewInit {
   cardSourceMethode: TableMethods = TableMethods.PlayerCards;
   playTable$ = new BehaviorSubject<TableState>(null);
   private subscription: Subscription = new Subscription();
-  nextTurnClicked$: Subject<void>;
+  nextTurnClicked$ = new Subject();
   waitingForNextTurnPlayers$: Observable<string[]>;
-  shuffleCardsClick$: Subject<void>;
+  shuffleCardsClick$ = new Subject();
   variantSelected$: Subject<GamesVariants> = new Subject<GamesVariants>();
   playerInOrder$: Observable<AdditionPlayerInfo[]>;
   lastStich: boolean = false;
@@ -83,7 +84,6 @@ export class PlayerViewComponent implements OnInit, OnDestroy, AfterViewInit {
     const tableId$: Observable<number> = this.route.paramMap.pipe(
       map((params) => Number(params.get('id')))
     );
-    this.nextTurnClicked$ = new Subject();
 
     this.waitingForNextTurnPlayers$ = this.playTable$.pipe(
       map((tableState) => {
@@ -101,33 +101,14 @@ export class PlayerViewComponent implements OnInit, OnDestroy, AfterViewInit {
     });
     this.tableHubService.invokeMethode(TableMethods.PlayerTableState);
 
-    this.addSubscription(
-      this.nextTurnClicked$.pipe(
-        switchMap(() => this.userService.user),
-        switchMap((user) =>
-          this.tableService.nextTurn(Number.parseInt(user.id))
-        )
-      )
+    this.addSubscription(this.nextTurnClicked$, (user) =>
+      this.tableService.nextTurn(Number.parseInt(user.id))
     );
-    this.shuffleCardsClick$ = new Subject();
-    this.addSubscription(
-      this.shuffleCardsClick$.pipe(
-        switchMap(() => this.userService.user),
-        switchMap((user) =>
-          this.tableService.shuffleCards(Number.parseInt(user.id))
-        )
-      )
+    this.addSubscription(this.shuffleCardsClick$, (user) =>
+      this.tableService.shuffleCards(Number.parseInt(user.id))
     );
-
-    this.addSubscription(
-      combineLatest([this.userService.user, this.variantSelected$]).pipe(
-        switchMap((userVariant) =>
-          this.tableService.setGameVariant(
-            Number.parseInt(userVariant[0].id),
-            userVariant[1]
-          )
-        )
-      )
+    this.addSubscription(this.variantSelected$, (user, variant) =>
+      this.tableService.setGameVariant(Number.parseInt(user.id), variant)
     );
   }
 
@@ -166,8 +147,14 @@ export class PlayerViewComponent implements OnInit, OnDestroy, AfterViewInit {
     this.nextTurnClicked$.next();
   }
 
-  private addSubscription<T>(sub: Observable<T>): void {
-    this.subscription.add(sub.subscribe());
+  private addSubscription<T>(
+    event: Observable<T>,
+    sm: (user: User, eventValue: T) => Observable<undefined>
+  ): void {
+    const observ = combineLatest([this.userService.user, event]).pipe(
+      switchMap((userValue) => sm(userValue[0], userValue[1]))
+    );
+    this.subscription.add(observ.subscribe());
   }
 
   announcementChanged(announcement: string) {

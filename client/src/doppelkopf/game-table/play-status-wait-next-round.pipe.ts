@@ -7,6 +7,6 @@ import { TableState } from '../models/table-state.model';
 })
 export class PlayStatusWaitNextRoundPipe implements PipeTransform {
   transform(value: TableState): unknown {
-    return value.status == PlayStatus.WaitForNextRund;
+    return value.status === PlayStatus.WaitForNextRund;
   }
 }
