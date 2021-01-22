@@ -1,4 +1,4 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 
 import { HoverStepBoardComponent } from './hover-step-board.component';
 
@@ -6,7 +6,7 @@ describe('HoverStepBoardComponent', () => {
   let component: HoverStepBoardComponent;
   let fixture: ComponentFixture<HoverStepBoardComponent>;
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       declarations: [HoverStepBoardComponent],
     }).compileComponents();

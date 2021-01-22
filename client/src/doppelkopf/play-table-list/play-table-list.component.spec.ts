@@ -1,4 +1,4 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 
 import { PlayTableListComponent } from './play-table-list.component';
 
@@ -6,7 +6,7 @@ describe('PlayTableListComponent', () => {
   let component: PlayTableListComponent;
   let fixture: ComponentFixture<PlayTableListComponent>;
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       declarations: [PlayTableListComponent],
     }).compileComponents();

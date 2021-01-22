@@ -1,4 +1,4 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 
 import { LastStichComponent } from './last-stich.component';
 
@@ -6,7 +6,7 @@ describe('LastStichComponent', () => {
   let component: LastStichComponent;
   let fixture: ComponentFixture<LastStichComponent>;
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       declarations: [ LastStichComponent ]
     })
