@@ -2,10 +2,10 @@
 import { Router, ActivatedRoute } from '@angular/router';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { first } from 'rxjs/operators';
-
 import { AccountService, AlertService } from '@app/services';
 import { User } from '@app/models';
 import { Observable } from 'rxjs';
+import { TranslateService } from '@ngx-translate/core';
 
 @Component({
   templateUrl: 'add-edit.component.html',
@@ -17,18 +17,26 @@ export class AddEditComponent implements OnInit {
   isAddMode: boolean;
   loading = false;
   submitted = false;
- user$:Observable< User>
+  user$: Observable<User>;
+  languageKey: string;
+  previousUrl: string = '/users/list';
 
   constructor(
     private formBuilder: FormBuilder,
     private route: ActivatedRoute,
     private router: Router,
     private accountService: AccountService,
-    private alertService: AlertService
+    private alertService: AlertService,
+    private translateService: TranslateService
   ) {}
 
   ngOnInit() {
-    this.id = this.route.snapshot.params.id;
+    const params = (this.route.snapshot.params.id as string).split('?');
+    this.id = params[0];
+    if (params.length > 1) {
+      const url = params[1].split('=')[1];
+      this.previousUrl = url.split('_').join('/');
+    }
     this.isAddMode = !this.id;
     this.user$ = this.accountService.user;
     // password not required in edit mode
@@ -45,6 +53,7 @@ export class AddEditComponent implements OnInit {
       editUser: [false],
       editTables: [false],
     });
+    this.languageKey = this.translateService.getBrowserLang();
 
     if (!this.isAddMode) {
       this.accountService
@@ -56,6 +65,8 @@ export class AddEditComponent implements OnInit {
           this.formControls.username.setValue(x.username);
           this.formControls.editUser.setValue(x.editUser);
           this.formControls.editTables.setValue(x.editTables);
+          this.languageKey =
+            x.languageKey ?? this.translateService.getBrowserLang();
         });
     }
   }
@@ -63,6 +74,10 @@ export class AddEditComponent implements OnInit {
   // convenience getter for easy access to form fields
   get formControls() {
     return this.form.controls;
+  }
+
+  cancel(): void {
+    this.router.navigate([this.previousUrl]);
   }
 
   onSubmit() {
@@ -77,19 +92,21 @@ export class AddEditComponent implements OnInit {
     } */
 
     this.loading = true;
+    const user: User = this.form.value;
+    user.languageKey = this.languageKey;
     if (this.isAddMode) {
-      this.createUser();
+      this.createUser(user);
     } else {
-      this.updateUser();
+      this.updateUser(user);
     }
   }
 
-  private createUser() {
+  private createUser(user: User) {
     this.accountService
-      .register(this.form.value)
+      .register(user)
       .pipe(first())
       .subscribe(
-        (data) => {
+        () => {
           this.alertService.success('User added successfully', {
             keepAfterRouteChange: true,
           });
@@ -102,16 +119,16 @@ export class AddEditComponent implements OnInit {
       );
   }
 
-  private updateUser() {
+  private updateUser(user: User) {
     this.accountService
-      .update(this.id, this.form.value)
+      .update(this.id, user)
       .pipe(first())
       .subscribe(
-        (data) => {
+        () => {
           this.alertService.success('Update successful', {
             keepAfterRouteChange: true,
           });
-          this.router.navigate(['..', { relativeTo: this.route }]);
+          this.router.navigate([this.previousUrl, { relativeTo: this.route }]);
         },
         (error) => {
           this.alertService.error(error);

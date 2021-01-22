@@ -10,4 +10,5 @@
   editTables: boolean;
   icon: string;
   languageKey: string;
+  autoCounter: number;
 }

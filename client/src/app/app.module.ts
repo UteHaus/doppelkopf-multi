@@ -14,10 +14,10 @@ import { AlertComponent } from './components';
 import { HomeComponent } from './home';
 import { DoppelkopfModule } from 'src/doppelkopf/doppelkopf.module';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
-import { LanguageSelectComponent } from './components/language-select/language-select.component';
 import { LoggerModule, NgxLoggerLevel } from 'ngx-logger';
 import { environment } from '@environments/environment';
 import { ErrorHandlerService } from './error-handler.service';
+import { NavItemUserComponent } from './components/nav-item-user/nav-item-user.component';
 
 @NgModule({
   imports: [
@@ -46,7 +46,7 @@ import { ErrorHandlerService } from './error-handler.service';
     AppComponent,
     AlertComponent,
     HomeComponent,
-    LanguageSelectComponent,
+    NavItemUserComponent,
   ],
   providers: [
     { provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true },

@@ -2,7 +2,10 @@
     "app": {
         "logout": "Logout",
         "home": "Home",
-        "users": "Users"
+        "users": "Users",
+        "language": "Language",
+        "delete": "Delete",
+        "settings": "Settings"
     },
     "user": {
         "username": "Username",
@@ -46,7 +49,6 @@
         "with-niner": "With niner",
         "users": "Users",
         "points": "Punkte",
-        "delete": "Delete",
         "watch": "watch",
         "giver": "Giver",
         "name": "Name",

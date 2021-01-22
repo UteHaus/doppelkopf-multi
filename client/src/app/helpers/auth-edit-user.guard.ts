@@ -18,7 +18,7 @@ export class AuthGuardEditUser implements CanActivate {
     route: ActivatedRouteSnapshot,
     state: RouterStateSnapshot
   ): Observable<boolean> | Promise<boolean> | boolean {
-    const editUserId = route.params['id'];
+    const editUserId = (route.params['id'] as string).split('?')[0];
 
     return this.accountService.user.pipe(
       map(

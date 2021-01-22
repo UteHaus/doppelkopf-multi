@@ -28,9 +28,9 @@
               "src/assets"
             ],
             "styles": [
-              "src/styles.less",
+              "node_modules/bootstrap/dist/css/bootstrap.min.css",
               "node_modules/font-awesome/less/font-awesome.less",
-              "node_modules/bootstrap/dist/css/bootstrap.min.css"
+              "src/styles.less"
             ],
             "scripts": []
           },

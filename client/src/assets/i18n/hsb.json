@@ -2,7 +2,10 @@
     "app": {
         "logout": "wotzjewić",
         "home": "doma",
-        "users": "hrajerjo"
+        "users": "hrajerjo",
+        "language": "rěč",
+        "delete": "wotstronić",
+        "settings": "konfiguracija"
     },
     "user": {
         "username": "mjeno",
@@ -47,7 +50,6 @@
         "watch": "přihladować",
         "users": "hrajer",
         "points": "dypki",
-        "delete": "wotstronić",
         "giver": "dawar",
         "name": "mjeno",
         "go-out": "wustupić",

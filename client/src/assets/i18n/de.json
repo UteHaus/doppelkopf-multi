@@ -2,7 +2,10 @@
     "app": {
         "logout": "Abmelden",
         "home": "Home",
-        "users": "Nutzer"
+        "users": "Nutzer",
+        "language": "Sprache",
+        "delete": "Löschen",
+        "settings": "Einstellungen"
     },
     "user": {
         "username": "Nutzername",
@@ -47,7 +50,6 @@
         "watch": "zuschauen",
         "users": "Nutzer",
         "points": "Punkte",
-        "delete": "Löschen",
         "giver": "Geber",
         "name": "Name",
         "go-out": "austeigen",
