@@ -1,0 +1,25 @@
+/*! `Custom` Bootstrap 4 theme */
+//@import url(https://fonts.googleapis.com/css?family=Open+Sans:200,300,400,700);
+$headings-font-family:Open Sans;
+
+$enable-grid-classes:false;
+$primary:#528078;
+$secondary:#eed75a;
+$success:#FEC100;
+$danger:#703B3B;
+$info:#63e792;
+$warning:#FFE869;
+$light:#FDFBF7;
+$dark:#555555;
+$spacer:0.7rem;
+$border-width:1px;
+$btn-border-radius:1.35rem;
+@import "bootstrap";
+
+.card {
+    background-color: #9c9b98d6;
+    color: white;
+    border-radius: 5px;
+}
+
+// Add SASS theme customizations here..

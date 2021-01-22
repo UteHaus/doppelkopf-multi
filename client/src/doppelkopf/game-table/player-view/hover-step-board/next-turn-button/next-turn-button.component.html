@@ -1,7 +1,6 @@
-<button (click)="nextTurn()" class="btn" [translate]>
-    <span *ngIf="countDown$ | async as countDown; else noCounter">{{countDown}}
-    </span>
-    <span>
+<button (click)="nextTurn()" class="btn btn-primary" [translate]>
+    <span *ngIf="countDown$ | async as countDown; else noCounter">
+        {{ countDown }} </span><span>
         <ng-template #noCounter>dk.next</ng-template>
     </span>
 </button>
