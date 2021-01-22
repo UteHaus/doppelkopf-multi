@@ -1,4 +1,4 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 
 import { AnnouncementSelectorComponent } from './announcement-selector.component';
 
@@ -6,7 +6,7 @@ describe('AnnouncementSelectorComponent', () => {
   let component: AnnouncementSelectorComponent;
   let fixture: ComponentFixture<AnnouncementSelectorComponent>;
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       declarations: [ AnnouncementSelectorComponent ]
     })
