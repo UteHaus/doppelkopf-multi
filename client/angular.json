@@ -33,7 +33,10 @@
               "src/styles.less",
               "src/branding.scss"
             ],
-            "scripts": []
+            "scripts": [],
+            "allowedCommonJsDependencies": [
+              "rxjs/internal/operators"
+            ]
           },
           "configurations": {
             "production": {
