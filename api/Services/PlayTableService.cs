@@ -111,15 +111,20 @@ namespace DoppelkopfApi.Services
         {
 
             var tablePlayer = GettablePlayerOfId(playerId);
-            if (tablePlayer != null)
+
+            // if a player set his next step, do nothing.
+            if (tablePlayer != null && tablePlayer.NextTurn == false)
             {
+                var nextStepValueSet = tablePlayer.NextTurn;
                 tablePlayer.NextTurn = true;
                 _context.TablePlayer.Update(tablePlayer);
                 _context.SaveChanges();
+
                 var tableId = tablePlayer.TableId;
                 var nextTurnCount = _context.TablePlayer.Count(tp => tp.NextTurn);
 
-                if (nextTurnCount == 4)
+                // only if all players have set the next step and this player's next step was not set, then the next step can be executed.
+                if (nextTurnCount == 4 && nextStepValueSet == false)
                 {
                     var newRound = _context.PlayTables.Count((pt) => pt.Id == tablePlayer.TableId && pt.Status == PlayStatus.WinnersTime) == 1;
 
