@@ -75,7 +75,7 @@ namespace DoppelkopfApi.Services
                 return false;
 
             var tablePlayer = GettablePlayerOfId(playerId);
-            if (tablePlayer != null)
+            if (tablePlayer != null && tablePlayer.GameVariant == GamesVariants.None)
             {
                 // change the variant of the player
                 tablePlayer.GameVariant = variant;
@@ -102,8 +102,7 @@ namespace DoppelkopfApi.Services
                 OnTableChanged(tablePlayer.TableId);
                 return true;
             }
-            else
-                throw new Exception("Player for " + playerId + " not found.");
+            return false;
 
         }
 
@@ -373,24 +372,24 @@ namespace DoppelkopfApi.Services
         public void ShuffleCards(int playerId)
         {
             var player = GettablePlayerOfId(playerId);
-            if (player == null)
-                return;
-
-            player.ShuffleRound = true;
-            _context.TablePlayer.Update(player);
-            _context.SaveChanges();
-            int shuffelCount = _context.TablePlayer.Count(p => p.TableId == player.TableId && p.ShuffleRound);
-            if (shuffelCount == 4)
+            if (player != null && player.ShuffleRound == false)
             {
-
-                var table = _context.PlayTables.Find(player.TableId);
-                table.Status = PlayStatus.Stop;
-                _context.PlayTables.Update(table);
+                player.ShuffleRound = true;
+                _context.TablePlayer.Update(player);
                 _context.SaveChanges();
-                StartNewRound(table.Id);
+                int shuffelCount = _context.TablePlayer.Count(p => p.TableId == player.TableId && p.ShuffleRound);
+                if (shuffelCount == 4)
+                {
+
+                    var table = _context.PlayTables.Find(player.TableId);
+                    table.Status = PlayStatus.Stop;
+                    _context.PlayTables.Update(table);
+                    _context.SaveChanges();
+                    StartNewRound(table.Id);
+                }
+                else
+                { OnTableChanged(player.TableId); }
             }
-            else
-            { OnTableChanged(player.TableId); }
 
         }
 
@@ -497,7 +496,7 @@ namespace DoppelkopfApi.Services
         {
 
             var viewUser = _context.TableViewers.FirstOrDefault((user) => user.userId == userId);
-            if (viewUser != null)
+            if (viewUser != null && viewUser.AsAdditionPlayer != seeOn)
             {
                 // is a user a additional player
                 if (seeOn)
