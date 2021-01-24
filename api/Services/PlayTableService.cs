@@ -236,6 +236,7 @@ namespace DoppelkopfApi.Services
 
                 bool allPlayerSetCards = this.GetPlayersOfTable(player.TableId).Count((p) => !String.IsNullOrWhiteSpace(p.PlayedCard)) == 4;
                 var table = GetTableById(player.TableId);
+                // When all players have placed their cards, the state of the table changes from "Run" to "Waiting for the next round" or the next player can draw his card.
                 if (allPlayerSetCards)
                 {
                     table.Status = PlayStatus.WaitForNextRund;
