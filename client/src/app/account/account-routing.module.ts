@@ -4,14 +4,15 @@ import { LayoutComponent } from './layout.component';
 import { LoginComponent } from './login.component';
 
 const routes: Routes = [
-  {
+  { path: 'login', component: LoginComponent },
+  /*   {
     path: '',
     component: LayoutComponent,
     children: [
       { path: 'login', component: LoginComponent },
-      // { path: 'register', component: RegisterComponent },
+       { path: 'register', component: RegisterComponent },
     ],
-  },
+  }, */
 ];
 
 @NgModule({

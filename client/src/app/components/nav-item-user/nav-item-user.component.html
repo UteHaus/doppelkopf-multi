@@ -1,4 +1,4 @@
-<div class="dropdown" *ngIf="user$ | async as user">
+<div class="dropdown pr-4" *ngIf="user$ | async as user">
     <a class="dropdown-toggle text-white" data-toggle="dropdown" aria-haspopup="true"
         aria-expanded="showMenu" (click)="show=!show">
         <span>({{user.username}}) </span> <i class="fa fa-user"></i>
