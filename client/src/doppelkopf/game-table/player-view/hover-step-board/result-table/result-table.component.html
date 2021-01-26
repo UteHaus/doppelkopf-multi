@@ -7,9 +7,18 @@
             </tr>
         </thead>
         <tbody>
-            <tr *ngFor="let player of tablePlayerState.players">
-                <td>{{player.userName}}</td>
+            <tr *ngFor="let player of winners; index as i" class="bg-primary">
+                <td>{{player.userName}} <span *ngIf="player.roundWinner"><i
+                            class="fa fa-trophy"></i></span></td>
                 <td>{{player.roundsPoints}}</td>
+                <td [attr.rowspan]="winners.length" *ngIf="i==0">{{winnerPoints}}</td>
+            </tr>
+            <tr *ngFor="let player of loser; index as i" class="">
+                <td>{{player.userName}} <span *ngIf="player.roundWinner"><i
+                            class="fa fa-trophy"></i></span>
+                </td>
+                <td>{{player.roundsPoints}}</td>
+                <td [attr.rowspan]="loser.length" *ngIf="i==0">{{loserPoints}}</td>
             </tr>
         </tbody>
     </table>

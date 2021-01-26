@@ -110,6 +110,7 @@ namespace DoppelkopfApi.Entities
             CancellationOfparty = 0;
             NextTurn = false;
             DutyAnnouncement = "";
+            RoundWinner = false;
         }
 
 

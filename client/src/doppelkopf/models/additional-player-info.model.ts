@@ -10,6 +10,7 @@ export class AdditionPlayerInfo {
   playedCard: Card;
   message: string;
   dutyAnnouncement: string;
+  roundWinner: boolean;
 
   nextTurn: boolean;
   roundsPoints: number;

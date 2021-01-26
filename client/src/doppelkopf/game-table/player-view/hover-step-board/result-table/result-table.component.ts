@@ -1,4 +1,5 @@
 import { Component, Input, OnInit } from '@angular/core';
+import { AdditionPlayerInfo } from 'src/doppelkopf/models/additional-player-info.model';
 import { TableState } from 'src/doppelkopf/models/table-state.model';
 
 @Component({
@@ -8,8 +9,23 @@ import { TableState } from 'src/doppelkopf/models/table-state.model';
 })
 export class ResultTableComponent implements OnInit {
   @Input()
-  tablePlayerState: TableState;
-
+  set tablePlayerState(value: TableState) {
+    this.winners = value.players.filter((player) => player.roundWinner);
+    this.loser = value.players.filter((player) => !player.roundWinner);
+    this.loserPoints = this.loser.reduce(
+      (sum: number, player: AdditionPlayerInfo) => sum + player.roundsPoints,
+      0
+    );
+    this.winnerPoints = this.winners.reduce(
+      (sum: number, player: AdditionPlayerInfo) => sum + player.roundsPoints,
+      0
+    );
+  }
+  playersWinner: AdditionPlayerInfo[];
+  winners: AdditionPlayerInfo[];
+  winnerPoints: number;
+  loserPoints: number;
+  loser: AdditionPlayerInfo[];
   constructor() {}
 
   ngOnInit(): void {}
