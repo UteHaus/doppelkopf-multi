@@ -198,8 +198,8 @@ export class PlayerViewComponent implements OnInit, OnDestroy, AfterViewInit {
     if (
       table.status == PlayStatus.Run &&
       table.thisPlayer &&
-      table.currentPlayerPosition == table.thisPlayer.playerPosition &&
-      firstCardPlayer != table.thisPlayer.playerPosition &&
+      table.currentPlayerPosition === table.thisPlayer.playerPosition &&
+      firstCardPlayer !== table.thisPlayer.playerPosition &&
       cardMap &&
       cardMap.orderedCards &&
       cardMap.orderedCards.length == 1
