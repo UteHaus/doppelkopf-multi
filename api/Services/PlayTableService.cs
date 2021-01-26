@@ -542,8 +542,8 @@ namespace DoppelkopfApi.Services
         private void SetWinnerPoints(TablePlayer[] party1, TablePlayer[] party2)
         {
             //ToDo if has Players the same points
-            var party1Points = party1.Sum((player) => player.PlayerPosition);
-            var party2Points = party2.Sum((player) => player.PlayerPosition);
+            var party1Points = party1.Sum((player) => player.RoundsPoints);
+            var party2Points = party2.Sum((player) => player.RoundsPoints);
             foreach (var player in (party1Points > party2Points ? party1 : party2))
             {
                 player.SetAsWinner();
