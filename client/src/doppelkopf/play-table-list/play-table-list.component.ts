@@ -130,13 +130,12 @@ export class PlayTableListComponent
             Number(user.id),
             playTable.id
           )
-        )
+        ),
+        first()
       )
-      .toPromise()
-      .then((canView: boolean) => {
-        this.router.navigate(['table', playTable.id, 'spectator']);
-      })
-      .catch(() => {});
+      .subscribe((canView: boolean) => {
+        if (canView) this.router.navigate(['table', playTable.id, 'spectator']);
+      });
   }
 
   trackPlayTable(index: number, table: PlayTable): string {
@@ -155,7 +154,7 @@ export class PlayTableListComponent
         }),
         first()
       )
-      .toPromise();
+      .subscribe();
   }
 
   private sortTables(tables: PlayTableCount[]): PlayTableCount[] {
