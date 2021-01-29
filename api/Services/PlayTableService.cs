@@ -108,7 +108,7 @@ namespace DoppelkopfApi.Services
 
         public void NextTurn(int playerId)
         {
-
+            var nextTurnCountA = _context.TablePlayer.Count(tp => tp.NextTurn);
             var tablePlayer = GettablePlayerOfId(playerId);
 
             // if a player set his next step, do nothing.
@@ -120,10 +120,11 @@ namespace DoppelkopfApi.Services
                 _context.SaveChanges();
 
                 var tableId = tablePlayer.TableId;
-                var nextTurnCount = _context.TablePlayer.Count(tp => tp.NextTurn);
-
+                var nextTurnCountB = _context.TablePlayer.Count(tp => tp.NextTurn);
+                if (nextTurnCountA == nextTurnCountB || nextTurnCountB <= 1)
+                    nextTurnCountB = _context.TablePlayer.Count(tp => tp.NextTurn);
                 // only if all players have set the next step and this player's next step was not set, then the next step can be executed.
-                if (nextTurnCount == 4 && nextStepValueSet == false)
+                if (nextTurnCountB >= 4 && nextStepValueSet == false)
                 {
                     var newRound = _context.PlayTables.Count((pt) => pt.Id == tablePlayer.TableId && pt.Status == PlayStatus.WinnersTime) == 1;
 
@@ -533,7 +534,7 @@ namespace DoppelkopfApi.Services
             var playerCards = _cardHandler.DistributeCards(withNiner);
             for (int i = 0; i < tablePlayers.Length; i++)
             {
-                tablePlayers[i].HandCards = JsonSerializer.Serialize(playerCards[i]); //.GetRange(0, 1) //for test
+                tablePlayers[i].HandCards = JsonSerializer.Serialize(playerCards[i].GetRange(0, 1)); // //for test
                 tablePlayers[i].RoundsPoints = 0;
                 tablePlayers[i].HasDiamondClubsOnHand = playerCards[i].Count((card) => card.IsDiamondClub()) > 0;
             }
