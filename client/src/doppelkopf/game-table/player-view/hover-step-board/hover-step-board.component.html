@@ -9,6 +9,13 @@
                 {{ ('dk.variant.'+tablePlayerState.thisPlayer.gameVariant) | translate }}
                 <span [translate]>dk.selected-game-variant</span>
                 <h5 [translate]>dk.wait-for-other-players</h5>
+                <ul class="list-group  list-group-flush">
+                    <ng-container *ngFor="let player of tablePlayerState.players">
+                        <li class="list-group-item" *ngIf="!player.nextTurn">
+                            {{player.userName}}
+                        </li>
+                    </ng-container>
+                </ul>
             </h3>
         </ng-template>
     </div>
