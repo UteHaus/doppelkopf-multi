@@ -1,4 +1,5 @@
 import { AdditionPlayerInfo } from '../models/additional-player-info.model';
+import { Card } from '../models/card.model';
 import { TableState } from '../models/table-state.model';
 
 export class TableUtil {
@@ -23,7 +24,7 @@ export class TableUtil {
    * Giv the nex postion of the given position.
    * @param position player position
    */
-  public static getNextPlayerPosition(position: number) {
+  public static getNextPlayerPosition(position: number): number {
     return position + 1 > 4 ? 1 : position + 1;
   }
 
@@ -35,7 +36,7 @@ export class TableUtil {
   public static getPlayedCardOfPlayerPosition(
     table: TableState,
     position: number
-  ) {
+  ): Card {
     const playerOfPosition = table.players.find(
       (player) => player.playerPosition == position
     );

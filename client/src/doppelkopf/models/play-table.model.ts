@@ -1,7 +1,7 @@
 export class PlayTable {
   id?: number;
   name: string;
-  withNiner: Boolean = false;
+  withNiner = false;
   status: PlayStatus;
   currentPlayerPosition: number;
   roundCardsGiversPosition: number;

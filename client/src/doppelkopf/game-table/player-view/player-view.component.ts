@@ -196,7 +196,7 @@ export class PlayerViewComponent implements OnInit, OnDestroy, AfterViewInit {
       firstCardPlayer !== table.thisPlayer.playerPosition &&
       cardMap &&
       cardMap.orderedCards &&
-      cardMap.orderedCards.length == 1
+      cardMap.orderedCards.length === 1
     ) {
       cardMap.setLastCard();
       return true;
