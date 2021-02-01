@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { AdditionPlayerInfo } from 'src/doppelkopf/models/additional-player-info.model';
 import { TableState } from 'src/doppelkopf/models/table-state.model';
 
@@ -7,7 +7,7 @@ import { TableState } from 'src/doppelkopf/models/table-state.model';
   templateUrl: './result-table.component.html',
   styleUrls: ['./result-table.component.less'],
 })
-export class ResultTableComponent implements OnInit {
+export class ResultTableComponent {
   @Input()
   set tablePlayerState(value: TableState) {
     this.winners = value.players.filter((player) => player.roundWinner);
@@ -26,7 +26,4 @@ export class ResultTableComponent implements OnInit {
   winnerPoints: number;
   loserPoints: number;
   loser: AdditionPlayerInfo[];
-  constructor() {}
-
-  ngOnInit(): void {}
 }

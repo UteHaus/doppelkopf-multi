@@ -21,14 +21,14 @@ export class ListComponent implements OnInit, AfterViewChecked {
     }
   }
 
-  ngOnInit() {
+  ngOnInit(): void {
     this.accountService
       .getAll()
       .pipe(first())
       .subscribe((users) => (this.users = this.sortUsers(users)));
   }
 
-  deleteUser(id: string) {
+  deleteUser(id: string): void {
     const user = this.users.find((x) => x.id === id);
     user.isDeleting = true;
     this.accountService

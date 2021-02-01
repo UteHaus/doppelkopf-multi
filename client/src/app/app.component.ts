@@ -33,7 +33,7 @@ export class AppComponent implements OnInit {
     );
   }
 
-  editUser(user: User) {
+  editUser(): void {
     this.route.navigate(['/users', 'list']);
   }
 }

@@ -12,13 +12,11 @@ import { AccountService } from '@app/services';
 import {
   BehaviorSubject,
   combineLatest,
-  forkJoin,
   Observable,
   Subject,
   Subscription,
-  zip,
 } from 'rxjs';
-import { first, map, switchMap, take, withLatestFrom } from 'rxjs/operators';
+import { first, map, switchMap, take } from 'rxjs/operators';
 import { AdditionPlayerInfo } from 'src/doppelkopf/models/additional-player-info.model';
 import { Card } from 'src/doppelkopf/models/card.model';
 import {
@@ -46,7 +44,7 @@ export class PlayerViewComponent implements OnInit, OnDestroy, AfterViewInit {
   shuffleCardsClick$ = new Subject();
   variantSelected$: Subject<GamesVariants> = new Subject<GamesVariants>();
   playerInOrder$: Observable<AdditionPlayerInfo[]>;
-  lastStich: boolean = false;
+  lastStich = false;
   private autoSetLastCard: Subscription;
   @ViewChildren(CardMapComponent)
   private cardMap: QueryList<CardMapComponent>;
@@ -81,10 +79,6 @@ export class PlayerViewComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   ngOnInit(): void {
-    const tableId$: Observable<number> = this.route.paramMap.pipe(
-      map((params) => Number(params.get('id')))
-    );
-
     this.waitingForNextTurnPlayers$ = this.playTable$.pipe(
       map((tableState) => {
         if (tableState) {
@@ -112,7 +106,7 @@ export class PlayerViewComponent implements OnInit, OnDestroy, AfterViewInit {
     );
   }
 
-  reloadTable() {
+  reloadTable(): void {
     this.tableHubService.invokeMethode(TableMethods.PlayerTableState);
   }
 
@@ -120,7 +114,7 @@ export class PlayerViewComponent implements OnInit, OnDestroy, AfterViewInit {
     this.shuffleCardsClick$.next();
   }
 
-  cardSelected(card: Card) {
+  cardSelected(card: Card): void {
     this.userService.user
       .pipe(
         switchMap((user) =>
@@ -131,7 +125,7 @@ export class PlayerViewComponent implements OnInit, OnDestroy, AfterViewInit {
       .subscribe();
   }
 
-  variantSelected(variant: GamesVariants) {
+  variantSelected(variant: GamesVariants): void {
     this.variantSelected$.next(variant);
   }
 
@@ -143,7 +137,7 @@ export class PlayerViewComponent implements OnInit, OnDestroy, AfterViewInit {
     return `${player.playerPosition}`;
   }
 
-  nextTurn() {
+  nextTurn(): void {
     this.nextTurnClicked$.next();
   }
 
@@ -157,7 +151,7 @@ export class PlayerViewComponent implements OnInit, OnDestroy, AfterViewInit {
     this.subscription.add(observ.subscribe());
   }
 
-  announcementChanged(announcement: string) {
+  announcementChanged(announcement: string): void {
     this.userService.user
       .pipe(
         switchMap((user) =>

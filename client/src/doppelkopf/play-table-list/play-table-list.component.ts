@@ -8,15 +8,8 @@ import {
 import { Router } from '@angular/router';
 import { User } from '@app/models';
 import { AccountService, AlertService } from '@app/services';
-import { BehaviorSubject, combineLatest, forkJoin, Observable, of } from 'rxjs';
-import {
-  catchError,
-  combineAll,
-  first,
-  map,
-  switchMap,
-  take,
-} from 'rxjs/operators';
+import { BehaviorSubject, combineLatest, Observable, of } from 'rxjs';
+import { catchError, first, map, switchMap } from 'rxjs/operators';
 import { PlayTableCount } from 'src/doppelkopf/models/play-table-count.model';
 import { PlayTable } from 'src/doppelkopf/models/play-table.model';
 import { PlayTableService } from 'src/doppelkopf/services/play-table.service';
@@ -33,7 +26,6 @@ export class PlayTableListComponent
   implements OnInit, OnDestroy, AfterViewInit, AfterViewChecked {
   tables$ = new BehaviorSubject<PlayTableCount[]>([]);
   onHubConnect$: Observable<boolean>;
-  testValue: any;
   userTableId$: Observable<number>;
   userTableIdSub: BehaviorSubject<void> = new BehaviorSubject(null);
   currentUser$: Observable<User>;
@@ -122,7 +114,7 @@ export class PlayTableListComponent
     this.userTableIdSub.next();
   }
 
-  watchTable(playTable: PlayTableCount) {
+  watchTable(playTable: PlayTableCount): void {
     this.user$
       .pipe(
         switchMap((user) =>
@@ -142,7 +134,7 @@ export class PlayTableListComponent
     return (table ? table.id : 0).toString();
   }
 
-  deleteTable(playTable: PlayTable) {
+  deleteTable(playTable: PlayTable): void {
     this.user$
       .pipe(
         switchMap((user) => {

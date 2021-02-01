@@ -1,5 +1,10 @@
 import { Component, OnInit } from '@angular/core';
-import { FormGroup, FormBuilder, Validators } from '@angular/forms';
+import {
+  FormGroup,
+  FormBuilder,
+  Validators,
+  AbstractControl,
+} from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AlertService } from '@app/services';
 import { first } from 'rxjs/internal/operators';
@@ -52,11 +57,11 @@ export class EditTableComponent implements OnInit {
     }
   }
 
-  get f() {
+  get f(): { [key: string]: AbstractControl } {
     return this.form.controls;
   }
 
-  onSubmit() {
+  onSubmit(): void {
     this.submitted = true;
 
     // reset alerts on submit

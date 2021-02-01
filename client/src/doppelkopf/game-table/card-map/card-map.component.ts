@@ -1,11 +1,4 @@
-import {
-  Component,
-  EventEmitter,
-  Input,
-  OnDestroy,
-  OnInit,
-  Output,
-} from '@angular/core';
+import { Component, Input, OnDestroy, OnInit, Output } from '@angular/core';
 import { BehaviorSubject, Subject } from 'rxjs';
 import { Card } from 'src/doppelkopf/models/card.model';
 import { GamesVariants } from 'src/doppelkopf/models/play-table.model';
@@ -65,7 +58,7 @@ export class CardMapComponent implements OnInit, OnDestroy {
     return `${card.rank}-${card.suit}`;
   }
 
-  selectCard(card: Card, index: number, autoSet: boolean = false) {
+  selectCard(card: Card, index: number, autoSet = false): void {
     if (!this.disabled || autoSet) {
       this.cardSelected.next(card);
       this.orderedCards.splice(index, 1);

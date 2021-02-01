@@ -3,7 +3,6 @@ import {
   EventEmitter,
   Input,
   OnDestroy,
-  OnInit,
   Output,
 } from '@angular/core';
 import { AdditionPlayerInfo } from 'src/doppelkopf/models/additional-player-info.model';
@@ -15,7 +14,7 @@ import { GamesVariants } from 'src/doppelkopf/models/play-table.model';
   templateUrl: './players-table.component.html',
   styleUrls: ['./players-table.component.less'],
 })
-export class PlayersTableComponent implements OnInit, OnDestroy {
+export class PlayersTableComponent implements OnDestroy {
   @Input()
   players: AdditionPlayerInfo[];
 
@@ -32,13 +31,13 @@ export class PlayersTableComponent implements OnInit, OnDestroy {
   tableGameVariant: GamesVariants;
 
   @Input()
-  showPointsForAllPlayers: boolean = false;
+  showPointsForAllPlayers: false;
 
   @Input()
-  showCardsOfPlayer: number = -1;
+  showCardsOfPlayer = -1;
 
   @Input()
-  enableShowCardsOfPlayer: boolean = false;
+  enableShowCardsOfPlayer = false;
 
   @Output()
   showCardsOfPlayersSelected: EventEmitter<
@@ -51,15 +50,11 @@ export class PlayersTableComponent implements OnInit, OnDestroy {
   @Output()
   showLastStich = new EventEmitter<void>();
 
-  constructor() {}
-
   ngOnDestroy(): void {
     this.showCardsOfPlayersSelected.complete();
   }
 
-  ngOnInit(): void {}
-
-  showCardsOf(player: AdditionPlayerInfo) {
+  showCardsOf(player: AdditionPlayerInfo): void {
     this.showCardsOfPlayersSelected.emit(player);
   }
 
@@ -70,7 +65,7 @@ export class PlayersTableComponent implements OnInit, OnDestroy {
     return player.viewPosition;
   }
 
-  announcementSelected(announcement: string) {
+  announcementSelected(announcement: string): void {
     this.announcementChanged.emit(announcement);
   }
 

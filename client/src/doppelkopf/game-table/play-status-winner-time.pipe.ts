@@ -6,7 +6,7 @@ import { TableState } from '../models/table-state.model';
   name: 'playStatusWinnerTime',
 })
 export class PlayStatusWinnerTimePipe implements PipeTransform {
-  transform(value: TableState, ...args: unknown[]): unknown {
+  transform(value: TableState): unknown {
     return value.status == PlayStatus.WinnersTime;
   }
 }

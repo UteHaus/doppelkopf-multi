@@ -106,14 +106,17 @@ export class PlayTableService {
       .pipe(retry(4));
   }
 
-  public setPlayerMessage(playerId: number, message: string) {
+  public setPlayerMessage(playerId: number, message: string): Observable<void> {
     return this.http.put<void>(
       `${this.defaultApiPath}/player/${playerId}/message?message=${message}`,
       {}
     );
   }
 
-  public setPlayerAnnouncement(playerId: number, announcement: string) {
+  public setPlayerAnnouncement(
+    playerId: number,
+    announcement: string
+  ): Observable<void> {
     return this.http.put<void>(
       `${this.defaultApiPath}/player/${playerId}/announcement?announcement=${announcement}`,
       {}

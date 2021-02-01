@@ -5,7 +5,7 @@ import { PlayStatus, PlayTable } from '../models/play-table.model';
   name: 'playStatusRun',
 })
 export class PlayStatusRunPipe implements PipeTransform {
-  transform(value: PlayTable, ...args: unknown[]): boolean {
+  transform(value: PlayTable): boolean {
     return value.status == PlayStatus.Run;
   }
 }

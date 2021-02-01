@@ -1,6 +1,11 @@
 ﻿import { Component, OnInit } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import {
+  AbstractControl,
+  FormBuilder,
+  FormGroup,
+  Validators,
+} from '@angular/forms';
 import { first } from 'rxjs/operators';
 import { AccountService, AlertService } from '@app/services';
 import { User } from '@app/models';
@@ -19,7 +24,7 @@ export class AddEditComponent implements OnInit {
   submitted = false;
   user$: Observable<User>;
   languageKey: string;
-  previousUrl: string = '/users/list';
+  previousUrl = '/users/list';
 
   constructor(
     private formBuilder: FormBuilder,
@@ -30,7 +35,7 @@ export class AddEditComponent implements OnInit {
     private translateService: TranslateService
   ) {}
 
-  ngOnInit() {
+  ngOnInit(): void {
     const params = (this.route.snapshot.params.id as string).split('?');
     this.id = params[0];
     if (params.length > 1) {
@@ -72,7 +77,7 @@ export class AddEditComponent implements OnInit {
   }
 
   // convenience getter for easy access to form fields
-  get formControls() {
+  get formControls(): { [key: string]: AbstractControl } {
     return this.form.controls;
   }
 
@@ -80,7 +85,7 @@ export class AddEditComponent implements OnInit {
     this.router.navigate([this.previousUrl]);
   }
 
-  onSubmit() {
+  onSubmit(): void {
     this.submitted = true;
 
     // reset alerts on submit

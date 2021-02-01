@@ -37,7 +37,7 @@ export class HoverStepBoardComponent implements OnDestroy {
     if (this.runNextTurn) this.runNextTurn.complete();
   }
 
-  variantSelected(variant: GamesVariants) {
+  variantSelected(variant: GamesVariants): void {
     this.gameVariantSelected.next(variant);
   }
 

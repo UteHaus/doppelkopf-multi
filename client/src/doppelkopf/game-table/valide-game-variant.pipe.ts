@@ -5,7 +5,7 @@ import { GamesVariants } from '../models/play-table.model';
   name: 'valideGameVariant',
 })
 export class ValideGameVariantPipe implements PipeTransform {
-  transform(value: any, ...args: unknown[]): unknown {
+  transform(value: GamesVariants): unknown {
     return value != undefined && value != GamesVariants.None;
   }
 }

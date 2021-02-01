@@ -5,11 +5,13 @@ describe('PlayerViewComponent', () => {
   let component: PlayerViewComponent;
   let fixture: ComponentFixture<PlayerViewComponent>;
 
-  beforeEach(waitForAsync(() => {
-    TestBed.configureTestingModule({
-      declarations: [PlayerViewComponent],
-    }).compileComponents();
-  }));
+  beforeEach(
+    waitForAsync(() => {
+      TestBed.configureTestingModule({
+        declarations: [PlayerViewComponent],
+      }).compileComponents();
+    })
+  );
 
   beforeEach(() => {
     fixture = TestBed.createComponent(PlayerViewComponent);

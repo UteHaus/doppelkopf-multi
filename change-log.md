@@ -8,6 +8,7 @@
  - show last card stich
  - 5th player as visitor
  - visitors: display cards of one player 
+ - set Re - Kontra
 
 ### Changed
 

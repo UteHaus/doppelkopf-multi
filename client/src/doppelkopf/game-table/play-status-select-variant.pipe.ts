@@ -6,7 +6,7 @@ import { TableState } from '../models/table-state.model';
   name: 'playStatusSelectVariant',
 })
 export class PlayStatusSelectVariantPipe implements PipeTransform {
-  transform(value: TableState, ...args: unknown[]): unknown {
+  transform(value: TableState): unknown {
     return value.status == PlayStatus.SelectGameVarian;
   }
 }

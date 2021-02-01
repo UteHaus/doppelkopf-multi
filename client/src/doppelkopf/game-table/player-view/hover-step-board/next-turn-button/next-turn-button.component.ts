@@ -4,7 +4,6 @@ import {
   EventEmitter,
   Input,
   OnDestroy,
-  OnInit,
   Output,
 } from '@angular/core';
 import { Observable, Subject, timer } from 'rxjs';
@@ -15,10 +14,9 @@ import { map, switchMap, take } from 'rxjs/operators';
   templateUrl: './next-turn-button.component.html',
   styleUrls: ['./next-turn-button.component.less'],
 })
-export class NextTurnButtonComponent
-  implements OnInit, OnDestroy, AfterViewInit {
+export class NextTurnButtonComponent implements OnDestroy, AfterViewInit {
   private timerSub = new Subject<void>();
-  private timerSecondsCount: number = 2;
+  private timerSecondsCount = 2;
   countDown$: Observable<number>;
 
   @Output()
@@ -51,9 +49,7 @@ export class NextTurnButtonComponent
     this.timerSub.complete();
   }
 
-  ngOnInit(): void {}
-
-  nextTurn() {
+  nextTurn(): void {
     this.runNextTurn.emit();
   }
 }

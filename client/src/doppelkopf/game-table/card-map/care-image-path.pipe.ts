@@ -9,8 +9,8 @@ export class CareImagePathPipe implements PipeTransform {
     if (!value)
       return args && args[0] ? '/assets/images/cards/default-card.png' : '';
 
-    var cartSuit = undefined;
-    var cartRank = undefined;
+    let cartSuit: string = undefined;
+    let cartRank: string = undefined;
     switch (value.suit) {
       case Suits.hearts:
         cartSuit = 'herz';
