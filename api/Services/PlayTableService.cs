@@ -1,4 +1,3 @@
-using System.Threading;
 using System;
 using System.Collections.Generic;
 using DoppelkopfApi.Entities;
@@ -7,7 +6,7 @@ using DoppelkopfApi.Helpers;
 using System.Linq;
 using System.Text.Json;
 using DoppelkopfApi.Enums;
-using System.Threading.Tasks;
+using DoppelkopfApi.Services.Utils;
 
 namespace DoppelkopfApi.Services
 {
@@ -160,7 +159,7 @@ namespace DoppelkopfApi.Services
                         // if the round is over
                         if (table.StitchCounter >= 12 || (!table.WithNiner && table.StitchCounter >= 10) || tablePlayers.All((player) => player.AnyCards()))
                         {
-                            SetWinners(tablePlayers, table);
+                            TableUtil.SetWinners(tablePlayers, table);
                             table.Status = PlayStatus.WinnersTime;
                             _context.TablePlayer.UpdateRange(tablePlayers);
 
@@ -540,59 +539,13 @@ namespace DoppelkopfApi.Services
             }
         }
 
-        private void SetWinnerPoints(TablePlayer[] party1, TablePlayer[] party2)
-        {
-            //ToDo if has Players the same points
-            var party1Points = party1.Sum((player) => player.RoundsPoints);
-            var party2Points = party2.Sum((player) => player.RoundsPoints);
-            foreach (var player in (party1Points > party2Points ? party1 : party2))
-            {
-                player.SetAsWinner();
-            }
-        }
-
-        private void SetWinners(TablePlayer[] players, PlayTable table)
-        {
-            var soloPlayer = players.FirstOrDefault((player) => player.GameVariant == table.GameVariant);
-
-            if (table.GameVariant == GamesVariants.Normal || table.GameVariant == GamesVariants.Wedding || soloPlayer == null)
-            {
-                if (table.GameVariant == GamesVariants.Normal)
-                {
-                    SetWinnerPoints(players.Where((player) => player.HasDiamondClubsOnHand).ToArray(),
-                     players.Where((player) => !player.HasDiamondClubsOnHand).ToArray());
-                }
-                else
-                {
-                    var weddingPlayer = GetWeddingPlayer(players);
-                    var additionWedingPlayer = players.FirstOrDefault((player) => player.PlayerId == table.AdditionalWeddingPlayerId);
-                    if (additionWedingPlayer != null)
-                    {
-                        SetWinnerPoints(
-                            new TablePlayer[] { weddingPlayer, additionWedingPlayer },
-                            players.Where((player) => player.PlayerId != weddingPlayer.PlayerId && player.PlayerId != additionWedingPlayer.PlayerId).ToArray()
-                            );
-                    }
-                }
-            }
-            else
-            {
-                // for solo games
-                var opponentsPlayers = players.Where((player) => player.PlayerId != soloPlayer.PlayerId);
-                SetWinnerPoints(new TablePlayer[] { soloPlayer }, opponentsPlayers.ToArray());
-            }
-
-        }
 
 
 
-        private TablePlayer GetWeddingPlayer(TablePlayer[] players)
-        {
-            return players.FirstOrDefault((player) => player.GameVariant == GamesVariants.Wedding);
-        }
+
         private bool SetAdditionalWeddingPlayer(TablePlayer[] players, PlayTable table, int stitchWinnerId)
         {
-            var weddingPlayer = GetWeddingPlayer(players);
+            var weddingPlayer = TableUtil.GetWeddingPlayer(players);
 
             if (table.GameVariant == GamesVariants.Wedding &&
             weddingPlayer.PlayerId != stitchWinnerId &&
