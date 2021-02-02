@@ -36,12 +36,17 @@ export class AddEditComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    const params = (this.route.snapshot.params.id as string).split('?');
-    this.id = params[0];
-    if (params.length > 1) {
-      const url = params[1].split('=')[1];
-      this.previousUrl = url.split('_').join('/');
+    const params = (this.route.snapshot.params.id as string)?.split('?');
+    if (params != null) {
+      this.id = params[0];
+
+      if (params.length > 1) {
+        const url = params[1]?.split('=')[1];
+        this.previousUrl = url?.split('_').join('/');
+      }
     }
+    if (this.previousUrl == null) this.previousUrl = '/users/list';
+
     this.isAddMode = !this.id;
     this.user$ = this.accountService.user;
     // password not required in edit mode

@@ -1,4 +1,4 @@
-﻿<div class="card" *ngIf="user$| async as user">
+﻿<div class="card">
   <div class="card-header">
     <h1 *ngIf="isAddMode" [translate]>user.add-user</h1>
     <h1 *ngIf="!isAddMode" [translate]>user.edit-user</h1>
@@ -58,23 +58,27 @@
         </div>
       </div>
 
-      <ng-container *ngIf="user.admin">
-        <div class="form-row">
-          <div class="form-group form-check">
-            <input type="checkbox" class="form-check-input" formControlName="editUser"
-              id="editUser">
-            <label class="form-check-label" for="editUser" [translate]>user.could-edit-users</label>
+      <ng-container *ngIf="user$| async as user">
+        <ng-container *ngIf="user.admin">
+          <div class="form-row">
+            <div class="form-group form-check">
+              <input type="checkbox" class="form-check-input" formControlName="editUser"
+                id="editUser">
+              <label class="form-check-label" for="editUser"
+                [translate]>user.could-edit-users</label>
+            </div>
           </div>
-        </div>
-        <div class="form-row">
-          <div class="form-group form-check">
-            <input type="checkbox" class="form-check-input" formControlName="editTables"
-              id="editTables">
-            <label class="form-check-label" for="editTables"
-              [translate]>user.could-edit-tables</label>
+          <div class="form-row">
+            <div class="form-group form-check">
+              <input type="checkbox" class="form-check-input" formControlName="editTables"
+                id="editTables">
+              <label class="form-check-label" for="editTables"
+                [translate]>user.could-edit-tables</label>
+            </div>
           </div>
-        </div>
+        </ng-container>
       </ng-container>
+
       <div class="form-group">
         <button [disabled]="loading" type="submit" class="btn btn-primary">
           <span *ngIf="loading" class="spinner-border spinner-border-sm mr-1"></span>

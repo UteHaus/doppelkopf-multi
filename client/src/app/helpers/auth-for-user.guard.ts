@@ -7,13 +7,17 @@ import {
 } from '@angular/router';
 
 import { AccountService } from '@app/services';
+import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 
 @Injectable({ providedIn: 'root' })
 export class AuthForUserGuard implements CanActivate {
   constructor(private router: Router, private accountService: AccountService) {}
 
-  canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot) {
+  canActivate(
+    route: ActivatedRouteSnapshot,
+    state: RouterStateSnapshot
+  ): Observable<boolean> {
     return this.accountService.user.pipe(
       map((user) => {
         if (user && route.params['id'] == user.id) {
