@@ -18,7 +18,11 @@ import { LoggerModule, NgxLoggerLevel } from 'ngx-logger';
 import { environment } from '@environments/environment';
 import { ErrorHandlerService } from './error-handler.service';
 import { NavItemUserComponent } from './components/nav-item-user/nav-item-user.component';
+import { AppConfig, APP_CONFIG } from 'src/core/app-config';
 
+export const defaultAppConfig: AppConfig = {
+  jitsiBaseLink: 'doppelkopf-20',
+};
 @NgModule({
   imports: [
     BrowserModule,
@@ -52,6 +56,7 @@ import { NavItemUserComponent } from './components/nav-item-user/nav-item-user.c
     { provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true },
     { provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptor, multi: true },
     { provide: ErrorHandler, useClass: ErrorHandlerService },
+    { provide: APP_CONFIG, useValue: defaultAppConfig },
   ],
   exports: [TranslateModule],
   bootstrap: [AppComponent],
