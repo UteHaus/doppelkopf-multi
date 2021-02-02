@@ -2,6 +2,7 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Observable } from 'rxjs';
 import { map, switchMap } from 'rxjs/operators';
+import { JitsiService } from 'src/jitsi/services/jitsi.service';
 import { PlayTable } from '../models/play-table.model';
 import { UserUseCase } from '../models/user-use-case.model';
 import { PlayTableService } from '../services/play-table.service';
@@ -21,7 +22,8 @@ export class GameTableComponent implements OnInit, OnDestroy {
     private tableService: PlayTableService,
     private route: ActivatedRoute,
     private tableHub: TableHubService,
-    private routing: Router
+    private routing: Router,
+    private jitsiService: JitsiService
   ) {}
 
   ngOnDestroy(): void {
@@ -44,4 +46,8 @@ export class GameTableComponent implements OnInit, OnDestroy {
   }
 
   reloadTable() {}
+
+  openJitsi(tableName: string): void {
+    this.jitsiService.openJitsiInNewBrowserTab(`${tableName}`);
+  }
 }

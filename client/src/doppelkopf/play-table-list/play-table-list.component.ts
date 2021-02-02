@@ -13,6 +13,7 @@ import { catchError, first, map, switchMap } from 'rxjs/operators';
 import { PlayTableCount } from 'src/doppelkopf/models/play-table-count.model';
 import { PlayTable } from 'src/doppelkopf/models/play-table.model';
 import { PlayTableService } from 'src/doppelkopf/services/play-table.service';
+import { JitsiService } from 'src/jitsi/services/jitsi.service';
 import { SpectatorService } from '../services/spectator.service';
 import { TableMethods } from '../services/table-hub-method.enum';
 import { TableHubService } from '../services/table-hub.service';
@@ -38,7 +39,8 @@ export class PlayTableListComponent
     private router: Router,
     private accountService: AccountService,
     private tableHub: TableHubService,
-    private spectatorService: SpectatorService
+    private spectatorService: SpectatorService,
+    private jitsiService: JitsiService
   ) {}
 
   ngAfterViewInit(): void {
@@ -147,6 +149,9 @@ export class PlayTableListComponent
         first()
       )
       .subscribe();
+  }
+  openJitsi(): void {
+    this.jitsiService.openJitsiInNewBrowserTab();
   }
 
   private sortTables(tables: PlayTableCount[]): PlayTableCount[] {
