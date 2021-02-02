@@ -57,13 +57,8 @@ namespace DoppelkopfApi.Entities
 
         public void SetTableToNextGameTurn()
         {
-            RoundCardsGiversPosition++;
-            if (RoundCardsGiversPosition > 4 || RoundCardsGiversPosition < 1)
-                RoundCardsGiversPosition = 1;
-
-            CurrentPlayerPosition = RoundCardsGiversPosition + 1;
-            if (CurrentPlayerPosition > 4)
-                CurrentPlayerPosition = 1;
+            RoundCardsGiversPosition = GetLeftOfGiversPosition();
+            CurrentPlayerPosition = RoundCardsGiversPosition + 1 > 4 ? 1 : RoundCardsGiversPosition + 1;
             StitchCounter = 0;
             LastCardSet = "";
             RoundCount++;
@@ -108,7 +103,7 @@ namespace DoppelkopfApi.Entities
         KingSolo = 15,
 
         ColoRSoloClubs = 20,
-        ColoRSoloDiamonds = 21,
+        ColorSoloDiamonds = 21,
         ColoRSoloHearts = 22,
         ColoRSoloSpades = 23,
 

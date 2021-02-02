@@ -14,8 +14,8 @@ namespace DoppelkopfApi.Services.Utils
             {
                 if (table.GameVariant == GamesVariants.Normal)
                 {
-                    SetWinnerPoints(players.Where((player) => player.HasDiamondClubsOnHand).ToArray(),
-                     players.Where((player) => !player.HasDiamondClubsOnHand).ToArray());
+                    SetWinnerPoints(players.Where((player) => player.HasClubsQueenOnHand).ToArray(),
+                     players.Where((player) => !player.HasClubsQueenOnHand).ToArray());
                 }
                 else
                 {
@@ -43,6 +43,11 @@ namespace DoppelkopfApi.Services.Utils
         public static TablePlayer GetWeddingPlayer(TablePlayer[] players)
         {
             return players.FirstOrDefault((player) => player.GameVariant == GamesVariants.Wedding);
+        }
+
+        public static int GetNextPosition(int position)
+        {
+            return position + 1 > 4 ? 1 : position + 1;
         }
 
 

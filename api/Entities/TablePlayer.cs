@@ -35,7 +35,7 @@ namespace DoppelkopfApi.Entities
         public bool ShuffleRound { get; set; }
 
         public bool NextTurn { get; set; }
-        public bool HasDiamondClubsOnHand { get; set; }
+        public bool HasClubsQueenOnHand { get; set; }
 
         public int WinnedRounds { get; set; }
 
@@ -111,6 +111,7 @@ namespace DoppelkopfApi.Entities
             NextTurn = false;
             DutyAnnouncement = "";
             RoundWinner = false;
+            HasClubsQueenOnHand = false;
         }
 
 

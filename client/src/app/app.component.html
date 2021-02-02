@@ -3,7 +3,7 @@
     <div class="navbar-nav  w-100 d-flex">
       <a class="nav-item nav-link " routerLink="/" routerLinkActive="active"
         [routerLinkActiveOptions]="{ exact: false }" [translate]>dk.console-tables</a>
-      <a *ngIf="(user.admin || user.editUser)" class="nav-item nav-link" (click)="editUser(user)"
+      <a *ngIf="(user.admin || user.editUser)" class="nav-item nav-link" (click)="editUser()"
         routerLinkActive="active" [translate]>app.users</a>
       <app-nav-item-user [previousRoute]="route.url" class="nav-item  p-2 ml-auto">
       </app-nav-item-user>

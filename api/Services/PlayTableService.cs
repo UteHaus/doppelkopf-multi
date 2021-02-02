@@ -14,7 +14,6 @@ namespace DoppelkopfApi.Services
     {
         private DataContext _context;
         private IUserService _userService;
-        private CardHandler _cardHandler;
         ITableEventService _tableEventService;
 
         public PlayTableService(DataContext context, IUserService userService, ITableEventService tableEventService)
@@ -22,7 +21,6 @@ namespace DoppelkopfApi.Services
             _context = context;
             _tableEventService = tableEventService;
             _userService = userService;
-            _cardHandler = new CardHandler();
         }
 
 
@@ -55,7 +53,7 @@ namespace DoppelkopfApi.Services
                 {
                     player.ClearForNextRound();
                 }
-                SetHandCards(tablePlayers, table.WithNiner);
+                CardUtil.SetHandCards(tablePlayers, table.WithNiner);
                 _context.TablePlayer.UpdateRange(tablePlayers);
                 _context.PlayTables.Update(table);
                 int changeCount = _context.SaveChanges();
@@ -90,9 +88,9 @@ namespace DoppelkopfApi.Services
                 {
                     PlayTable table = GetTableById(tablePlayer.TableId);
 
-                    table.GameVariant = _cardHandler.WhichVariantIsPlayed(tablePlayers);
+                    table.GameVariant = CardPointsUtil.WhichVariantIsPlayed(tablePlayers);
                     if (table.GameVariant == GamesVariants.Normal)
-                        table.SilentForPlayer = _cardHandler.SilentPlayer(tablePlayers);
+                        table.SilentForPlayer = CardPointsUtil.SilentPlayer(tablePlayers);
 
                     table.Status = PlayStatus.Run;
                     _context.Update(table);
@@ -140,7 +138,7 @@ namespace DoppelkopfApi.Services
                         var table = _context.PlayTables.FirstOrDefault(pt => pt.Id == tablePlayer.TableId);
 
                         table.SetLastCardSet(playedRoundCards.Select((prc) => prc.Card).ToArray());
-                        int stitchWinnerId = _cardHandler.WhoeWinCardRound(playedRoundCards, table, tablePlayers);
+                        int stitchWinnerId = CardPointsUtil.WhoWinCardRound(playedRoundCards, table, tablePlayers);
                         // var stitchWinner = tablePlayers.FirstOrDefault((tp) => tp.PlayerId == stitchWinnerId);
                         SetAdditionalWeddingPlayer(tablePlayers, table, stitchWinnerId);
 
@@ -149,7 +147,7 @@ namespace DoppelkopfApi.Services
                             player.ClearForNextTurn();
                             if (player.PlayerId == stitchWinnerId)
                             {
-                                player.RoundsPoints += _cardHandler.CardPoints(playedRoundCards);
+                                player.RoundsPoints += CardPointsUtil.CardPoints(playedRoundCards);
                                 table.CurrentPlayerPosition = player.PlayerPosition;
                             }
                         }
@@ -527,22 +525,6 @@ namespace DoppelkopfApi.Services
         }
 
 
-
-        private void SetHandCards(TablePlayer[] tablePlayers, bool withNiner)
-        {
-            var playerCards = _cardHandler.DistributeCards(withNiner);
-            for (int i = 0; i < tablePlayers.Length; i++)
-            {
-                tablePlayers[i].HandCards = JsonSerializer.Serialize(playerCards[i].GetRange(0, 1)); // //for test
-                tablePlayers[i].RoundsPoints = 0;
-                tablePlayers[i].HasDiamondClubsOnHand = playerCards[i].Count((card) => card.IsDiamondClub()) > 0;
-            }
-        }
-
-
-
-
-
         private bool SetAdditionalWeddingPlayer(TablePlayer[] players, PlayTable table, int stitchWinnerId)
         {
             var weddingPlayer = TableUtil.GetWeddingPlayer(players);
@@ -556,7 +538,7 @@ namespace DoppelkopfApi.Services
                 if (table.WeddingWithFirstColorCast && table.StitchCounter < 2)
                 {
                     var leftOfGiverPlayer = players.FirstOrDefault((player) => table.GetLeftOfGiversPosition() == player.PlayerPosition);
-                    if (leftOfGiverPlayer != null && _cardHandler.IsColorPlayed(table, leftOfGiverPlayer.GetPlayedCard()))
+                    if (leftOfGiverPlayer != null && CardPointsUtil.IsColorPlayed(table, leftOfGiverPlayer.GetPlayedCard()))
                     {
                         additionalWeddingPlayerId = stitchWinnerId;
                         return true;

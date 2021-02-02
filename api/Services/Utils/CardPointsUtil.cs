@@ -3,103 +3,21 @@ using System;
 using DoppelkopfApi.Entities;
 using System.Linq;
 
-namespace DoppelkopfApi.Helpers
+namespace DoppelkopfApi.Services.Utils
 {
 
-    public class CardHandler
+    public static class CardPointsUtil
     {
 
 
-        public List<Card> ShuffleCardsOld()
-        {
-            List<Card> cards = new List<Card>();
-            Random random = new Random(5);
 
-            var suits = Enum.GetNames(typeof(Suits));
-            var ranks = Enum.GetNames(typeof(Ranks));
-            var cardsCount = suits.Length * ranks.Length * 2;
-            while (cards.Count < cardsCount)
-            {
-                int suite = random.Next(suits.Length);
-                int rank = random.Next(ranks.Length);
-                Card newCard = new Card(Enum.Parse<Suits>(suits[suite]), Enum.Parse<Ranks>(ranks[rank]));
-                int cardCount = cards.FindAll((card) => card == newCard).Count;
-                if (cardCount < 2)
-                {
-                    cards.Add(newCard);
-                }
-            }
-            return cards;
-        }
-
-        public List<Card> ShuffleCards(List<Card> cards = null)
-        {
-            cards = cards == null ? GetNewCards() : cards;
-            return cards.OrderBy(x => Guid.NewGuid()).ToList();
-        }
-
-
-        public List<Card> GetNewCards()
-        {
-            List<Card> cards = new List<Card>();
-            Random random = new Random(5);
-
-            var suits = Enum.GetNames(typeof(Suits));
-            var ranks = Enum.GetNames(typeof(Ranks));
-            for (int i = 1; i <= 2; i++)
-            {
-                foreach (var suite in suits)
-                {
-                    foreach (var rank in ranks)
-                    {
-                        cards.Add(new Card(Enum.Parse<Suits>(suite), Enum.Parse<Ranks>(rank)));
-                    }
-                }
-            }
-
-            return cards;
-        }
-
-        public List<Card>[] DistributeCards(bool withNiner, List<Card> cards = null)
-        {
-            cards = ShuffleCards(cards);
-            List<Card>[] playerCards = new List<Card>[4];
-            for (int i = 0; i < playerCards.Length; i++)
-            {
-                playerCards[i] = new List<Card>();
-            }
-
-            if (cards.Count > 0)
-            {
-                int[] shuffelCounts = new int[3] { 4, 4, 4 };
-
-                if (!withNiner)
-                {
-                    cards = cards.FindAll((card) => card.Rank != Ranks.nine);
-                    shuffelCounts = new int[3] { 3, 4, 3 };
-                }
-
-
-                for (int j = 0; j < shuffelCounts.Length; j++)
-                {
-                    for (int i = 0; i < 4; i++)
-                    {
-                        var cardsForPlayer = cards.GetRange(0, shuffelCounts[j]);
-                        playerCards[i].AddRange(cardsForPlayer);
-                        cards.RemoveRange(0, shuffelCounts[j]);
-                    }
-                }
-            }
-
-            return playerCards;
-        }
 
         /// <summary>
-        /// Return the Id of one player thate run a silent, outherwise return -1
+        /// Return the Id of one player that run a silent, outherwise return -1
         ///  </summary>
         /// <param name="tablePlayers"></param>
         /// <returns></returns>
-        public int SilentPlayer(TablePlayer[] tablePlayers)
+        public static int SilentPlayer(TablePlayer[] tablePlayers)
         {
             bool onePlayerWithNoneVariant = tablePlayers.Count((p) => p.GameVariant == GamesVariants.None) > 0;
             if (onePlayerWithNoneVariant)
@@ -110,7 +28,7 @@ namespace DoppelkopfApi.Helpers
             return -1;
         }
 
-        public GamesVariants WhichVariantIsPlayed(TablePlayer[] tablePlayers)
+        public static GamesVariants WhichVariantIsPlayed(TablePlayer[] tablePlayers)
         {
             GamesVariants playedVariant = GamesVariants.Normal;
             int weighting = 50;
@@ -132,9 +50,9 @@ namespace DoppelkopfApi.Helpers
                         weightingbuffer = 2;
                         variantBuff = GamesVariants.ColoRSoloHearts;
                         break;
-                    case GamesVariants.ColoRSoloDiamonds:
+                    case GamesVariants.ColorSoloDiamonds:
                         weightingbuffer = 3;
-                        variantBuff = GamesVariants.ColoRSoloDiamonds;
+                        variantBuff = GamesVariants.ColorSoloDiamonds;
                         break;
                     case GamesVariants.Solo:
                         weightingbuffer = 4;
@@ -175,21 +93,18 @@ namespace DoppelkopfApi.Helpers
             return playedVariant;
         }
 
-        public PlayCard[] OrderPlayersByPosition(PlayCard[] playedCards, int currentPlayerPosition)
+        public static PlayCard[] OrderPlayersByPosition(PlayCard[] playedCards, int currentPlayerPosition)
         {
-            int initialPlayerPosition = GetNextPosition(currentPlayerPosition);
+            int initialPlayerPosition = TableUtil.GetNextPosition(currentPlayerPosition);
             var player1 = playedCards.First((p) => p.Position == initialPlayerPosition);
-            var player2 = playedCards.First((p) => p.Position == GetNextPosition(player1.Position));
-            var player3 = playedCards.First((p) => p.Position == GetNextPosition(player2.Position));
-            var player4 = playedCards.First((p) => p.Position == GetNextPosition(player3.Position));
+            var player2 = playedCards.First((p) => p.Position == TableUtil.GetNextPosition(player1.Position));
+            var player3 = playedCards.First((p) => p.Position == TableUtil.GetNextPosition(player2.Position));
+            var player4 = playedCards.First((p) => p.Position == TableUtil.GetNextPosition(player3.Position));
 
             return new PlayCard[] { player1, player2, player3, player4 };
         }
 
-        private int GetNextPosition(int position)
-        {
-            return position + 1 > 4 ? 1 : position + 1;
-        }
+
 
         /// <summary>
         /// Return the round winners player id.
@@ -197,7 +112,7 @@ namespace DoppelkopfApi.Helpers
         /// <param name="playedCards"></param>
         /// <param name="table"></param>
         /// <returns></returns>
-        public int WhoeWinCardRound(PlayCard[] playedCards, PlayTable table, TablePlayer[] players)
+        public static int WhoWinCardRound(PlayCard[] playedCards, PlayTable table, TablePlayer[] players)
         {
             playedCards = OrderPlayersByPosition(playedCards, table.CurrentPlayerPosition);
             Card initialCard = playedCards[0].Card;
@@ -213,7 +128,7 @@ namespace DoppelkopfApi.Helpers
                     return WhoeWinCardRound(playedCards, (card) => RankSoloRating(card.Card, Ranks.king, initialCard));
                 case GamesVariants.ColoRSoloClubs:
                     return WhoeWinCardRound(playedCards, (card) => ColorSoloRating(card.Card, Suits.clubs, initialCard));
-                case GamesVariants.ColoRSoloDiamonds:
+                case GamesVariants.ColorSoloDiamonds:
                     return WhoeWinCardRound(playedCards, (card) => ColorSoloRating(card.Card, Suits.diamonds, initialCard));
                 case GamesVariants.ColoRSoloHearts:
                     return WhoeWinCardRound(playedCards, (card) => ColorSoloRating(card.Card, Suits.hearts, initialCard));
@@ -224,12 +139,12 @@ namespace DoppelkopfApi.Helpers
             }
         }
 
-        public bool IsColorPlayed(PlayTable table, Card card)
+        public static bool IsColorPlayed(PlayTable table, Card card)
         {
             return NormalRating(table, card) >= 50;
         }
 
-        public int CardPoints(PlayCard[] playCard)
+        public static int CardPoints(PlayCard[] playCard)
         {
             int sum = 0;
             for (int i = 0; i < playCard.Length; i++)
@@ -240,7 +155,12 @@ namespace DoppelkopfApi.Helpers
         }
 
 
-        private int SuitRating(Card card)
+        /// <summary>
+        /// Return -1 is the card undefined and for the highest card 1 and for the lowest 4.
+        /// </summary>
+        /// <param name="card"></param>
+        /// <returns></returns>
+        private static int SuitRating(Card card)
         {
             if (card == null)
                 return -1;
@@ -262,7 +182,7 @@ namespace DoppelkopfApi.Helpers
         }
 
 
-        int RankSoloRating(Card card, Ranks soloRank, Card initialCard)
+        static int RankSoloRating(Card card, Ranks soloRank, Card initialCard)
         {
             var suitRating = SuitRating(card);
 
@@ -275,7 +195,7 @@ namespace DoppelkopfApi.Helpers
 
         }
 
-        private int ColorSoloRating(Card card, Suits soloSuit, Card initialCard)
+        private static int ColorSoloRating(Card card, Suits soloSuit, Card initialCard)
         {
             var rankRating = RankRating(card.Rank);
 
@@ -287,7 +207,7 @@ namespace DoppelkopfApi.Helpers
             return initialCard.Suit == card.Suit ? 20 + rankRating : 1000;
         }
 
-        private int RankRating(Ranks rank)
+        private static int RankRating(Ranks rank)
         {
             switch (rank)
             {
@@ -308,12 +228,12 @@ namespace DoppelkopfApi.Helpers
             }
         }
 
-        private int NormalRating(PlayTable table, Card card, Card initialCard)
+        private static int NormalRating(PlayTable table, Card card, Card initialCard)
         {
             int cardRating = NormalRating(table, card);
             return cardRating < 50 ? cardRating : (initialCard.Suit == card.Suit ? cardRating : 1000);
         }
-        private int NormalRating(PlayTable table, Card card)
+        private static int NormalRating(PlayTable table, Card card)
         {
             if (card == null)
                 return -1;
@@ -365,7 +285,7 @@ namespace DoppelkopfApi.Helpers
             }
         }
 
-        private int CardPoints(PlayCard playCard)
+        private static int CardPoints(PlayCard playCard)
         {
             switch (playCard.Card.Rank)
             {
@@ -394,7 +314,7 @@ namespace DoppelkopfApi.Helpers
         /// <param name="cards"></param>
         /// <param name="ratingFunc"></param>
         /// <returns></returns>
-        private int WhoeWinCardRound(PlayCard[] cards, Func<PlayCard, int> ratingFunc)
+        public static int WhoeWinCardRound(PlayCard[] cards, Func<PlayCard, int> ratingFunc)
         {
             int ratingMin = 1000;
             int playerId = -1;
@@ -419,20 +339,5 @@ namespace DoppelkopfApi.Helpers
 
     }
 
-    public static class ShuffelCards
-    {
-        public static IEnumerable<T> Shuffle<T>(this T[] source, Random rng)
-        {
-            T[] elements = source;
-            for (int i = elements.Length - 1; i >= 0; i--)
-            {
-                // Swap element "i" with a random earlier element it (or itself)
-                // ... except we don't really need to swap it fully, as we can
-                // return it immediately, and afterwards it's irrelevant.
-                int swapIndex = rng.Next(i + 1);
-                yield return elements[swapIndex];
-                elements[swapIndex] = elements[i];
-            }
-        }
-    }
+
 }

@@ -186,21 +186,29 @@ export class PlayerViewComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   private setLastCard(table: TableState, cardMap: CardMapComponent): boolean {
-    const firstCardPlayer = TableUtil.getNextPlayerPosition(
-      table.roundCardsGiversPosition
-    );
     if (
       table.status == PlayStatus.Run &&
       table.thisPlayer &&
       table.currentPlayerPosition === table.thisPlayer.playerPosition &&
-      firstCardPlayer !== table.thisPlayer.playerPosition &&
       cardMap &&
       cardMap.orderedCards &&
-      cardMap.orderedCards.length === 1
+      cardMap.orderedCards.length === 1 &&
+      this.isOneCardPlayed(table)
     ) {
       cardMap.setLastCard();
       return true;
     }
+    return false;
+  }
+  private isOneCardPlayed(table: TableState): boolean {
+    table.players.forEach((player) => {
+      if (player.playedCard) {
+        console.log(`player played card ${player.playedCard}`);
+
+        return true;
+      }
+      console.log(`player played no card ${player.playerId}`);
+    });
     return false;
   }
 }

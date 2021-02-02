@@ -20,9 +20,9 @@ namespace DoppelkopfApi.Entities
 
         public Ranks Rank { get; set; }
 
-        public bool IsDiamondClub()
+        public bool IsClubQueen()
         {
-            return Suit == Suits.diamonds && Rank == Ranks.queen;
+            return Suit == Suits.clubs && Rank == Ranks.queen;
         }
 
         public override bool Equals(object obj)
@@ -81,13 +81,13 @@ namespace DoppelkopfApi.Entities
 
     public enum Suits
     {
-        //"♣"
+        //"♣" (DE eichel)
         clubs,
-        // "♦"
+        // "♦" (DE schellen) 
         diamonds,
-        // "♥"
+        // "♥" (De herz)
         hearts,
-        // "♠"
+        // "♠" (DE grün)
         spades,
 
     };

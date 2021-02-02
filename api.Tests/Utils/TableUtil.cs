@@ -11,10 +11,10 @@ namespace api.Utils
         public void PlayerWinnerAtVariantNormal()
         {
             var player = new TablePlayer[]  {
-                new TablePlayer { PlayerId = 1, HasDiamondClubsOnHand = true, RoundsPoints=40, GameVariant= GamesVariants.Normal },
-                new TablePlayer { PlayerId = 2, HasDiamondClubsOnHand = false, RoundsPoints=80 , GameVariant= GamesVariants.Normal},
-                new TablePlayer { PlayerId = 3, HasDiamondClubsOnHand = true, RoundsPoints=40 , GameVariant= GamesVariants.Normal},
-                new TablePlayer { PlayerId = 4, HasDiamondClubsOnHand = false, RoundsPoints=60 , GameVariant= GamesVariants.Normal}
+                new TablePlayer { PlayerId = 1, HasClubsQueenOnHand = true, RoundsPoints=40, GameVariant= GamesVariants.Normal },
+                new TablePlayer { PlayerId = 2, HasClubsQueenOnHand = false, RoundsPoints=80 , GameVariant= GamesVariants.Normal},
+                new TablePlayer { PlayerId = 3, HasClubsQueenOnHand = true, RoundsPoints=40 , GameVariant= GamesVariants.Normal},
+                new TablePlayer { PlayerId = 4, HasClubsQueenOnHand = false, RoundsPoints=60 , GameVariant= GamesVariants.Normal}
                 };
             var table = new PlayTable { GameVariant = GamesVariants.Normal };
 
@@ -30,10 +30,10 @@ namespace api.Utils
         public void PlayerWinnerAtVariantSolo()
         {
             var player = new TablePlayer[]  {
-                new TablePlayer { PlayerId = 1, HasDiamondClubsOnHand = true, RoundsPoints=110, GameVariant= GamesVariants.ColoRSoloClubs },
-                new TablePlayer { PlayerId = 2, HasDiamondClubsOnHand = false, RoundsPoints=30 , GameVariant= GamesVariants.Normal},
-                new TablePlayer { PlayerId = 3, HasDiamondClubsOnHand = true, RoundsPoints=40 , GameVariant= GamesVariants.Normal},
-                new TablePlayer { PlayerId = 4, HasDiamondClubsOnHand = false, RoundsPoints=60 , GameVariant= GamesVariants.Normal}
+                new TablePlayer { PlayerId = 1, HasClubsQueenOnHand = true, RoundsPoints=110, GameVariant= GamesVariants.ColoRSoloClubs },
+                new TablePlayer { PlayerId = 2, HasClubsQueenOnHand = false, RoundsPoints=30 , GameVariant= GamesVariants.Normal},
+                new TablePlayer { PlayerId = 3, HasClubsQueenOnHand = true, RoundsPoints=40 , GameVariant= GamesVariants.Normal},
+                new TablePlayer { PlayerId = 4, HasClubsQueenOnHand = false, RoundsPoints=60 , GameVariant= GamesVariants.Normal}
                 };
             var table = new PlayTable { GameVariant = GamesVariants.ColoRSoloClubs };
 
