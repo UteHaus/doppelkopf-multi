@@ -2,7 +2,8 @@
   <div class="card-header" *ngIf="currentUser$ |async as currentUser">
     <h1 [translate]>dk.console-tables</h1>
     <a *ngIf="(currentUser.editTables || currentUser.admin)" routerLink="table"
-      class="btn btn-sm btn-primary mb-2" [translate]>dk.new-play-table</a>
+      class="btn btn-sm btn-primary m-2" [translate]>dk.new-play-table</a>
+    <a class="btn btn-sm btn-secondary m-2" (click)="openJitsi()">Jitsi</a>
   </div>
   <div class="card-body" *ngIf="tables$ | async as tables">
 
