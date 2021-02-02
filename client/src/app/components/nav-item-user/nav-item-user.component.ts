@@ -11,15 +11,15 @@ import { PlayTableService } from 'src/doppelkopf/services/play-table.service';
   styleUrls: ['./nav-item-user.component.less'],
 })
 export class NavItemUserComponent implements OnInit {
-  show: boolean = false;
-  showLangauges: boolean = false;
+  show = false;
+  showLangauges = false;
   user$: Observable<User>;
   backupRout: string;
   @Input()
   set previousRoute(value: string) {
     const i = value.includes('edit');
     if (!i) {
-      this.backupRout = value.split('/').join('_');
+      this.backupRout = value?.split('/').join('_');
     }
   }
 
@@ -32,7 +32,7 @@ export class NavItemUserComponent implements OnInit {
     this.user$ = this.accountService.user;
   }
 
-  logout() {
+  logout(): void {
     this.accountService.user
       .pipe(
         switchMap((user) =>

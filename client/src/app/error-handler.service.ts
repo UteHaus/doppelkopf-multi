@@ -1,5 +1,3 @@
-import { JsonPipe } from '@angular/common';
-import { JsonpInterceptor } from '@angular/common/http';
 import { ErrorHandler, Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { NGXLogger } from 'ngx-logger';
@@ -10,10 +8,12 @@ export class ErrorHandlerService extends ErrorHandler {
     super();
   }
 
-  handleError(error) {
-    this.logger.error(error.message || error, [
-      { url: this.route.url, stak: error.stack || '' },
-    ]);
-    super.handleError(error);
+  handleError(error: any): void {
+    if (error != null) {
+      this.logger.error(error.message || error, [
+        { url: this.route.url, stak: error.stack || '' },
+      ]);
+      super.handleError(error);
+    }
   }
 }
