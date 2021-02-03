@@ -10,24 +10,22 @@ namespace DoppelkopfApi.Services.Utils
         {
             var soloPlayer = players.FirstOrDefault((player) => player.GameVariant == table.GameVariant);
 
-            if (table.GameVariant == GamesVariants.Normal || table.GameVariant == GamesVariants.Wedding || soloPlayer == null)
+
+            if (table.GameVariant == GamesVariants.Normal)
             {
-                if (table.GameVariant == GamesVariants.Normal)
+                SetWinnerPoints(players.Where((player) => player.HasClubsQueenOnHand).ToArray(),
+                 players.Where((player) => !player.HasClubsQueenOnHand).ToArray());
+            }
+            else if (table.GameVariant == GamesVariants.Wedding)
+            {
+                var weddingPlayer = GetWeddingPlayer(players);
+                var additionWedingPlayer = players.FirstOrDefault((player) => player.PlayerId == table.AdditionalWeddingPlayerId);
+                if (additionWedingPlayer != null)
                 {
-                    SetWinnerPoints(players.Where((player) => player.HasClubsQueenOnHand).ToArray(),
-                     players.Where((player) => !player.HasClubsQueenOnHand).ToArray());
-                }
-                else
-                {
-                    var weddingPlayer = GetWeddingPlayer(players);
-                    var additionWedingPlayer = players.FirstOrDefault((player) => player.PlayerId == table.AdditionalWeddingPlayerId);
-                    if (additionWedingPlayer != null)
-                    {
-                        SetWinnerPoints(
-                            new TablePlayer[] { weddingPlayer, additionWedingPlayer },
-                            players.Where((player) => player.PlayerId != weddingPlayer.PlayerId && player.PlayerId != additionWedingPlayer.PlayerId).ToArray()
-                            );
-                    }
+                    SetWinnerPoints(
+                        new TablePlayer[] { weddingPlayer, additionWedingPlayer },
+                        players.Where((player) => player.PlayerId != weddingPlayer.PlayerId && player.PlayerId != additionWedingPlayer.PlayerId).ToArray()
+                        );
                 }
             }
             else

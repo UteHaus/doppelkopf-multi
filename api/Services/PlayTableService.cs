@@ -531,8 +531,7 @@ namespace DoppelkopfApi.Services
 
             if (table.GameVariant == GamesVariants.Wedding &&
             weddingPlayer.PlayerId != stitchWinnerId &&
-            table.AdditionalWeddingPlayerId < 0 &&
-            table.GameVariant == GamesVariants.Wedding)
+            table.AdditionalWeddingPlayerId < 0)
             {
                 int additionalWeddingPlayerId = -1;
                 if (table.WeddingWithFirstColorCast && table.StitchCounter < 2)
@@ -549,6 +548,12 @@ namespace DoppelkopfApi.Services
                 {
                     additionalWeddingPlayerId = stitchWinnerId;
                     return true;
+                }
+                else
+                {
+                    table.GameVariant = GamesVariants.Solo;
+                    _context.PlayTables.Update(table);
+                    _context.SaveChanges();
                 }
 
             }
