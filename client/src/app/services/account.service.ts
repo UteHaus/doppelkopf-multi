@@ -22,7 +22,7 @@ export class AccountService {
     return this.userSubject.value;
   }
 
-  login(username, password) {
+  login(username: string, password: string): Observable<User> {
     return this.http
       .post<User>(`${environment.apiUrl}/users/authenticate`, {
         username,
@@ -38,14 +38,14 @@ export class AccountService {
       );
   }
 
-  logout() {
+  logout(): void {
     // remove user from local storage and set current user to null
     localStorage.removeItem('user');
     this.userSubject.next(null);
     this.router.navigate(['/account/login']);
   }
 
-  register(user: User) {
+  register(user: User): Observable<unknown> {
     return this.http.post(`${environment.apiUrl}/users/register`, user);
   }
 
@@ -59,15 +59,15 @@ export class AccountService {
     );
   }
 
-  getAll() {
+  getAll(): Observable<User[]> {
     return this.http.get<User[]>(`${environment.apiUrl}/users`);
   }
 
-  getById(id: string) {
+  getById(id: string): Observable<User> {
     return this.http.get<User>(`${environment.apiUrl}/users/${id}`);
   }
 
-  update(id, params) {
+  update(id: string, params): Observable<unknown> {
     return this.http.put(`${environment.apiUrl}/users/${id}`, params).pipe(
       map((x) => {
         // update stored user if the logged in user updated their own record
@@ -83,7 +83,7 @@ export class AccountService {
     );
   }
 
-  delete(id: string) {
+  delete(id: string): Observable<unknown> {
     return this.http.delete(`${environment.apiUrl}/users/${id}`).pipe(
       map((x) => {
         // auto logout if the logged in user deleted their own record

@@ -8,7 +8,7 @@ export class ErrorHandlerService extends ErrorHandler {
     super();
   }
 
-  handleError(error: any): void {
+  handleError(error: { message?: string; stack: string }): void {
     if (error != null) {
       this.logger.error(error.message || error, [
         { url: this.route.url, stak: error.stack || '' },
