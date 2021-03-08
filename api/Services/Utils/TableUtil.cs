@@ -11,7 +11,7 @@ namespace DoppelkopfApi.Services.Utils
             var soloPlayer = players.FirstOrDefault((player) => player.GameVariant == table.GameVariant);
 
 
-            if (table.GameVariant == GamesVariants.Normal)
+            if (table.GameVariant == GamesVariants.Normal || soloPlayer == null)
             {
                 SetWinnerPoints(players.Where((player) => player.HasClubsQueenOnHand).ToArray(),
                  players.Where((player) => !player.HasClubsQueenOnHand).ToArray());
