@@ -63,6 +63,6 @@ export const defaultAppConfig: AppConfig = {
 })
 export class AppModule {}
 
-export function HttpLoaderFactory(http: HttpClient) {
+export function HttpLoaderFactory(http: HttpClient): TranslateHttpLoader {
   return new TranslateHttpLoader(http);
 }
