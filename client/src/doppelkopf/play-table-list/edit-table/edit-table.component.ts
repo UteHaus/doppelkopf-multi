@@ -7,7 +7,7 @@ import {
 } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AlertService } from '@app/services';
-import { first } from 'rxjs/internal/operators';
+import { first } from 'rxjs';
 import {
   GamesVariants,
   PlayStatus,
@@ -49,7 +49,7 @@ export class EditTableComponent implements OnInit {
       this.playTableService
         .getTable(Number(this.id))
         .pipe(first())
-        .subscribe((x) => {
+        .subscribe((x:PlayTable) => {
           this.f.tableName.setValue(x.name);
           this.f.diamondsAceAsMaster.setValue(x.diamondsAceAsMaster);
           this.f.withNiner.setValue(x.withNiner);

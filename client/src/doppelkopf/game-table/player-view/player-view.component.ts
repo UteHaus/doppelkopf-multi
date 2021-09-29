@@ -111,7 +111,7 @@ export class PlayerViewComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   shuffleCards(): void {
-    this.shuffleCardsClick$.next();
+    this.shuffleCardsClick$.next(null);
   }
 
   cardSelected(card: Card): void {
@@ -138,7 +138,7 @@ export class PlayerViewComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   nextTurn(): void {
-    this.nextTurnClicked$.next();
+    this.nextTurnClicked$.next(null);
   }
 
   private addSubscription<T>(
