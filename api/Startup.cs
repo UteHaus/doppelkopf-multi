@@ -10,10 +10,9 @@ using Microsoft.IdentityModel.Tokens;
 using Microsoft.AspNetCore.SignalR;
 using DoppelkopfApi.Helpers;
 using DoppelkopfApi.Services;
-using AutoMapper;
 using System.Text;
 using DoppelkopfApi.Hubs;
-
+using System.Text.Json.Serialization;
 
 namespace DoppelkopfApi
 {
@@ -65,7 +64,7 @@ namespace DoppelkopfApi
             services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
             services.AddControllers().AddJsonOptions(o =>
          {
-             o.JsonSerializerOptions.IgnoreNullValues = true;
+             o.JsonSerializerOptions.DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull;
              //o.JsonSerializerOptions.WriteIndented = true;
              o.JsonSerializerOptions.Converters.Add(new System.Text.Json.Serialization.JsonStringEnumConverter());
              //o.JsonSerializerOptions.Converters.Add(new Newtonsoft.Json.Converters.StringEnumConverter());
