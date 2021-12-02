@@ -10,10 +10,11 @@ using Microsoft.IdentityModel.Tokens;
 using Microsoft.AspNetCore.SignalR;
 using DoppelkopfApi.Helpers;
 using DoppelkopfApi.Services;
-using AutoMapper;
 using System.Text;
 using DoppelkopfApi.Hubs;
-
+using System.Text.Json.Serialization;
+using api.Database;
+using System.IO;
 
 namespace DoppelkopfApi
 {
@@ -32,7 +33,8 @@ namespace DoppelkopfApi
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            var connectionString = _configuration.GetConnectionString("NpsqlDatabase");
+            var connectionString = NpgsqlUtil.buildConnectionString(_configuration);
+            var envVar = Environment.GetEnvironmentVariable("POSTGRES_DB");
             services.AddDbContext<DataContext>(options => options.UseNpgsql(connectionString));
 
             services
@@ -66,9 +68,7 @@ namespace DoppelkopfApi
             services.AddControllers().AddJsonOptions(o =>
          {
              o.JsonSerializerOptions.IgnoreNullValues = true;
-             //o.JsonSerializerOptions.WriteIndented = true;
              o.JsonSerializerOptions.Converters.Add(new System.Text.Json.Serialization.JsonStringEnumConverter());
-             //o.JsonSerializerOptions.Converters.Add(new Newtonsoft.Json.Converters.StringEnumConverter());
 
          });
 
@@ -80,6 +80,7 @@ namespace DoppelkopfApi
             // configure jwt authentication
             var appSettings = appSettingsSection.Get<AppSettings>();
             var key = Encoding.ASCII.GetBytes(appSettings.Secret);
+
             services.AddAuthentication(x =>
             {
                 x.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
@@ -118,10 +119,6 @@ namespace DoppelkopfApi
             // migrate any database changes on startup (includes initial db creation)
             dataContext.Database.Migrate();
             CreateDefaultUser(dataContext);
-            // if (env.IsDevelopment())
-            // {
-            // app.UseDeveloperExceptionPage();
-            // }
 
             app.UseRouting();
 

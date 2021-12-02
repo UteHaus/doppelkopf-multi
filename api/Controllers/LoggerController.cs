@@ -1,6 +1,5 @@
 using System;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Authorization;
 using DoppelkopfApi.Services;
 using DoppelkopfApi.Models;
 using AutoMapper;
