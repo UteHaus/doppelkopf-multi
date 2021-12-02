@@ -11,6 +11,9 @@ RUN dotnet publish -c Release -o build
 
 FROM mcr.microsoft.com/dotnet/aspnet:6.0 AS runtime
 WORKDIR /app
+ENV POSTGRES_USER doppelkopf
+ENV POSTGRES_PASSWORD doppelkopf
+ENV POSTGRES_DB doppelkopf
 
 COPY --from=build-env /app/build .
-ENTRYPOINT [ "dotnet", "DoppelkopfApi.dll" ]
+ENTRYPOINT [ "dotnet", "DoppelkopfApi.dll" , "--environment=Production"]

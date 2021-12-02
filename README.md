@@ -27,10 +27,12 @@ TableList
 
 ### Docker
 
-1. Build the images `docker-compose build`
+1. Build the images `sh build-docker`
+1. Environment properties in the env files (db.env, ap-settings.env)
+1. Check the `docker-compose`, optional change. 
 1. Run the as container `docker-compose up -d`
 
-#### Posableites
+#### Possibilities
 To change the port of the client, at docker compose file change the client ports item `8080:80` to `xxxx:80`.
 
 ### local
