@@ -12,16 +12,12 @@ services:
 
     ports:
       - 5432:5432
-    networks:
-      - dk-db
   dkapi:
     image: doppelkopf-api
     ports:
       - 5003:80
     depends_on:
       - postgres
-    networks:
-      - dk-db
     env_file:
       - db.env
   client:
@@ -31,8 +27,6 @@ services:
     restart: always
     depends_on:
       - dkapi
-    networks:
-      - dk-db
 
 
 
