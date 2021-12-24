@@ -12,9 +12,7 @@ export class InplaceInputComponent {
   @Input() tag: string;
   @Output() focusOut: EventEmitter<string> = new EventEmitter<string>();
   @Output()
-  editValue: EventEmitter<InplaceInputComponent> = new EventEmitter<
-    InplaceInputComponent
-  >();
+  editValue: EventEmitter<InplaceInputComponent> = new EventEmitter<InplaceInputComponent>();
   editMode = false;
 
   constructor() {

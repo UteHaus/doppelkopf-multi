@@ -24,7 +24,8 @@ import { TableHubService } from '../services/table-hub.service';
   styleUrls: ['./play-table-list.component.less'],
 })
 export class PlayTableListComponent
-  implements OnInit, OnDestroy, AfterViewInit, AfterViewChecked {
+  implements OnInit, OnDestroy, AfterViewInit, AfterViewChecked
+{
   tables$ = new BehaviorSubject<PlayTableCount[]>([]);
   onHubConnect$: Observable<boolean>;
   userTableId$: Observable<number>;

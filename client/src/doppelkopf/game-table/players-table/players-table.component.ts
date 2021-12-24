@@ -40,9 +40,7 @@ export class PlayersTableComponent implements OnDestroy {
   enableShowCardsOfPlayer = false;
 
   @Output()
-  showCardsOfPlayersSelected: EventEmitter<
-    AdditionPlayerInfo
-  > = new EventEmitter();
+  showCardsOfPlayersSelected: EventEmitter<AdditionPlayerInfo> = new EventEmitter();
 
   @Output()
   announcementChanged: EventEmitter<string> = new EventEmitter();

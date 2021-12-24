@@ -1,26 +1,41 @@
 <ng-container *ngIf="spectatorStateSub | async as spectatorState">
-    <div class="header-line">
-        <div class="check">
-            <input type="checkbox" class="form-check-input" #additionPlayer id="5thPlayerCheck"
-                (click)="playerAsAdditionPlayerChecked(additionPlayer.checked)"
-                [checked]="spectatorState.asAdditionPlayer">
-            <label class="form-check-label" for="5thPlayerCheck" translate>dk.5th-player</label>
-        </div>
+  <div class="header-line">
+    <div class="check">
+      <input
+        type="checkbox"
+        class="form-check-input"
+        #additionPlayer
+        id="5thPlayerCheck"
+        (click)="playerAsAdditionPlayerChecked(additionPlayer.checked)"
+        [checked]="spectatorState.asAdditionPlayer"
+      />
+      <label class="form-check-label" for="5thPlayerCheck" translate
+        >dk.5th-player</label
+      >
     </div>
-    <div class="table">
-        <ng-container *ngIf="tableStateSub | async as tableState">
-            <app-players-table [players]="tableState.players" [thisPlayerId]="-1"
-                [positionOnMove]="tableState.currentPlayerPosition"
-                [currentGiverPos]="tableState.roundCardsGiversPosition"
-                [tableGameVariant]="tableState.gameVariant" [showPointsForAllPlayers]="true"
-                [showCardsOfPlayer]="spectatorState.seePlayerCard" [enableShowCardsOfPlayer]="true"
-                (showCardsOfPlayersSelected)="cardsOfPlayerSelected($event)">
-            </app-players-table>
+  </div>
+  <div class="table">
+    <ng-container *ngIf="tableStateSub | async as tableState">
+      <app-players-table
+        [players]="tableState.players"
+        [thisPlayerId]="-1"
+        [positionOnMove]="tableState.currentPlayerPosition"
+        [currentGiverPos]="tableState.roundCardsGiversPosition"
+        [tableGameVariant]="tableState.gameVariant"
+        [showPointsForAllPlayers]="true"
+        [showCardsOfPlayer]="spectatorState.seePlayerCard"
+        [enableShowCardsOfPlayer]="true"
+        (showCardsOfPlayersSelected)="cardsOfPlayerSelected($event)"
+      >
+      </app-players-table>
 
-            <app-card-map *ngIf="spectatorState.seePlayerCard>0"
-                [diamondsAceAsMaster]="tableState.diamondsAceAsMaster" [disabled]="true"
-                [sourceHubMethode]="cardSourceMethode">
-            </app-card-map>
-        </ng-container>
-    </div>
+      <app-card-map
+        *ngIf="spectatorState.seePlayerCard > 0"
+        [diamondsAceAsMaster]="tableState.diamondsAceAsMaster"
+        [disabled]="true"
+        [sourceHubMethode]="cardSourceMethode"
+      >
+      </app-card-map>
+    </ng-container>
+  </div>
 </ng-container>

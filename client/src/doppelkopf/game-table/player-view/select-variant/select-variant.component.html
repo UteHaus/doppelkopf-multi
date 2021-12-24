@@ -1,15 +1,31 @@
 <div>
-    <div class="dropdown">
-        <button class="btn btn-primary dropdown-toggle" type="button" id="dropdownMenuButton"
-            data-toggle="dropdown" aria-haspopup="true" aria-expanded="showMenu" [translate]
-            (click)="showMenu=!showMenu">
-            dk.choose-a-game-variant
-        </button>
-        <div class="dropdown-menu" [ngClass]="{'show':showMenu}"
-            aria-labelledby="dropdownMenuButton">
-            <button *ngFor="let variant of variants" type="button"
-                class="dropdown-item btn btn-secondary" (click)="setVariant(variant)"
-                [translate]>dk.variant.{{variant }}</button>
-        </div>
+  <div class="dropdown">
+    <button
+      class="btn btn-primary dropdown-toggle"
+      type="button"
+      id="dropdownMenuButton"
+      data-toggle="dropdown"
+      aria-haspopup="true"
+      aria-expanded="showMenu"
+      [translate]
+      (click)="showMenu = !showMenu"
+    >
+      dk.choose-a-game-variant
+    </button>
+    <div
+      class="dropdown-menu"
+      [ngClass]="{ show: showMenu }"
+      aria-labelledby="dropdownMenuButton"
+    >
+      <button
+        *ngFor="let variant of variants"
+        type="button"
+        class="dropdown-item btn btn-secondary"
+        (click)="setVariant(variant)"
+        [translate]
+      >
+        dk.variant.{{ variant }}
+      </button>
     </div>
+  </div>
 </div>

@@ -49,7 +49,7 @@ export class EditTableComponent implements OnInit {
       this.playTableService
         .getTable(Number(this.id))
         .pipe(first())
-        .subscribe((x:PlayTable) => {
+        .subscribe((x: PlayTable) => {
           this.f.tableName.setValue(x.name);
           this.f.diamondsAceAsMaster.setValue(x.diamondsAceAsMaster);
           this.f.withNiner.setValue(x.withNiner);

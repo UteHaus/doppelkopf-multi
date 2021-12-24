@@ -1,15 +1,34 @@
 <div class="dropdown">
-    <button class="btn btn-primary dropdown-toggle" type="button" id="dropdownMenuButton"
-        data-toggle="dropdown" aria-haspopup="true" aria-expanded="showMenu" [translate]
-        (click)="show=!show">
-        <span *ngIf="announcement;else announcementDefault">{{announcement}}</span>
-        <ng-template #announcementDefault>
-            <span>{{'dk.announcement' |translate}}</span>
-        </ng-template>
+  <button
+    class="btn btn-primary dropdown-toggle"
+    type="button"
+    id="dropdownMenuButton"
+    data-toggle="dropdown"
+    aria-haspopup="true"
+    aria-expanded="showMenu"
+    [translate]
+    (click)="show = !show"
+  >
+    <span *ngIf="announcement; else announcementDefault">{{
+      announcement
+    }}</span>
+    <ng-template #announcementDefault>
+      <span>{{ 'dk.announcement' | translate }}</span>
+    </ng-template>
+  </button>
+  <div
+    class="dropdown-menu"
+    [ngClass]="{ show: show }"
+    aria-labelledby="dropdownMenuButton"
+  >
+    <button
+      *ngFor="let announcement of announcements"
+      type="button"
+      class="dropdown-item btn btn-secondary"
+      (click)="setAnnouncements(announcement)"
+      [translate]
+    >
+      {{ announcement }}
     </button>
-    <div class="dropdown-menu" [ngClass]="{'show':show}" aria-labelledby="dropdownMenuButton">
-        <button *ngFor="let announcement of announcements" type="button"
-            class="dropdown-item btn btn-secondary" (click)="setAnnouncements(announcement)"
-            [translate]>{{announcement }}</button>
-    </div>
+  </div>
 </div>

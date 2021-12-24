@@ -6,11 +6,13 @@ describe('HoverStepBoardComponent', () => {
   let component: HoverStepBoardComponent;
   let fixture: ComponentFixture<HoverStepBoardComponent>;
 
-  beforeEach(waitForAsync(() => {
-    TestBed.configureTestingModule({
-      declarations: [HoverStepBoardComponent],
-    }).compileComponents();
-  }));
+  beforeEach(
+    waitForAsync(() => {
+      TestBed.configureTestingModule({
+        declarations: [HoverStepBoardComponent],
+      }).compileComponents();
+    })
+  );
 
   beforeEach(() => {
     fixture = TestBed.createComponent(HoverStepBoardComponent);

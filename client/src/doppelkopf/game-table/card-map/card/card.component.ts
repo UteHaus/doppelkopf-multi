@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { Card } from 'src/doppelkopf/models/card.model';
 
 @Component({
@@ -6,7 +6,7 @@ import { Card } from 'src/doppelkopf/models/card.model';
   templateUrl: './card.component.html',
   styleUrls: ['./card.component.less'],
 })
-export class CardComponent implements OnInit {
+export class CardComponent {
   @Input()
   card: Card;
 
@@ -20,6 +20,4 @@ export class CardComponent implements OnInit {
     this.withDefaultCard = false;
     this.overlap = false;
   }
-
-  ngOnInit(): void {}
 }
