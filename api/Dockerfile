@@ -14,6 +14,7 @@ WORKDIR /app
 ENV POSTGRES_USER doppelkopf
 ENV POSTGRES_PASSWORD doppelkopf
 ENV POSTGRES_DB doppelkopf
+ENV POSTGRES_HOST localhost
 
 COPY --from=build-env /app/build .
 ENTRYPOINT [ "dotnet", "DoppelkopfApi.dll" , "--environment=Production"]

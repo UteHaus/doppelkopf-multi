@@ -1,7 +1,7 @@
 version: "3"
 services:
   postgres:
-    container_name: "postgres"
+#    container_name: "postgres"
     restart: always
     image: postgres
     env_file:
@@ -14,10 +14,12 @@ services:
       - 5432:5432
   dkapi:
     image: doppelkopf-api
-    ports:
-      - 5003:80
     depends_on:
       - postgres
+    ports:
+      - 5003:80
+    environment:
+      - POSTGRES_HOST=postgres
     env_file:
       - db.env
   client:
@@ -33,6 +35,3 @@ services:
 volumes:
   dk-pgdata:
 
-networks:
-  dk-db:
-    driver: bridge
