@@ -119,9 +119,21 @@
               "devServerTarget": "doppelkopf-multi:serve:production"
             }
           }
+        },
+        "lint": {
+          "builder": "@angular-eslint/builder:lint",
+          "options": {
+            "lintFilePatterns": [
+              "src/**/*.ts",
+              "src/**/*.html"
+            ]
+          }
         }
       }
     }
   },
-  "defaultProject": "doppelkopf-multi"
+  "defaultProject": "doppelkopf-multi",
+  "cli": {
+    "defaultCollection": "@angular-eslint/schematics"
+  }
 }
