@@ -1,7 +1,6 @@
 version: "3"
 services:
   postgres:
-#    container_name: "postgres"
     restart: always
     image: postgres
     env_file:
@@ -9,6 +8,8 @@ services:
       - app-settings.env
     volumes:
       - dk-pgdata:/var/lib/postgresql/data
+    networks:
+      - default
 
     ports:
       - 5432:5432
@@ -22,6 +23,9 @@ services:
       - POSTGRES_HOST=postgres
     env_file:
       - db.env
+    networks:
+      - default
+
   client:
     image: doppelkopf-client
     ports:
@@ -29,6 +33,8 @@ services:
     restart: always
     depends_on:
       - dkapi
+    networks:
+      - default
 
 
 
