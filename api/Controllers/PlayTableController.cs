@@ -8,7 +8,6 @@ using AutoMapper;
 using DoppelkopfApi.Helpers;
 using DoppelkopfApi.Services;
 using DoppelkopfApi.Hubs;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.SignalR;
 
 namespace DoppelkopfApi.Controllers

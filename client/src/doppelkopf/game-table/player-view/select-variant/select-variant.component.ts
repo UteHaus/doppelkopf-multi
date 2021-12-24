@@ -1,10 +1,4 @@
-import {
-  Component,
-  EventEmitter,
-  OnDestroy,
-  OnInit,
-  Output,
-} from '@angular/core';
+import { Component, EventEmitter, Output } from '@angular/core';
 
 import { GamesVariants } from 'src/doppelkopf/models/play-table.model';
 
@@ -13,7 +7,7 @@ import { GamesVariants } from 'src/doppelkopf/models/play-table.model';
   templateUrl: './select-variant.component.html',
   styleUrls: ['./select-variant.component.less'],
 })
-export class SelectVariantComponent implements OnInit, OnDestroy {
+export class SelectVariantComponent {
   @Output()
   selected = new EventEmitter<GamesVariants>();
   variants: GamesVariants[] = Object.keys(GamesVariants)
@@ -25,10 +19,6 @@ export class SelectVariantComponent implements OnInit, OnDestroy {
   showMenu: boolean = false;
 
   constructor() {}
-
-  ngOnDestroy(): void {}
-
-  ngOnInit(): void {}
 
   setVariant(varian: GamesVariants): void {
     this.showMenu = !this.showMenu;

@@ -3,27 +3,41 @@
     <h1 class="text">Doppelkopf</h1>
   </div>
   <form class="" [formGroup]="form" (ngSubmit)="onSubmit()">
-    <div class=" row form-group  justify-content-center">
-      <input type="text" formControlName="username" class="form-control col-md-5 col-10 col-xl-3"
-        placeholder="{{'user.username' | translate}}"
-        [ngClass]="{ 'is-invalid': submitted && f.username.errors }" />
+    <div class="row form-group justify-content-center">
+      <input
+        type="text"
+        formControlName="username"
+        class="form-control col-md-5 col-10 col-xl-3"
+        placeholder="{{ 'user.username' | translate }}"
+        [ngClass]="{ 'is-invalid': submitted && f.username.errors }"
+      />
       <div *ngIf="submitted && f.username.errors" class="invalid-feedback">
-        <div *ngIf="f.username.errors.required" [translate]>user.user-required</div>
+        <div *ngIf="f.username.errors.required" [translate]>
+          user.user-required
+        </div>
       </div>
     </div>
-    <div class=" row form-group justify-content-center">
-      <input type="password" formControlName="password"
-        class="form-control  col-md-5  col-10 col-xl-3"
-        placeholder="{{'user.password' | translate}}"
-        [ngClass]="{ 'is-invalid': submitted && f.password.errors }" />
+    <div class="row form-group justify-content-center">
+      <input
+        type="password"
+        formControlName="password"
+        class="form-control col-md-5 col-10 col-xl-3"
+        placeholder="{{ 'user.password' | translate }}"
+        [ngClass]="{ 'is-invalid': submitted && f.password.errors }"
+      />
       <div *ngIf="submitted && f.password.errors" class="invalid-feedback">
-        <div *ngIf="f.password.errors.required" [translate]>user.password-required</div>
+        <div *ngIf="f.password.errors.required" [translate]>
+          user.password-required
+        </div>
       </div>
     </div>
-    <div class="row form-group   justify-content-center">
-      <button [disabled]="loading" class="btn btn-primary  col-auto ">
-        <span *ngIf="loading" class="spinner-border spinner-border-sm mr-1"></span>
-        {{ 'user.login' | translate}}
+    <div class="row form-group justify-content-center">
+      <button [disabled]="loading" class="btn btn-primary col-auto">
+        <span
+          *ngIf="loading"
+          class="spinner-border spinner-border-sm mr-1"
+        ></span>
+        {{ 'user.login' | translate }}
       </button>
       <!-- <a routerLink="../register" class="btn btn-link" [translate]>user.register</a> -->
     </div>

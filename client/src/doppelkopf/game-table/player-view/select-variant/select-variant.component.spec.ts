@@ -6,12 +6,13 @@ describe('SelectVariantComponent', () => {
   let component: SelectVariantComponent;
   let fixture: ComponentFixture<SelectVariantComponent>;
 
-  beforeEach(waitForAsync(() => {
-    TestBed.configureTestingModule({
-      declarations: [ SelectVariantComponent ]
+  beforeEach(
+    waitForAsync(() => {
+      TestBed.configureTestingModule({
+        declarations: [SelectVariantComponent],
+      }).compileComponents();
     })
-    .compileComponents();
-  }));
+  );
 
   beforeEach(() => {
     fixture = TestBed.createComponent(SelectVariantComponent);

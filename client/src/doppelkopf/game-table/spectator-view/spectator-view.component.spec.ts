@@ -6,12 +6,13 @@ describe('SpectatorViewComponent', () => {
   let component: SpectatorViewComponent;
   let fixture: ComponentFixture<SpectatorViewComponent>;
 
-  beforeEach(waitForAsync(() => {
-    TestBed.configureTestingModule({
-      declarations: [ SpectatorViewComponent ]
+  beforeEach(
+    waitForAsync(() => {
+      TestBed.configureTestingModule({
+        declarations: [SpectatorViewComponent],
+      }).compileComponents();
     })
-    .compileComponents();
-  }));
+  );
 
   beforeEach(() => {
     fixture = TestBed.createComponent(SpectatorViewComponent);

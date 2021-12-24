@@ -27,21 +27,44 @@
       <div class="form-row">
         <div class="form-group col-md-6">
           <label for="username" [translate]>user.username</label>
-          <input type="text" formControlName="username" class="form-control"
-            [ngClass]="{ 'is-invalid': submitted && formControls.username.errors }" />
-          <div *ngIf="submitted && formControls.username.errors" class="invalid-feedback">
-            <div *ngIf="formControls.username.errors.required" [translate]>user.user-required</div>
+          <input
+            type="text"
+            formControlName="username"
+            class="form-control"
+            [ngClass]="{
+              'is-invalid': submitted && formControls.username.errors
+            }"
+          />
+          <div
+            *ngIf="submitted && formControls.username.errors"
+            class="invalid-feedback"
+          >
+            <div *ngIf="formControls.username.errors.required" [translate]>
+              user.user-required
+            </div>
           </div>
         </div>
         <div class="form-group col">
           <label for="password" [translate]>
             user.password
-            <em *ngIf="!isAddMode" [translate]>user.leave-blank-for-same-password</em>
+            <em *ngIf="!isAddMode" [translate]
+              >user.leave-blank-for-same-password</em
+            >
           </label>
-          <input type="password" formControlName="password" class="form-control"
-            [ngClass]="{ 'is-invalid': submitted && formControls.password.errors }" />
-          <div *ngIf="submitted && formControls.password.errors" class="invalid-feedback">
-            <div *ngIf="formControls.password.errors.required" [translate]>user.password-is-required
+          <input
+            type="password"
+            formControlName="password"
+            class="form-control"
+            [ngClass]="{
+              'is-invalid': submitted && formControls.password.errors
+            }"
+          />
+          <div
+            *ngIf="submitted && formControls.password.errors"
+            class="invalid-feedback"
+          >
+            <div *ngIf="formControls.password.errors.required" [translate]>
+              user.password-is-required
             </div>
             <div *ngIf="formControls.password.errors.minlength" [translate]>
               user.password-6-characters
@@ -53,27 +76,40 @@
       <div class="form-row">
         <div class="form-group col">
           <label for="langaugeSelection" translate>app.language</label>
-          <app-language-selection [(value)]="languageKey" id="langaugeSelection">
+          <app-language-selection
+            [(value)]="languageKey"
+            id="langaugeSelection"
+          >
           </app-language-selection>
         </div>
       </div>
 
-      <ng-container *ngIf="user$| async as user">
+      <ng-container *ngIf="user$ | async as user">
         <ng-container *ngIf="user.admin">
           <div class="form-row">
             <div class="form-group form-check">
-              <input type="checkbox" class="form-check-input" formControlName="editUser"
-                id="editUser">
-              <label class="form-check-label" for="editUser"
-                [translate]>user.could-edit-users</label>
+              <input
+                type="checkbox"
+                class="form-check-input"
+                formControlName="editUser"
+                id="editUser"
+              />
+              <label class="form-check-label" for="editUser" [translate]
+                >user.could-edit-users</label
+              >
             </div>
           </div>
           <div class="form-row">
             <div class="form-group form-check">
-              <input type="checkbox" class="form-check-input" formControlName="editTables"
-                id="editTables">
-              <label class="form-check-label" for="editTables"
-                [translate]>user.could-edit-tables</label>
+              <input
+                type="checkbox"
+                class="form-check-input"
+                formControlName="editTables"
+                id="editTables"
+              />
+              <label class="form-check-label" for="editTables" [translate]
+                >user.could-edit-tables</label
+              >
             </div>
           </div>
         </ng-container>
@@ -81,11 +117,15 @@
 
       <div class="form-group">
         <button [disabled]="loading" type="submit" class="btn btn-primary">
-          <span *ngIf="loading" class="spinner-border spinner-border-sm mr-1"></span>
-          {{'user.save' | translate}}
+          <span
+            *ngIf="loading"
+            class="spinner-border spinner-border-sm mr-1"
+          ></span>
+          {{ 'user.save' | translate }}
         </button>
-        <a type="button" (click)="cancel()" class="btn btn-outline-secondary ">{{'user.cancel' |
-          translate}}</a>
+        <a type="button" (click)="cancel()" class="btn btn-outline-secondary">{{
+          'user.cancel' | translate
+        }}</a>
       </div>
     </form>
   </div>

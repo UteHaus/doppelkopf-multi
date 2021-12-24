@@ -6,12 +6,13 @@ describe('AnnouncementSelectorComponent', () => {
   let component: AnnouncementSelectorComponent;
   let fixture: ComponentFixture<AnnouncementSelectorComponent>;
 
-  beforeEach(waitForAsync(() => {
-    TestBed.configureTestingModule({
-      declarations: [ AnnouncementSelectorComponent ]
+  beforeEach(
+    waitForAsync(() => {
+      TestBed.configureTestingModule({
+        declarations: [AnnouncementSelectorComponent],
+      }).compileComponents();
     })
-    .compileComponents();
-  }));
+  );
 
   beforeEach(() => {
     fixture = TestBed.createComponent(AnnouncementSelectorComponent);

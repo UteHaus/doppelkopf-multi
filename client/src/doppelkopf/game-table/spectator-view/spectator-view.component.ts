@@ -16,7 +16,8 @@ import { TableUtil } from 'src/doppelkopf/utils/table.util';
   styleUrls: ['./spectator-view.component.less'],
 })
 export class SpectatorViewComponent
-  implements OnInit, OnDestroy, AfterViewInit {
+  implements OnInit, OnDestroy, AfterViewInit
+{
   tableStateSub = new BehaviorSubject<TableState>(null);
   spectatorStateSub = new BehaviorSubject<ViewerState>(null);
   tableState$: Observable<TableState>;
@@ -65,10 +66,11 @@ export class SpectatorViewComponent
     this.tableState$ = this.tableStateSub.pipe(
       map((tableState) => {
         if (tableState && tableState.players) {
-          tableState.players = TableUtil.orderPlayersByPositionAndSetViewPosition(
-            tableState.players,
-            this.getPlayerPosition(tableState.players, this.showPlayerId)
-          );
+          tableState.players =
+            TableUtil.orderPlayersByPositionAndSetViewPosition(
+              tableState.players,
+              this.getPlayerPosition(tableState.players, this.showPlayerId)
+            );
         }
 
         return tableState;

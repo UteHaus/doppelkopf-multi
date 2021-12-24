@@ -3,9 +3,11 @@
     <div class="card col-12">
       <div class="card-header">
         <h1 translate>app.users</h1>
-        <a routerLink="../add" class="btn btn-sm btn-primary mb-2" translate>user.add-user</a>
+        <a routerLink="../add" class="btn btn-sm btn-primary mb-2" translate
+          >user.add-user</a
+        >
       </div>
-      <div class="card-body ">
+      <div class="card-body">
         <table class="table table-striped">
           <thead>
             <tr>
@@ -21,19 +23,29 @@
               <!--  <td>{{ user.firstName }}</td>
             <td>{{ user.lastName }}</td> -->
               <td style="white-space: nowrap">
-                <a routerLink="../edit/{{ user.id }}"
-                  class="btn btn-sm btn-primary mr-1">{{'user.edit'
-                  |translate}}</a>
-                <button (click)="deleteUser(user.id)" class="btn btn-sm btn-danger btn-delete-user"
-                  [disabled]="user.isDeleting">
-                  <span *ngIf="user.isDeleting" class="spinner-border spinner-border-sm"></span>
+                <a
+                  routerLink="../edit/{{ user.id }}"
+                  class="btn btn-sm btn-primary mr-1"
+                  >{{ 'user.edit' | translate }}</a
+                >
+                <button
+                  (click)="deleteUser(user.id)"
+                  class="btn btn-sm btn-danger btn-delete-user"
+                  [disabled]="user.isDeleting"
+                >
+                  <span
+                    *ngIf="user.isDeleting"
+                    class="spinner-border spinner-border-sm"
+                  ></span>
                   <span *ngIf="!user.isDeleting" translate>app.delete</span>
                 </button>
               </td>
             </tr>
             <tr *ngIf="!users">
               <td colspan="4" class="text-center">
-                <span class="spinner-border spinner-border-lg align-center"></span>
+                <span
+                  class="spinner-border spinner-border-lg align-center"
+                ></span>
               </td>
             </tr>
           </tbody>
@@ -41,5 +53,4 @@
       </div>
     </div>
   </div>
-
 </div>

@@ -6,12 +6,13 @@ describe('NextTurnButtonComponent', () => {
   let component: NextTurnButtonComponent;
   let fixture: ComponentFixture<NextTurnButtonComponent>;
 
-  beforeEach(waitForAsync(() => {
-    TestBed.configureTestingModule({
-      declarations: [ NextTurnButtonComponent ]
+  beforeEach(
+    waitForAsync(() => {
+      TestBed.configureTestingModule({
+        declarations: [NextTurnButtonComponent],
+      }).compileComponents();
     })
-    .compileComponents();
-  }));
+  );
 
   beforeEach(() => {
     fixture = TestBed.createComponent(NextTurnButtonComponent);

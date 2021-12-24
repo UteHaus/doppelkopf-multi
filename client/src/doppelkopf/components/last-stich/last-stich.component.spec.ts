@@ -6,12 +6,13 @@ describe('LastStichComponent', () => {
   let component: LastStichComponent;
   let fixture: ComponentFixture<LastStichComponent>;
 
-  beforeEach(waitForAsync(() => {
-    TestBed.configureTestingModule({
-      declarations: [ LastStichComponent ]
+  beforeEach(
+    waitForAsync(() => {
+      TestBed.configureTestingModule({
+        declarations: [LastStichComponent],
+      }).compileComponents();
     })
-    .compileComponents();
-  }));
+  );
 
   beforeEach(() => {
     fixture = TestBed.createComponent(LastStichComponent);

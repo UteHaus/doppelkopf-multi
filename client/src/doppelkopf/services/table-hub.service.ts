@@ -1,15 +1,14 @@
 import { Injectable } from '@angular/core';
 import { User } from '@app/models';
 import { AccountService } from '@app/services';
+import { environment } from '@environments/environment';
 import {
   HubConnection,
   HubConnectionBuilder,
   HubConnectionState,
   LogLevel,
-} from '@aspnet/signalr';
-import { environment } from '@environments/environment';
+} from '@microsoft/signalr';
 import { BehaviorSubject } from 'rxjs';
-import { first } from 'rxjs/operators';
 import { TableMethods as TableHubMethods } from './table-hub-method.enum';
 
 @Injectable({
@@ -109,7 +108,7 @@ export class TableHubService {
       console.log('Update table list');
 
       this.tables$.next(data);
-    }); 
+    });
 
     this.hubConnection.on(TableHubMethods.PlayerTableState, (data: any) => {
       console.log('Update table state');

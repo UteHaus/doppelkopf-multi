@@ -1,7 +1,13 @@
 <div *ngIf="!editMode" (click)="edit(true)" class="cell">{{ value }}</div>
 <div class="cellInput" *ngIf="editMode">
-  <input class="cellInput-text" (keydown.enter)="onSave()" (keydown.escape)="onCancel()"
-    [(ngModel)]="value" appAutofocus type="text" />
+  <input
+    class="cellInput-text"
+    (keydown.enter)="onSave()"
+    (keydown.escape)="onCancel()"
+    [(ngModel)]="value"
+    appAutofocus
+    type="text"
+  />
   <span class="cellInput-button">
     <button class="btn btn-primary btn-sm" (click)="onSave()">
       <i class="fa fw fa-check"></i>
