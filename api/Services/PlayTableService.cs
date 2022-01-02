@@ -140,7 +140,7 @@ namespace DoppelkopfApi.Services
                         table.SetLastCardSet(playedRoundCards.Select((prc) => prc.Card).ToArray());
                         int stitchWinnerId = CardPointsUtil.WhoWinCardRound(playedRoundCards, table, tablePlayers);
                         // var stitchWinner = tablePlayers.FirstOrDefault((tp) => tp.PlayerId == stitchWinnerId);
-                        SetAdditionalWeddingPlayer(tablePlayers, table, stitchWinnerId);
+                        table.SetAdditionalWeddingPlayer(tablePlayers, stitchWinnerId);
 
                         foreach (var player in tablePlayers)
                         {
@@ -166,6 +166,7 @@ namespace DoppelkopfApi.Services
                         {
                             table.Status = PlayStatus.Run;
                         }
+
                         _context.PlayTables.Update(table);
                         _context.SaveChanges();
                         OnTableChanged(table.Id);
@@ -524,41 +525,6 @@ namespace DoppelkopfApi.Services
             return _context.TableViewers.Where((viewer) => viewer.SeePlayerCard == playerId).ToArray();
         }
 
-
-        private bool SetAdditionalWeddingPlayer(TablePlayer[] players, PlayTable table, int stitchWinnerId)
-        {
-            var weddingPlayer = TableUtil.GetWeddingPlayer(players);
-
-            if (table.GameVariant == GamesVariants.Wedding &&
-            weddingPlayer.PlayerId != stitchWinnerId &&
-            table.AdditionalWeddingPlayerId < 0)
-            {
-                int additionalWeddingPlayerId = -1;
-                if (table.WeddingWithFirstColorCast && table.StitchCounter < 2)
-                {
-                    var leftOfGiverPlayer = players.FirstOrDefault((player) => table.GetLeftOfGiversPosition() == player.PlayerPosition);
-                    if (leftOfGiverPlayer != null && CardPointsUtil.IsColorPlayed(table, leftOfGiverPlayer.GetPlayedCard()))
-                    {
-                        additionalWeddingPlayerId = stitchWinnerId;
-                        return true;
-                    }
-
-                }
-                else if (!table.WeddingWithFirstColorCast || table.StitchCounter > 2)
-                {
-                    additionalWeddingPlayerId = stitchWinnerId;
-                    return true;
-                }
-                else
-                {
-                    table.GameVariant = GamesVariants.Solo;
-                    _context.PlayTables.Update(table);
-                    _context.SaveChanges();
-                }
-
-            }
-            return false;
-        }
 
         /// <summary>
         /// find the nex free position of the table
