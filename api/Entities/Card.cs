@@ -1,4 +1,3 @@
-using System.Runtime.Serialization;
 using System.Text.Json;
 
 namespace DoppelkopfApi.Entities

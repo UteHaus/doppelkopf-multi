@@ -1,6 +1,8 @@
 using System.ComponentModel.DataAnnotations;
 using System;
 using System.Text.Json;
+using DoppelkopfApi.Services.Utils;
+using System.Linq;
 
 namespace DoppelkopfApi.Entities
 {
@@ -73,7 +75,40 @@ namespace DoppelkopfApi.Entities
                 CurrentPlayerPosition = 1;
         }
 
+        public bool SetAdditionalWeddingPlayer(TablePlayer[] players, int stitchWinnerId)
+        {
+            var additionPlayer = players.Count(player => player.PlayerId == stitchWinnerId && player.GameVariant != GamesVariants.Wedding) == 1;
+
+            if (GameVariant == GamesVariants.Wedding &&
+            additionPlayer &&
+            AdditionalWeddingPlayerId < 0)
+            {
+                if (WeddingWithFirstColorCast && StitchCounter < 2)
+                {
+                    var leftOfGiverPlayer = players.FirstOrDefault((player) => GetLeftOfGiversPosition() == player.PlayerPosition);
+                    if (leftOfGiverPlayer != null && CardPointsUtil.IsColorPlayed(this, leftOfGiverPlayer.GetPlayedCard()))
+                    {
+                        AdditionalWeddingPlayerId = stitchWinnerId;
+                        return true;
+                    }
+
+                }
+                else if (!WeddingWithFirstColorCast)
+                {
+                    AdditionalWeddingPlayerId = stitchWinnerId;
+                    return true;
+                }
+                else
+                {
+                    GameVariant = GamesVariants.Solo;
+                }
+
+            }
+            return false;
+        }
     }
+
+
 
     public enum PlayStatus
     {

@@ -1,5 +1,3 @@
-using System.Runtime.InteropServices;
-using System;
 using Xunit;
 using DoppelkopfApi.Entities;
 using DoppelkopfApi.Services.Utils;
