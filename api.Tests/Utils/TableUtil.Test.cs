@@ -28,9 +28,9 @@ namespace api.Utils
         public void PlayerWinnerAtVariantWedding()
         {
             var player = new TablePlayer[]  {
-                new TablePlayer { PlayerId = 1, HasClubsQueenOnHand = true, RoundsPoints=40,  GameVariant= GamesVariants.Wedding },
+                new TablePlayer { PlayerId = 1, HasClubsQueenOnHand = true, RoundsPoints=41,  GameVariant= GamesVariants.Wedding },
                 new TablePlayer { PlayerId = 2, HasClubsQueenOnHand = false, RoundsPoints=80 , GameVariant= GamesVariants.Normal},
-                new TablePlayer { PlayerId = 3, HasClubsQueenOnHand = true, RoundsPoints=40 , GameVariant= GamesVariants.Normal},
+                new TablePlayer { PlayerId = 3, HasClubsQueenOnHand = false, RoundsPoints=59 , GameVariant= GamesVariants.Normal},
                 new TablePlayer { PlayerId = 4, HasClubsQueenOnHand = false, RoundsPoints=60 , GameVariant= GamesVariants.Normal}
                 };
             var table = new PlayTable { GameVariant = GamesVariants.Wedding, AdditionalWeddingPlayerId = 2 };
