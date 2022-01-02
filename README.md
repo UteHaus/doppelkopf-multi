@@ -1,7 +1,7 @@
-# doppelkopf-multi
+# Doppelkopf Multiplayer
 Doppelkopf -->  sometimes abbreviated to Doko, is a trick-taking card game.
  
- It is a multiplayer Doppelkopf game. You can add tables and user. Users can play a game or view a game.
+It is a multiplayer Doppelkopf game, with a server and client. You can add tables and user. Users can play a game or view a game.
 
 Play Table
 ![play table](screen-on-play.png)
