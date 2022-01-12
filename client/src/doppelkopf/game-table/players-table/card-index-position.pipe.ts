@@ -1,5 +1,5 @@
 import { Pipe, PipeTransform } from '@angular/core';
-import { TableUtil } from 'src/doppelkopf/utils/table.util';
+import { TableUtil } from '../../utils/table.util';
 
 @Pipe({
   name: 'cardIndexPosition',

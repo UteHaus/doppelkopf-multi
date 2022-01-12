@@ -2,13 +2,13 @@ import { AfterViewInit, Component, OnDestroy, OnInit } from '@angular/core';
 import { AccountService } from '@app/services';
 import { BehaviorSubject, EMPTY, Observable, of } from 'rxjs';
 import { first, map, switchMap, take } from 'rxjs/operators';
-import { AdditionPlayerInfo } from 'src/doppelkopf/models/additional-player-info.model';
-import { TableState } from 'src/doppelkopf/models/table-state.model';
-import { ViewerState } from 'src/doppelkopf/models/viewer-state.model';
-import { SpectatorService } from 'src/doppelkopf/services/spectator.service';
-import { TableMethods } from 'src/doppelkopf/services/table-hub-method.enum';
-import { TableHubService } from 'src/doppelkopf/services/table-hub.service';
-import { TableUtil } from 'src/doppelkopf/utils/table.util';
+import { AdditionPlayerInfo } from '../../models/additional-player-info.model';
+import { TableState } from '../../models/table-state.model';
+import { ViewerState } from '../../models/viewer-state.model';
+import { SpectatorService } from '../../services/spectator.service';
+import { TableMethods } from '../../services/table-hub-method.enum';
+import { TableHubService } from '../../services/table-hub.service';
+import { TableUtil } from '../../utils/table.util';
 
 @Component({
   selector: 'app-spectator-view',

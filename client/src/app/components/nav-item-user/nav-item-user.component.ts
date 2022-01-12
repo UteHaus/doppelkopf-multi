@@ -3,7 +3,7 @@ import { User } from '@app/models';
 import { AccountService } from '@app/services';
 import { Observable, of } from 'rxjs';
 import { first, switchMap } from 'rxjs/operators';
-import { PlayTableService } from 'src/doppelkopf/services/play-table.service';
+import { PlayTableService } from '../../../doppelkopf/services/play-table.service';
 
 @Component({
   selector: 'app-nav-item-user',

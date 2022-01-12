@@ -2,7 +2,7 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Observable } from 'rxjs';
 import { map, switchMap } from 'rxjs/operators';
-import { JitsiService } from 'src/jitsi/services/jitsi.service';
+import { JitsiService } from '../../jitsi/services/jitsi.service';
 import { PlayTable } from '../models/play-table.model';
 import { UserUseCase } from '../models/user-use-case.model';
 import { PlayTableService } from '../services/play-table.service';

@@ -1,5 +1,5 @@
 import { Pipe, PipeTransform } from '@angular/core';
-import { Card, Ranks, Suits } from 'src/doppelkopf/models/card.model';
+import { Card, Ranks, Suits } from '../../models/card.model';
 
 @Pipe({
   name: 'careImagePath',

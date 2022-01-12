@@ -1,6 +1,7 @@
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
-
 import { LastStichComponent } from './last-stich.component';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { RouterTestingModule } from '@angular/router/testing';
 
 describe('LastStichComponent', () => {
   let component: LastStichComponent;
@@ -9,6 +10,7 @@ describe('LastStichComponent', () => {
   beforeEach(
     waitForAsync(() => {
       TestBed.configureTestingModule({
+        imports: [HttpClientTestingModule, RouterTestingModule],
         declarations: [LastStichComponent],
       }).compileComponents();
     })

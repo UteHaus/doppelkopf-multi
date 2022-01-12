@@ -17,17 +17,14 @@ import {
   Subscription,
 } from 'rxjs';
 import { first, map, switchMap, take } from 'rxjs/operators';
-import { AdditionPlayerInfo } from 'src/doppelkopf/models/additional-player-info.model';
-import { Card } from 'src/doppelkopf/models/card.model';
-import {
-  GamesVariants,
-  PlayStatus,
-} from 'src/doppelkopf/models/play-table.model';
-import { TableState } from 'src/doppelkopf/models/table-state.model';
-import { PlayTableService } from 'src/doppelkopf/services/play-table.service';
-import { TableMethods } from 'src/doppelkopf/services/table-hub-method.enum';
-import { TableHubService } from 'src/doppelkopf/services/table-hub.service';
-import { TableUtil } from 'src/doppelkopf/utils/table.util';
+import { AdditionPlayerInfo } from '../../models/additional-player-info.model';
+import { Card } from '../../models/card.model';
+import { GamesVariants, PlayStatus } from '../../models/play-table.model';
+import { TableState } from '../../models/table-state.model';
+import { PlayTableService } from '../../services/play-table.service';
+import { TableMethods } from '../../services/table-hub-method.enum';
+import { TableHubService } from '../../services/table-hub.service';
+import { TableUtil } from '../../utils/table.util';
 import { CardMapComponent } from '../card-map/card-map.component';
 
 @Component({
