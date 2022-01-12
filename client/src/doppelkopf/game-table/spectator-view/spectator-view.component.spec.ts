@@ -1,5 +1,6 @@
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
-
+import { RouterTestingModule } from '@angular/router/testing';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { SpectatorViewComponent } from './spectator-view.component';
 
 describe('SpectatorViewComponent', () => {
@@ -9,6 +10,7 @@ describe('SpectatorViewComponent', () => {
   beforeEach(
     waitForAsync(() => {
       TestBed.configureTestingModule({
+        imports: [RouterTestingModule, HttpClientTestingModule],
         declarations: [SpectatorViewComponent],
       }).compileComponents();
     })

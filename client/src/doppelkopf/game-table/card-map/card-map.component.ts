@@ -1,10 +1,10 @@
 import { Component, Input, OnDestroy, OnInit, Output } from '@angular/core';
 import { BehaviorSubject, Subject } from 'rxjs';
-import { Card } from 'src/doppelkopf/models/card.model';
-import { GamesVariants } from 'src/doppelkopf/models/play-table.model';
-import { TableMethods } from 'src/doppelkopf/services/table-hub-method.enum';
-import { TableHubService } from 'src/doppelkopf/services/table-hub.service';
-import { CardUtil } from 'src/doppelkopf/utils/card.util';
+import { Card } from '../../models/card.model';
+import { GamesVariants } from '../../models/play-table.model';
+import { TableMethods } from '../../services/table-hub-method.enum';
+import { TableHubService } from '../../services/table-hub.service';
+import { CardUtil } from '../../utils/card.util';
 
 @Component({
   selector: 'app-card-map',

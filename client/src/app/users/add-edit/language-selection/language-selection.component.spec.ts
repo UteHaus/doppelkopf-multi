@@ -1,4 +1,5 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { LanguageNamePipe } from './language-name.pipe';
 
 import { LanguageSelectionComponent } from './language-selection.component';
 
@@ -8,7 +9,7 @@ describe('LanguageSelectionComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [LanguageSelectionComponent],
+      declarations: [LanguageSelectionComponent, LanguageNamePipe],
     }).compileComponents();
   });
 

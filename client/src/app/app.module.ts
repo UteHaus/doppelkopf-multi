@@ -12,13 +12,13 @@ import { JwtInterceptor, ErrorInterceptor } from './helpers';
 import { AppComponent } from './app.component';
 import { AlertComponent } from './components';
 import { HomeComponent } from './home';
-import { DoppelkopfModule } from 'src/doppelkopf/doppelkopf.module';
+import { DoppelkopfModule } from '../doppelkopf/doppelkopf.module';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 import { LoggerModule, NgxLoggerLevel } from 'ngx-logger';
 import { environment } from '@environments/environment';
 import { ErrorHandlerService } from './error-handler.service';
 import { NavItemUserComponent } from './components/nav-item-user/nav-item-user.component';
-import { AppConfig, APP_CONFIG } from 'src/core/app-config';
+import { AppConfig, APP_CONFIG } from '../core/app-config';
 
 export const defaultAppConfig: AppConfig = {
   jitsiBaseLink: 'doppelkopf-20',

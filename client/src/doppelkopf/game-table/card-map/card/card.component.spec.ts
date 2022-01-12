@@ -1,4 +1,5 @@
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
+import { CareImagePathPipe } from '../care-image-path.pipe';
 
 import { CardComponent } from './card.component';
 
@@ -9,7 +10,7 @@ describe('CardComponent', () => {
   beforeEach(
     waitForAsync(() => {
       TestBed.configureTestingModule({
-        declarations: [CardComponent],
+        declarations: [CardComponent, CareImagePathPipe],
       }).compileComponents();
     })
   );

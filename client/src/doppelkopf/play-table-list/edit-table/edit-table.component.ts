@@ -12,8 +12,8 @@ import {
   GamesVariants,
   PlayStatus,
   PlayTable,
-} from 'src/doppelkopf/models/play-table.model';
-import { PlayTableService } from 'src/doppelkopf/services/play-table.service';
+} from '../../models/play-table.model';
+import { PlayTableService } from '../../services/play-table.service';
 
 @Component({
   selector: 'app-edit-table',
@@ -108,7 +108,7 @@ export class EditTableComponent implements OnInit {
 
   private updateTabel() {
     /* const table: PlayTable = { name: this.form.value, id: Number(this.id) }
- 
+
      this.playTableService.updateTable(table)
        .pipe(first())
        .subscribe(

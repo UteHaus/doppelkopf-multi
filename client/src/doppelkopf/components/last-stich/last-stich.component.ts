@@ -1,8 +1,7 @@
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { Observable, Subject } from 'rxjs';
-import { switchMap } from 'rxjs/operators';
-import { Card } from 'src/doppelkopf/models/card.model';
-import { PlayTableService } from 'src/doppelkopf/services/play-table.service';
+import { Card } from '../../models/card.model';
+import { PlayTableService } from '../../services/play-table.service';
 
 @Component({
   selector: 'app-last-stich',

@@ -1,6 +1,6 @@
 import { Component, Input } from '@angular/core';
-import { AdditionPlayerInfo } from 'src/doppelkopf/models/additional-player-info.model';
-import { TableState } from 'src/doppelkopf/models/table-state.model';
+import { AdditionPlayerInfo } from '../../../../models/additional-player-info.model';
+import { TableState } from '../../../../models/table-state.model';
 
 @Component({
   selector: 'app-result-table',

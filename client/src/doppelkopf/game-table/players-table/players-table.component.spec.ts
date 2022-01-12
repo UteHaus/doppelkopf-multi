@@ -1,5 +1,5 @@
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
-
+import { ValideGameVariantPipe } from '../valide-game-variant.pipe';
 import { PlayersTableComponent } from './players-table.component';
 
 describe('PlayersTableComponent', () => {
@@ -9,7 +9,7 @@ describe('PlayersTableComponent', () => {
   beforeEach(
     waitForAsync(() => {
       TestBed.configureTestingModule({
-        declarations: [PlayersTableComponent],
+        declarations: [PlayersTableComponent, ValideGameVariantPipe],
       }).compileComponents();
     })
   );

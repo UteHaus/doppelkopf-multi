@@ -5,9 +5,9 @@ import {
   OnDestroy,
   Output,
 } from '@angular/core';
-import { AdditionPlayerInfo } from 'src/doppelkopf/models/additional-player-info.model';
-import { Card } from 'src/doppelkopf/models/card.model';
-import { GamesVariants } from 'src/doppelkopf/models/play-table.model';
+import { AdditionPlayerInfo } from '../../models/additional-player-info.model';
+import { Card } from '../../models/card.model';
+import { GamesVariants } from '../../models/play-table.model';
 
 @Component({
   selector: 'app-players-table',

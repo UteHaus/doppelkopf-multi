@@ -6,8 +6,8 @@ import {
   Output,
 } from '@angular/core';
 import { Observable, Subject } from 'rxjs';
-import { GamesVariants } from 'src/doppelkopf/models/play-table.model';
-import { TableState } from 'src/doppelkopf/models/table-state.model';
+import { GamesVariants } from '../../../models/play-table.model';
+import { TableState } from '../../../models/table-state.model';
 
 @Component({
   selector: 'app-hover-step-board',

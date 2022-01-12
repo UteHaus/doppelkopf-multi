@@ -1,6 +1,5 @@
 import { Component, EventEmitter, Output } from '@angular/core';
-
-import { GamesVariants } from 'src/doppelkopf/models/play-table.model';
+import { GamesVariants } from '../../../models/play-table.model';
 
 @Component({
   selector: 'app-select-variant',
