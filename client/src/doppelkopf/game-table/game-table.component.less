@@ -2,7 +2,7 @@
     z-index: 1;
     width: 100%;
     width: 100%;
-    height: calc(100vh - 109px);
+    height: calc(100vh - 52px);
     position: absolute;
     top: 50px;
     left: 0;
@@ -28,7 +28,7 @@
 
 div.table-container {
     display: grid;
-    height: calc(100vh - 57px);
+    height: 100vh;
     grid-template-rows: 50px 0px calc(100% - 50px);
     padding: 10px;
     background-color: transparent;
@@ -43,21 +43,8 @@ div.table-container {
 
 
 
-        >h2.header-name {
+        >h3.header-name {
             grid-column: 1;
-
-            >span {
-                font-size: small;
-            }
-        }
-
-        >div.addition-buttons {
-            grid-column: 2;
-            justify-self: end;
-
-            &button.btn {
-                padding-right: 5px;
-            }
         }
     }
 

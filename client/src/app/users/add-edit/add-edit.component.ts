@@ -9,7 +9,7 @@ import {
 import { first } from 'rxjs/operators';
 import { AccountService, AlertService } from '@app/services';
 import { User } from '@app/models';
-import { Observable } from 'rxjs';
+import { firstValueFrom, Observable } from 'rxjs';
 import { TranslateService } from '@ngx-translate/core';
 
 @Component({
@@ -66,18 +66,15 @@ export class AddEditComponent implements OnInit {
     this.languageKey = this.translateService.getBrowserLang();
 
     if (!this.isAddMode) {
-      this.accountService
-        .getById(this.id)
-        .pipe(first())
-        .subscribe((x) => {
-          this.formControls.firstName.setValue(x.firstName);
-          this.formControls.lastName.setValue(x.lastName);
-          this.formControls.username.setValue(x.username);
-          this.formControls.editUser.setValue(x.editUser);
-          this.formControls.editTables.setValue(x.editTables);
-          this.languageKey =
-            x.languageKey ?? this.translateService.getBrowserLang();
-        });
+      firstValueFrom(this.accountService.getById(this.id)).then((x) => {
+        this.formControls.firstName.setValue(x.firstName);
+        this.formControls.lastName.setValue(x.lastName);
+        this.formControls.username.setValue(x.username);
+        this.formControls.editUser.setValue(x.editUser);
+        this.formControls.editTables.setValue(x.editTables);
+        this.languageKey =
+          x.languageKey ?? this.translateService.getBrowserLang();
+      });
     }
   }
 
@@ -96,7 +93,7 @@ export class AddEditComponent implements OnInit {
     // reset alerts on submit
     this.alertService.clear();
 
-    // stop here if form is invalid
+    // stop here is form invalid
     /*   if (this.form.invalid) {
       return;
     } */
@@ -112,38 +109,30 @@ export class AddEditComponent implements OnInit {
   }
 
   private createUser(user: User) {
-    this.accountService
-      .register(user)
-      .pipe(first())
-      .subscribe(
-        () => {
-          this.alertService.success('User added successfully', {
-            keepAfterRouteChange: true,
-          });
-          this.router.navigate(['.', { relativeTo: this.route }]);
-        },
-        (error) => {
-          this.alertService.error(error);
-          this.loading = false;
-        }
-      );
+    firstValueFrom(this.accountService.register(user))
+      .then(() => {
+        this.alertService.success('User added successfully', {
+          keepAfterRouteChange: true,
+        });
+        this.router.navigate([this.previousUrl]);
+      })
+      .catch((error) => {
+        this.alertService.error(error);
+        this.loading = false;
+      });
   }
 
   private updateUser(user: User) {
-    this.accountService
-      .update(this.id, user)
-      .pipe(first())
-      .subscribe(
-        () => {
-          this.alertService.success('Update successful', {
-            keepAfterRouteChange: true,
-          });
-          this.router.navigate([this.previousUrl, { relativeTo: this.route }]);
-        },
-        (error) => {
-          this.alertService.error(error);
-          this.loading = false;
-        }
-      );
+    firstValueFrom(this.accountService.update(this.id, user))
+      .then(() => {
+        this.alertService.success('Update successful', {
+          keepAfterRouteChange: true,
+        });
+        this.router.navigate([this.previousUrl]);
+      })
+      .catch((error) => {
+        this.alertService.error(error);
+        this.loading = false;
+      });
   }
 }

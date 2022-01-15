@@ -3,11 +3,7 @@
     {{ 'dk.variant.' + tableGameVariant | translate }}
   </h5>
   <div class="buttons">
-    <button
-      (click)="lastStich()"
-      class="btn btn-sm btn-primary mb-2"
-      [translate]
-    >
+    <button (click)="lastStich()" class="btn btn-primary mb-2" [translate]>
       dk.last-stich
     </button>
   </div>
@@ -79,7 +75,7 @@
                     </li> -->
           <li *ngIf="enableShowCardsOfPlayer && showCardsOfPlayer < 0">
             <button
-              class="btn btn-primary btn-sm"
+              class="btn btn-primary"
               (click)="showCardsOf(player)"
               translate
             >
