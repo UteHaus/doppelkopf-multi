@@ -4,35 +4,41 @@
     <a
       *ngIf="currentUser.editTables || currentUser.admin"
       routerLink="table"
-      class="btn btn-sm btn-primary m-2"
+      class="btn btn-primary"
       [translate]
       >dk.new-play-table</a
     >
-    <a class="btn btn-sm btn-secondary m-2" (click)="openJitsi()">Jitsi</a>
+    <a class="btn btn-secondary" (click)="openJitsi()">Jitsi</a>
   </div>
   <div class="card-body" *ngIf="tables$ | async as tables">
-    <table class="table table-striped">
+    <table class="table table-sm">
       <thead>
-        <tr>
-          <th style="width: 30%" [translate]>dk.name</th>
-          <th style="width: 10%" [translate]>dk.users</th>
-          <th style="width: 5%"></th>
-          <th style="width: 35%"></th>
+        <tr class="row px-3">
+          <th class="col-4" [translate]>dk.name</th>
+          <th class="col-2" [translate]>dk.users</th>
+          <!-- <th style="width: 5%"></th> -->
+          <th class="col-6"></th>
         </tr>
       </thead>
-      <tbody *ngIf="user$ | async as user">
-        <tr *ngFor="let playTable of tables; trackBy: trackPlayTable">
-          <td>{{ playTable.name }}</td>
-          <td>{{ playTable.userCount }}</td>
-          <td>{{ '' }}</td>
-          <td style="white-space: nowrap">
-            <!--  <a routerLink="edit/{{playTable.id}}" class="btn btn-sm btn-primary mr-1">Edit</a>-->
-            <div class="btn-group" *ngIf="userTableId$ | async as userTableId">
+      <tbody *ngIf="user$ | async as user" class="border-0">
+        <tr
+          *ngFor="let playTable of tables; trackBy: trackPlayTable"
+          class="row px-3"
+        >
+          <td class="col-4">{{ playTable.name }}</td>
+          <td class="col-2">{{ playTable.userCount }}</td>
+          <!-- <td>{{ '' }}</td> -->
+          <td class="col-6">
+            <!--  <a routerLink="edit/{{playTable.id}}" class="btn btn-primary mr-1">Edit</a>-->
+            <div
+              class="d-flex justify-content-end"
+              *ngIf="userTableId$ | async as userTableId"
+            >
               <button
                 type="button"
                 *ngIf="user.editTables || user.admin"
                 (click)="deleteTable(playTable)"
-                class="btn btn-sm btn-danger mb-2"
+                class="btn btn-danger mx-1"
                 [disabled]="!user.admin"
               >
                 <span
@@ -45,7 +51,7 @@
               </button>
               <button
                 type="button"
-                class="btn btn-sm btn-primary mb-2"
+                class="btn btn-primary mx-1"
                 (click)="
                   runWithOnTable(playTable.id, userTableId === playTable.id)
                 "
@@ -66,7 +72,7 @@
                 type="button"
                 *ngIf="userTableId === playTable.id"
                 (click)="goOutOfTable()"
-                class="btn btn-sm btn-danger mb-2"
+                class="btn btn-danger mx-1"
               >
                 <span
                   *ngIf="deleteTableIds[playTable.id]"
@@ -79,7 +85,7 @@
               <button
                 type="button"
                 (click)="watchTable(playTable)"
-                class="btn btn-sm btn-primary mb-2"
+                class="btn btn-primary"
               >
                 <span
                   *ngIf="deleteTableIds[playTable.id]"

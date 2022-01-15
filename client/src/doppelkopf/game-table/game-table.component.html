@@ -4,17 +4,16 @@
 </div>
 
 <div class="table-container" *ngIf="table$ | async as playTable">
-  <div class="tale-header">
-    <h3 class="header-name" (click)="reloadTable()">
+  <div class="tale-header row">
+    <h3 class="header-name col-auto me-auto" (click)="reloadTable()">
       {{ playTable.name }}
-      <span
-        ><a
-          class="btn btn-sm btn-secondary m-2"
-          (click)="openJitsi(playTable.name)"
-          >Jitsi</a
-        >
-      </span>
     </h3>
+    <div class="col-auto d-grid justify-content-end">
+      <a class="btn btn-secondary m-2" (click)="openJitsi(playTable.name)"
+        >Jitsi</a
+      >
+    </div>
+
     <!--  <span>{{playTable.status}}</span> -->
   </div>
   <div class="table-outlet">
