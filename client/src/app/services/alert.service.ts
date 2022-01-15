@@ -33,8 +33,8 @@ export class AlertService {
 
   // main alert method
   alert(alert: Alert) {
-    alert.id = alert.id || this.defaultId;
-    this.subject.next(alert);
+    /* alert.id = alert.id || this.defaultId;
+    this.subject.next(alert); */
   }
 
   // clear alerts
