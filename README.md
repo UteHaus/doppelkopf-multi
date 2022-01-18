@@ -3,6 +3,31 @@ Doppelkopf -->  sometimes abbreviated to Doko, is a trick-taking card game.
  
 It is a multiplayer Doppelkopf game, with a server and client. You can add tables and user. Users can play a game or view a game.
 
+## Features
+
+This game is still a work in progress. You will see that it's playable but some features are still missing that you might know from other Doppelkopf games:
+
+* [x] Playing multiple rounds
+* [x] Custom rules
+* [X] Game Variant
+    * Normal
+    * Wedding
+    * Solo
+    * Queen Solo
+    * Jack Solo
+    * Ace Solo
+    * Suit Solo
+    * King Solo
+    * Color Solo Clubs
+    * Color Solo Diamonds
+    * Color Solo Hearts
+    * Color Solo Spades
+* [x] Score calculation
+* [x] Announcement
+* [ ] Playing solo
+* [ ] Single player mode
+
+
 Play Table
 ![play table](screen-on-play.png)
 
