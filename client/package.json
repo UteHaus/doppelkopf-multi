@@ -67,7 +67,8 @@
   },
 
   "resolutions": {
-    "follow-redirects": "1.14.7"
+    "follow-redirects": "1.14.7",
+    "node-fetch": "2.6.7"
   }
   ,
   "eslintIgnore": ["node_modules/*"]
