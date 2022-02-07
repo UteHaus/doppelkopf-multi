@@ -8,9 +8,8 @@
     "build-prod": "ng build --configuration production",
     "test": "ng test",
     "e2e": "ng e2e",
-    "lint": "ng lint",
-    "lint-es": "tsc --noEmit && eslint . --ext js,ts,json --quiet --fix",
-    "prettier": "prettier --write \"{src,plugins}/**/*{.js,.ts,.html}\"",
+    "lint": "eslint \"src/**/*.{ts,js}\"",
+    "lint:fix": "eslint \"src/**/*.{ts,js}\" --fix",    "prettier": "prettier --write \"{src,plugins}/**/*{.js,.ts,.html}\"",
     "postinstall": "ngcc"
   },
   "private": true,
@@ -51,8 +50,8 @@
     "@types/jasminewd2": "~2.0.3",
     "@types/jest": "latest",
     "@types/node": "^17.0.5",
-    "@typescript-eslint/eslint-plugin": "5.3.0",
-    "@typescript-eslint/parser": "5.3.0",
+    "@typescript-eslint/eslint-plugin": "5.10.2",
+    "@typescript-eslint/parser": "5.10.2",
     "codelyzer": "^6.0.0",
     "eslint": "^8.2.0",
     "eslint-config-prettier": "^8.3.0",
@@ -70,4 +69,6 @@
   "resolutions": {
     "follow-redirects": "1.14.7"
   }
+  ,
+  "eslintIgnore": ["node_modules/*"]
 }
