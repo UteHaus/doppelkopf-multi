@@ -5,6 +5,7 @@ import {
   OnDestroy,
   Output,
 } from '@angular/core';
+import { TableState } from '../../models/table-state.model';
 import { AdditionPlayerInfo } from '../../models/additional-player-info.model';
 import { Card } from '../../models/card.model';
 import { GamesVariants } from '../../models/play-table.model';
@@ -22,15 +23,6 @@ export class PlayersTableComponent implements OnDestroy {
   thisPlayerId: number;
 
   @Input()
-  positionOnMove: number;
-
-  @Input()
-  currentGiverPos: number;
-
-  @Input()
-  tableGameVariant: GamesVariants;
-
-  @Input()
   showPointsForAllPlayers: false;
 
   @Input()
@@ -38,6 +30,9 @@ export class PlayersTableComponent implements OnDestroy {
 
   @Input()
   enableShowCardsOfPlayer = false;
+
+  @Input()
+  tableState!: TableState;
 
   @Output()
   showCardsOfPlayersSelected: EventEmitter<AdditionPlayerInfo> = new EventEmitter();
@@ -47,6 +42,9 @@ export class PlayersTableComponent implements OnDestroy {
 
   @Output()
   showLastStich = new EventEmitter<void>();
+
+  @Output()
+  shuffleCardsSelected = new EventEmitter<void>();
 
   ngOnDestroy(): void {
     this.showCardsOfPlayersSelected.complete();
@@ -69,5 +67,9 @@ export class PlayersTableComponent implements OnDestroy {
 
   lastStich(): void {
     this.showLastStich.emit();
+  }
+
+  shuffleCards(): void {
+    this.shuffleCardsSelected.emit();
   }
 }

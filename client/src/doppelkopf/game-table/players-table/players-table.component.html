@@ -1,10 +1,29 @@
 <div class="player-header">
-  <h5 *ngIf="tableGameVariant | valideGameVariant" class="table-game-variant">
-    {{ 'dk.variant.' + tableGameVariant | translate }}
+  <h5
+    *ngIf="tableState.gameVariant | valideGameVariant"
+    class="table-game-variant"
+  >
+    {{ 'dk.variant.' + tableState.gameVariant | translate }}
   </h5>
   <div class="buttons">
     <button (click)="lastStich()" class="btn btn-primary mb-2" [translate]>
       dk.last-stich
+    </button>
+    <button
+      [ngClass]="{
+        disabled:
+          tableState.userCount !== 4 ||
+          !(tableState | showCards) ||
+          (tableState.thisPlayer && tableState.thisPlayer.shuffleRound)
+      }"
+      (click)="shuffleCards()"
+      class="btn btn-primary mb-2"
+      [translate]
+    >
+      dk.assign-cards
+      <span *ngIf="tableState.shuffleCount !== 0"
+        >({{ tableState.shuffleCount }})</span
+      >
     </button>
   </div>
 </div>
@@ -20,11 +39,15 @@
   >
     <div
       class="img"
-      [ngClass]="{ 'on-move': player.playerPosition === positionOnMove }"
+      [ngClass]="{
+        'on-move': player.playerPosition === tableState.currentPlayerPosition
+      }"
     >
       <img [src]="player | playerIcon" alt="" />
       <span
-        [ngClass]="{ puls: player.playerPosition === positionOnMove }"
+        [ngClass]="{
+          puls: player.playerPosition === tableState.currentPlayerPosition
+        }"
       ></span>
     </div>
     <div>
@@ -38,7 +61,12 @@
       </h4>
       <div>
         <ul>
-          <li *ngIf="currentGiverPos === player.playerPosition" [translate]>
+          <li
+            *ngIf="
+              tableState.roundCardsGiversPosition === player.playerPosition
+            "
+            [translate]
+          >
             dk.giver
           </li>
           <li
@@ -68,11 +96,6 @@
               {{ player.dutyAnnouncement }}
             </li>
           </ng-template>
-
-          <!--                     <li>
-                        <button class="btn btn-smal"><i class="fas fa-check"></i></button>
-                        <button class="btn btn-smal"><i class="fas fa-times"></i></button>
-                    </li> -->
           <li *ngIf="enableShowCardsOfPlayer && showCardsOfPlayer < 0">
             <button
               class="btn btn-primary"
@@ -90,7 +113,9 @@
     <app-card
       *ngFor="let player of players; trackBy: trackCards"
       [ngStyle]="{
-        'z-index': player.playerPosition | cardIndexPosition: positionOnMove
+        'z-index':
+          player.playerPosition
+          | cardIndexPosition: tableState.currentPlayerPosition
       }"
       [ngClass]="['player-card-' + player.viewPosition]"
       [card]="player.playedCard"

@@ -24,6 +24,7 @@ This game is still a work in progress. You will see that it's playable but some 
     * Color Solo Spades
 * [x] Score calculation
 * [x] Announcement
+* [x] Shuffle curds
 * [ ] Playing solo
 * [ ] Single player mode
 

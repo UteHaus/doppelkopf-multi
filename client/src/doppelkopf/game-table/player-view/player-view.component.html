@@ -1,27 +1,17 @@
 <div *ngIf="playTable$ | async as tablePlayerState; else loading">
-  <!-- <div class="addition-buttons">
-    <button [ngClass]="{
-        disabled: tablePlayerState.userCount !== 4 || !(tablePlayerState | showCards) || (tablePlayerState.thisPlayer && tablePlayerState.thisPlayer.shuffleRound)
-      }" (click)="shuffleCards()" class="btn btn-primary mb-2" [translate]>
-        dk.assign-cards
-    </button>
-</div>
- -->
-
   <div class="table-body">
     <div class="table-section">
       <app-players-table
         [players]="tablePlayerState.players"
+        [tableState]="tablePlayerState"
         [thisPlayerId]="
           tablePlayerState.thisPlayer
             ? tablePlayerState.thisPlayer.playerId
             : -1
         "
-        [positionOnMove]="tablePlayerState.currentPlayerPosition"
-        [currentGiverPos]="tablePlayerState.roundCardsGiversPosition"
-        [tableGameVariant]="tablePlayerState.gameVariant"
         (announcementChanged)="announcementChanged($event)"
         (showLastStich)="showLastStich(true)"
+        (shuffleCardsSelected)="shuffleCards()"
       ></app-players-table>
     </div>
 

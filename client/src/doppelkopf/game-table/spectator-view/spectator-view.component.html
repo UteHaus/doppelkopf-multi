@@ -19,9 +19,7 @@
       <app-players-table
         [players]="tableState.players"
         [thisPlayerId]="-1"
-        [positionOnMove]="tableState.currentPlayerPosition"
-        [currentGiverPos]="tableState.roundCardsGiversPosition"
-        [tableGameVariant]="tableState.gameVariant"
+        [tableState]="tableState"
         [showPointsForAllPlayers]="true"
         [showCardsOfPlayer]="spectatorState.seePlayerCard"
         [enableShowCardsOfPlayer]="true"

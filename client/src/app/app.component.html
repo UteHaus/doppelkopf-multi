@@ -3,6 +3,7 @@
     <!--   <div class="navbar-nav w-100 d-flex"> -->
     <a
       class="nav-item nav-link col-auto"
+      [ngClass]="{ 'me-auto': !(user.admin || user.editUser) }"
       routerLink="/"
       routerLinkActive="active"
       [routerLinkActiveOptions]="{ exact: false }"
@@ -11,7 +12,8 @@
     >
     <a
       *ngIf="user.admin || user.editUser"
-      class="nav-item nav-link col-auto me-auto"
+      class="nav-item nav-link col-auto"
+      [ngClass]="{ 'me-auto': user.admin || user.editUser }"
       (click)="editUser()"
       routerLinkActive="active"
       [translate]
@@ -19,7 +21,7 @@
     >
     <app-nav-item-user
       [previousRoute]="route.url"
-      class="nav-item col-auto justify-self-end pl-3"
+      class="nav-item col-auto justify-self-end"
     >
     </app-nav-item-user>
     <!-- </div> -->

@@ -1,5 +1,14 @@
 # Change Log
-## [0.0.2] - 2022-01-18
+
+## [1.0.3] - 2022-02-14
+ 
+### Added
+- shuffle card
+
+### Fixed
+-  navigation styling 
+
+## [1.0.2] - 2022-01-18
  
 ### Added
 
@@ -13,7 +22,7 @@
 - fix layouting (bootstrap 5)
 - fix routing after change oder add user 
 - fix client Docker build
-## [0.0.1] - 2021-01-15
+## [1.0.1] - 2021-01-15
  
 ### Added
  - change language 
