@@ -44,6 +44,8 @@ namespace DoppelkopfApi.Services
                 table.SetTableToNextGameTurn();
                 var clinetUpdateAction = SwitchPlayer(table);
                 var tablePlayers = GetPlayersOfTable(tableId);
+                _context.PlayTables.Update(table);
+
                 if (tablePlayers.Length < 4)
                 {
                     throw new System.Exception("This Table hase not 4 players");
@@ -55,11 +57,13 @@ namespace DoppelkopfApi.Services
                 }
                 CardUtil.SetHandCards(tablePlayers, table.WithNiner);
                 _context.TablePlayer.UpdateRange(tablePlayers);
-                _context.PlayTables.Update(table);
                 int changeCount = _context.SaveChanges();
 
-                clinetUpdateAction?.Invoke();
                 OnTableChanged(table.Id);
+                foreach (var player in tablePlayers)
+                    OnPlayerCardsChanged(player.Id, player.GetHandCards());
+
+
                 return changeCount > 0;
 
             }
@@ -229,7 +233,7 @@ namespace DoppelkopfApi.Services
                 player.NextTurn = false;
                 _context.TablePlayer.Update(player);
                 _context.SaveChanges();
-                OnPlayerCardsChanged(playerId, player.TableId);
+                OnPlayerCardsChanged(playerId, player.GetHandCards());
 
 
                 bool allPlayerSetCards = this.GetPlayersOfTable(player.TableId).Count((p) => !String.IsNullOrWhiteSpace(p.PlayedCard)) == 4;
@@ -376,13 +380,12 @@ namespace DoppelkopfApi.Services
                 player.ShuffleRound = true;
                 _context.TablePlayer.Update(player);
                 _context.SaveChanges();
-                int shuffelCount = _context.TablePlayer.Count(p => p.TableId == player.TableId && p.ShuffleRound);
-                if (shuffelCount == 4)
+                int shuffleCount = _context.TablePlayer.Count(p => p.TableId == player.TableId && p.ShuffleRound);
+                if (shuffleCount == 4)
                 {
 
                     var table = _context.PlayTables.Find(player.TableId);
                     table.Status = PlayStatus.Stop;
-                    _context.PlayTables.Update(table);
                     _context.SaveChanges();
                     StartNewRound(table.Id);
                 }
@@ -597,9 +600,9 @@ namespace DoppelkopfApi.Services
             _tableEventService.TableChanged(tableId, this);
         }
 
-        protected void OnPlayerCardsChanged(int userId, int tableId)
+        protected void OnPlayerCardsChanged(int userId, Card[] userCards)
         {
-            _tableEventService.OnPlayerCardsChanged(userId, tableId, this);
+            _tableEventService.OnPlayerCardsChanged(userId, userCards, this);
         }
 
         protected void OnSpectatorStateChanged(int userId)

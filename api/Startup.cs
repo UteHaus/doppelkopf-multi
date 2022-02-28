@@ -12,9 +12,7 @@ using DoppelkopfApi.Helpers;
 using DoppelkopfApi.Services;
 using System.Text;
 using DoppelkopfApi.Hubs;
-using System.Text.Json.Serialization;
 using api.Database;
-using System.IO;
 
 namespace DoppelkopfApi
 {

@@ -2,9 +2,9 @@
   <div class="row">
     <app-card
       class="col-1"
-      *ngFor="let card of orderedCards; index as i; trackBy: trackCard"
+      *ngFor="let card of playerCards; index as i; trackBy: trackCard"
       [card]="card"
-      (dblclick)="selectCard(card, i)"
+      (dblclick)="selectCard(card)"
       [overlap]="true"
     >
     </app-card>

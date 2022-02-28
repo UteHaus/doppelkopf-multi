@@ -12,7 +12,7 @@ namespace DoppelkopfApi.Services.Utils
 
         public static void SetHandCards(TablePlayer[] tablePlayers, bool withNiner)
         {
-            var playerCards = CardUtil.DistributeCards(withNiner);
+            var playerCards = DistributeCards(withNiner);
             for (int i = 0; i < tablePlayers.Length; i++)
             {
                 tablePlayers[i].HandCards = JsonSerializer.Serialize(playerCards[i]); // .GetRange(0, 3)//for test
