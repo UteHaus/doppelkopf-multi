@@ -27,13 +27,14 @@
       >
       </app-players-table>
 
-      <app-card-map
-        *ngIf="spectatorState.seePlayerCard > 0"
-        [diamondsAceAsMaster]="tableState.diamondsAceAsMaster"
-        [disabled]="true"
-        [sourceHubMethode]="cardSourceMethode"
-      >
-      </app-card-map>
+      <ng-container *ngIf="sortPlayerCards$ | async as playerCards">
+        <app-card-map
+          *ngIf="spectatorState.seePlayerCard > 0"
+          [disabled]="true"
+          [playerCards]="playerCards"
+        >
+        </app-card-map>
+      </ng-container>
     </ng-container>
   </div>
 </ng-container>

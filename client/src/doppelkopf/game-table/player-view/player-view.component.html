@@ -18,14 +18,14 @@
     <div class="this-player-cards">
       <div *ngIf="tablePlayerState | showCards">
         <app-card-map
-          [diamondsAceAsMaster]="tablePlayerState.diamondsAceAsMaster"
+          *ngIf="sortPlayerCards$ | async as sortPlayerCards"
           [disabled]="
             tablePlayerState.players[3].playerPosition !==
-            tablePlayerState.currentPlayerPosition
+              tablePlayerState.currentPlayerPosition ||
+            !(tablePlayerState | playStatusRun)
           "
+          [playerCards]="sortPlayerCards"
           (cardSelected)="cardSelected($event)"
-          [sourceHubMethode]="cardSourceMethode"
-          [gameVariant]="tablePlayerState.gameVariant"
         >
         </app-card-map>
       </div>

@@ -1,7 +1,15 @@
 import { AfterViewInit, Component, OnDestroy, OnInit } from '@angular/core';
 import { AccountService } from '@app/services';
-import { BehaviorSubject, EMPTY, Observable, of } from 'rxjs';
-import { first, map, switchMap, take } from 'rxjs/operators';
+import {
+  BehaviorSubject,
+  combineLatest,
+  firstValueFrom,
+  Observable,
+  of,
+} from 'rxjs';
+import { map, switchMap } from 'rxjs/operators';
+import { Card } from 'src/doppelkopf/models/card.model';
+import { CardUtil } from 'src/doppelkopf/utils/card.util';
 import { AdditionPlayerInfo } from '../../models/additional-player-info.model';
 import { TableState } from '../../models/table-state.model';
 import { ViewerState } from '../../models/viewer-state.model';
@@ -22,6 +30,8 @@ export class SpectatorViewComponent
   spectatorStateSub = new BehaviorSubject<ViewerState>(null);
   tableState$: Observable<TableState>;
   cardSourceMethode: TableMethods = TableMethods.PlayerCardsForSpectator;
+  sortPlayerCards$: Observable<Card[]>;
+  private playerCards$ = new BehaviorSubject<Card[]>([]);
   private showPlayerId: number = -1;
 
   constructor(
@@ -37,19 +47,41 @@ export class SpectatorViewComponent
 
   ngOnDestroy(): void {
     this.tableHubService.offMethode(TableMethods.SpectatorTable);
+    this.tableHubService.offMethode(TableMethods.PlayerCards);
     this.tableStateSub.complete();
     this.spectatorStateSub.complete();
 
-    this.accountService.user
-      .pipe(
+    firstValueFrom(
+      this.accountService.user.pipe(
         switchMap((user) =>
           user
             ? this.spectatorService.cancelSpectatorOnTable(Number(user.id))
             : of(undefined)
-        ),
-        first()
+        )
       )
-      .subscribe();
+    ).then();
+
+    this.sortPlayerCards$ = combineLatest([
+      this.playerCards$,
+      this.tableState$,
+    ]).pipe(
+      map(([playerCards, playTable]) =>
+        playerCards?.length > 0
+          ? CardUtil.orderCards(
+              playerCards,
+              playTable.gameVariant,
+              playTable.diamondsAceAsMaster
+            )
+          : []
+      )
+    );
+    this.tableHubService.onMethode(
+      TableMethods.PlayerCardsForSpectator,
+      (playedCards) => {
+        this.playerCards$.next(playedCards);
+      }
+    );
+    this.tableHubService.invokeMethode(TableMethods.PlayerCardsForSpectator);
   }
 
   ngOnInit(): void {
@@ -83,31 +115,28 @@ export class SpectatorViewComponent
   }
 
   cardsOfPlayerSelected(player: AdditionPlayerInfo): void {
-    this.accountService.user
-      .pipe(
+    firstValueFrom(
+      this.accountService.user.pipe(
         switchMap((user) =>
           this.spectatorService.showCardsOf(Number(user.id), player.playerId)
-        ),
-        take(1)
+        )
       )
-      .toPromise()
-      .then((canShow) => {
-        if (canShow) {
-          this.showPlayerId = player.playerId;
-          this.tableHubService.invokeMethode(TableMethods.SpectatorTable);
-        }
-      });
+    ).then((canShow) => {
+      if (canShow) {
+        this.showPlayerId = player.playerId;
+        this.tableHubService.invokeMethode(TableMethods.SpectatorTable);
+      }
+    });
   }
 
   playerAsAdditionPlayerChecked(value: boolean) {
-    this.accountService.user
-      .pipe(
+    firstValueFrom(
+      this.accountService.user.pipe(
         switchMap((user) =>
           this.spectatorService.setAsAdditionPlayer(Number(user.id), value)
-        ),
-        first()
+        )
       )
-      .subscribe();
+    ).then();
   }
 
   private getPlayerPosition(
