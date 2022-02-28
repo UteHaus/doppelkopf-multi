@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.SignalR;
 using DoppelkopfApi.Models.PlayTable;
 using DoppelkopfApi.Enums;
+using DoppelkopfApi.Entities;
 
 namespace DoppelkopfApi.Hubs
 {
@@ -12,7 +13,7 @@ namespace DoppelkopfApi.Hubs
     {
         void TableListChanged(IPlayTableService playTableService);
         void TableChanged(int tableId, IPlayTableService playTableService);
-        void OnPlayerCardsChanged(int userId, int tableId, IPlayTableService playTableService);
+        void OnPlayerCardsChanged(int userId, Card[] userCards, IPlayTableService playTableService);
 
         void OnSpectatorStateChanged(int userId, IPlayTableService playTableService);
 
@@ -55,10 +56,9 @@ namespace DoppelkopfApi.Hubs
 
         }
 
-        public void OnPlayerCardsChanged(int userId, int tableId, IPlayTableService playTableService)
+        public void OnPlayerCardsChanged(int userId, Card[] userCards, IPlayTableService playTableService)
         {
-            var cards = TableHubUtils.GetPlayerCards(userId, playTableService);
-            _hub.Clients.User(userId.ToString()).PlayerCards(cards);
+            _hub.Clients.User(userId.ToString()).PlayerCards(userCards);
 
             //for viewers
             var viewers = playTableService.GetTableViewerOfCardPlayers(userId);
@@ -66,7 +66,7 @@ namespace DoppelkopfApi.Hubs
             {
                 foreach (var viewer in viewers)
                 {
-                    _hub.Clients.User(viewer.userId.ToString()).PlayerCardsForSpectator(cards);
+                    _hub.Clients.User(viewer.userId.ToString()).PlayerCardsForSpectator(userCards);
                 }
             }
         }
