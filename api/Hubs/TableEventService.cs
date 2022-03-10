@@ -25,6 +25,7 @@ namespace DoppelkopfApi.Hubs
     {
         private IMapper _mapper;
         private IHubContext<TableHub, ITableClient> _hub;
+
         public TableEventService(IMapper mapper, IHubContext<TableHub, ITableClient> hub)
         {
             _mapper = mapper;
@@ -45,13 +46,17 @@ namespace DoppelkopfApi.Hubs
             var tableState = TableHubUtils.GetTableState(tableId, playTableService, _mapper);
             Parallel.ForEach(tablePlayers, (tablePlayer) =>
             {
-                _hub.Clients.User(tablePlayer.PlayerId.ToString()).PlayerTableState(tableState);
+                var clientUser = getClientUser(tablePlayer.PlayerId);
+                if (clientUser != null)
+                    clientUser.PlayerTableState(tableState);
             });
 
             // for all viewers of the table
             Parallel.ForEach(tableViewers, (tableViewer) =>
             {
-                _hub.Clients.User(tableViewer.userId.ToString()).SpectatorTable(tableState);
+                var clientUser = getClientUser(tableViewer.userId);
+                if (clientUser != null)
+                    clientUser.SpectatorTable(tableState);
             });
 
         }
@@ -66,7 +71,9 @@ namespace DoppelkopfApi.Hubs
             {
                 foreach (var viewer in viewers)
                 {
-                    _hub.Clients.User(viewer.userId.ToString()).PlayerCardsForSpectator(userCards);
+                    var clientUser = getClientUser(viewer.userId);
+                    if (clientUser != null)
+                        clientUser.PlayerCardsForSpectator(userCards);
                 }
             }
         }
@@ -74,12 +81,21 @@ namespace DoppelkopfApi.Hubs
 
         public void OnSpectatorStateChanged(int userId, IPlayTableService playTableService)
         {
-            _hub.Clients.User(userId.ToString()).SpectatorState(TableHubUtils.GetViewWerModel(userId, playTableService, _mapper));
+            var clientUser = getClientUser(userId);
+            if (clientUser != null)
+                clientUser.SpectatorState(TableHubUtils.GetViewWerModel(userId, playTableService, _mapper));
         }
 
         public void UserUseCaseChanged(int userId, int tableId, UseCase useCase)
         {
-            _hub.Clients.User(userId.ToString()).UserUseCase(new UserUseCaseModel(tableId, useCase));
+            var clientUser = getClientUser(userId);
+            if (clientUser != null)
+                clientUser.UserUseCase(new UserUseCaseModel(tableId, useCase));
+        }
+
+        private ITableClient getClientUser(int userId)
+        {
+            return _hub.Clients.Users(userId.ToString());
         }
     }
 }
