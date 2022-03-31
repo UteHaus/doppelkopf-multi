@@ -3821,9 +3821,9 @@ co@^4.6.0:
   resolved "https://registry.npmjs.org/co/-/co-4.6.0.tgz"
   integrity sha1-bqa989hTrlTMuOR7+gvz+QMfsYQ=
 
-codelyzer@^6.0.0:
+codelyzer@^6.0.2:
   version "6.0.2"
-  resolved "https://registry.npmjs.org/codelyzer/-/codelyzer-6.0.2.tgz"
+  resolved "https://registry.yarnpkg.com/codelyzer/-/codelyzer-6.0.2.tgz#25d72eae641e8ff13ffd7d99b27c9c7ad5d7e135"
   integrity sha512-v3+E0Ucu2xWJMOJ2fA/q9pDT/hlxHftHGPUay1/1cTgyPV5JTHFdO9hqo837Sx2s9vKBMTt5gO+lhF95PO6J+g==
   dependencies:
     "@angular/compiler" "9.0.0"
@@ -7044,15 +7044,10 @@ lodash.truncate@^4.4.2:
   resolved "https://registry.npmjs.org/lodash.truncate/-/lodash.truncate-4.4.2.tgz"
   integrity sha1-WjUNoLERO4N+z//VgSy+WNbq4ZM=
 
-lodash@4.17.19:
-  version "4.17.19"
-  resolved "https://registry.npmjs.org/lodash/-/lodash-4.17.19.tgz"
-  integrity sha512-JNvd8XER9GQX0v2qJgsaN/mzFCNA5BRe/j8JN9d+tWyGLSodKQHKFicdwNYzWwI3wjRnaKPsGj1XkBjx/F96DQ==
-
-lodash@^4.17.13, lodash@^4.17.14, lodash@^4.17.15, lodash@^4.17.21, lodash@^4.3.0, lodash@^4.7.0:
-  version "4.17.21"
-  resolved "https://registry.npmjs.org/lodash/-/lodash-4.17.21.tgz"
-  integrity sha512-v2kDEe57lecTulaDIuNTPy3Ry4gLGJ6Z1O3vE1krgXZNrsQ+LFTGHVxVjcXPs17LhbZVGedAJv8XZ1tvj5FvSg==
+lodash@4.17.19, lodash@4.17.20, lodash@^4.17.13, lodash@^4.17.14, lodash@^4.17.15, lodash@^4.17.21, lodash@^4.3.0, lodash@^4.7.0:
+  version "4.17.20"
+  resolved "https://registry.yarnpkg.com/lodash/-/lodash-4.17.20.tgz#b44a9b6297bcb698f1c51a3545a2b3b368d59c52"
+  integrity sha512-PlhdFcillOINfeV7Ni6oF1TAEayyZBoZ8bcshTHqOYJYlrqzRK5hagpagky5o4HfCzzd1TRkXPMFq6cKk9rGmA==
 
 log-symbols@^4.0.0, log-symbols@^4.1.0:
   version "4.1.0"
