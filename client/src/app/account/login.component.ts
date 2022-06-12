@@ -1,26 +1,27 @@
 ﻿import { Component, OnInit } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import {
-  FormBuilder,
-  FormGroup,
+  UntypedFormBuilder,
+  UntypedFormGroup,
   Validators,
   AbstractControl,
 } from '@angular/forms';
 import { first } from 'rxjs/operators';
 import { AccountService, AlertService } from '@app/services';
+import { firstValueFrom } from 'rxjs';
 
 @Component({
   templateUrl: 'login.component.html',
   styleUrls: ['login.component.less'],
 })
 export class LoginComponent implements OnInit {
-  form: FormGroup;
+  form: UntypedFormGroup;
   loading = false;
   submitted = false;
   returnUrl: string;
 
   constructor(
-    private formBuilder: FormBuilder,
+    private formBuilder: UntypedFormBuilder,
     private route: ActivatedRoute,
     private router: Router,
     private accountService: AccountService,
@@ -54,10 +55,9 @@ export class LoginComponent implements OnInit {
     }
 
     this.loading = true;
-    this.accountService
+   firstValueFrom( this.accountService
       .login(this.f.username.value, this.f.password.value)
-      .pipe(first())
-      .subscribe(
+      .pipe(first())).then(
         () => this.router.navigate([this.returnUrl]),
         (error) => {
           this.alertService.error(error);

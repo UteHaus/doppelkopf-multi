@@ -21,7 +21,7 @@ import { TableHubService } from '../services/table-hub.service';
 @Component({
   selector: 'app-play-table-list',
   templateUrl: './play-table-list.component.html',
-  styleUrls: ['./play-table-list.component.less'],
+  styleUrls: [],
 })
 export class PlayTableListComponent
   implements OnInit, OnDestroy, AfterViewInit, AfterViewChecked
