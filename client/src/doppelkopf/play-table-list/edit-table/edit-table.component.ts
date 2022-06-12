@@ -1,13 +1,13 @@
 import { Component, OnInit } from '@angular/core';
 import {
-  FormGroup,
-  FormBuilder,
+  UntypedFormGroup,
+  UntypedFormBuilder,
   Validators,
   AbstractControl,
 } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AlertService } from '@app/services';
-import { first } from 'rxjs';
+import { first, firstValueFrom } from 'rxjs';
 import {
   GamesVariants,
   PlayStatus,
@@ -21,7 +21,7 @@ import { PlayTableService } from '../../services/play-table.service';
   styleUrls: ['./edit-table.component.less'],
 })
 export class EditTableComponent implements OnInit {
-  form: FormGroup;
+  form: UntypedFormGroup;
   id: string;
   isAddMode: boolean;
   loading = false;
@@ -29,7 +29,7 @@ export class EditTableComponent implements OnInit {
 
   constructor(
     private playTableService: PlayTableService,
-    private formBuilder: FormBuilder,
+    private formBuilder: UntypedFormBuilder,
     private route: ActivatedRoute,
     private router: Router,
     private alertService: AlertService
@@ -89,10 +89,9 @@ export class EditTableComponent implements OnInit {
       weddingWithFirstColorCast: true,
       gameVariant: GamesVariants.None,
     };
-    this.playTableService
+   firstValueFrom( this.playTableService
       .createTable(newTable)
-      .pipe(first())
-      .subscribe(
+      .pipe(first())).then(
         () => {
           this.alertService.success('Table added successfully', {
             keepAfterRouteChange: true,

@@ -2,8 +2,8 @@
 import { Router, ActivatedRoute } from '@angular/router';
 import {
   AbstractControl,
-  FormBuilder,
-  FormGroup,
+  UntypedFormBuilder,
+  UntypedFormGroup,
   Validators,
 } from '@angular/forms';
 import { first } from 'rxjs/operators';
@@ -17,7 +17,7 @@ import { TranslateService } from '@ngx-translate/core';
   styleUrls: ['add-edit.component.less'],
 })
 export class AddEditComponent implements OnInit {
-  form: FormGroup;
+  form: UntypedFormGroup;
   id: string;
   isAddMode: boolean;
   loading = false;
@@ -27,7 +27,7 @@ export class AddEditComponent implements OnInit {
   previousUrl = '/users/list';
 
   constructor(
-    private formBuilder: FormBuilder,
+    private formBuilder: UntypedFormBuilder,
     private route: ActivatedRoute,
     private router: Router,
     private accountService: AccountService,
