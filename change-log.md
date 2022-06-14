@@ -1,5 +1,9 @@
 # Change Log
 
+## [1.0.4] - 2022-06-12
+ 
+- upgrade client and api dependencies 
+
 ## [1.0.3] - 2022-02-14
  
 ### Added
