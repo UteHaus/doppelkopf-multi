@@ -32,6 +32,7 @@ import { InplaceInputComponent } from './game-table/players-table/inplace-input/
 import { GameVariantNormalPipe } from './game-table/game-variant-normal.pipe';
 import { AnnouncementSelectorComponent } from './game-table/player-view/announcement-selector/announcement-selector.component';
 import { LastStichComponent } from './components/last-stich/last-stich.component';
+
 const routes: Routes = [
   {
     path: 'table',
