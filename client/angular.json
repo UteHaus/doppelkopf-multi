@@ -130,6 +130,7 @@
     }
   },
   "cli": {
+    "packageManager": "yarn",
     "schematicCollections": [
       "@angular-eslint/schematics"
     ]
