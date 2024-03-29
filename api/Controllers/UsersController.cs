@@ -12,7 +12,6 @@ using DoppelkopfApi.Services;
 using DoppelkopfApi.Entities;
 using DoppelkopfApi.Models.Users;
 using AutoMapper;
-using System.Reflection;
 namespace DoppelkopfApi.Controllers
 {
     [Authorize]
@@ -48,11 +47,11 @@ namespace DoppelkopfApi.Controllers
             var key = Encoding.ASCII.GetBytes(_appSettings.Secret);
             var tokenDescriptor = new SecurityTokenDescriptor
             {
-                Subject = new ClaimsIdentity(new Claim[]
-                {
+                Subject = new ClaimsIdentity(
+                [
                     new Claim(ClaimTypes.Name, user.Id.ToString())
-                }),
-                Expires = DateTime.UtcNow.AddDays(7),
+                ]),
+                Expires = DateTime.UtcNow.AddDays(1),
                 SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
             };
             var token = tokenHandler.CreateToken(tokenDescriptor);

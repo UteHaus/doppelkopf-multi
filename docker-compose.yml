@@ -23,6 +23,8 @@ services:
       - POSTGRES_HOST=postgres
     env_file:
       - db.env
+    depends_on:
+      - postgres
     networks:
       - default
 
@@ -35,6 +37,8 @@ services:
       - dkapi
     networks:
       - default
+    depends_on:
+      - dkapi
 
 
 
