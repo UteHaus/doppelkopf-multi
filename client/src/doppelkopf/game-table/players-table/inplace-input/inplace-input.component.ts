@@ -1,5 +1,6 @@
 import { EventEmitter, Output } from '@angular/core';
 import { Component, Input } from '@angular/core';
+import { firstValueFrom } from 'rxjs';
 
 @Component({
   selector: 'inplace-input',
@@ -16,7 +17,7 @@ export class InplaceInputComponent {
   editMode = false;
 
   constructor() {
-    this.focusOut.toPromise().then(() => this.edit(false));
+    firstValueFrom(this.focusOut).then(() => this.edit(false));
   }
 
   onSave(): void {
